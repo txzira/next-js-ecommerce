@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
       console.log(user);
       if (user) {
         token.email = user.email;
-        token.id = user.id;
+        token.id = Number(user.id);
         token.role = user.role;
         token.name = user.firstName + " " + user.lastName;
       }

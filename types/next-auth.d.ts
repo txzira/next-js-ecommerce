@@ -8,13 +8,13 @@ declare module "next-auth" {
   interface Session {
     user: {
       /** The user's postal address. */
-      id: string;
+      id: number | undefined;
       role: string;
     } & DefaultSession["user"];
   }
 
   interface User {
-    id: string;
+    id: number | undefined;
     firstName: string;
     lastName: string;
     role: string;
@@ -26,7 +26,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken: string;
     email: string;
-    id: string;
+    id: number | undefined;
     role: string;
   }
 }
