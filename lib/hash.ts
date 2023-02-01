@@ -14,8 +14,7 @@ export async function verifyPassword(password: string, hashedPassword: string) {
 //home - menu
 {
   /*
-Sign up
-login
+
 signup success
 order page
 order success
