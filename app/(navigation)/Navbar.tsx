@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-function NavLink({ children, href }) {
+export function NavLink({ children, href }) {
   return (
     <Link href={href} className="">
       {children}
@@ -19,7 +19,7 @@ export default function Navbar() {
     <nav className="flex flex-row justify-evenly">
       <NavLink href="/">Home</NavLink>
       {status === "authenticated" ? <NavLink href="/account">Account</NavLink> : null}
-      {status === "unauthenticated" ? <NavLink href="/auth/login">Login</NavLink> : null}
+      {status === "unauthenticated" ? <NavLink href="/login">Login</NavLink> : null}
     </nav>
   );
 }

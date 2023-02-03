@@ -57,11 +57,12 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // session.accessToken = token.accessToken;
-      session.user.id = token.id;
-      session.user.role = token.role;
-      session.user.name = token.name;
+      session.user = token;
       return session;
     },
+  },
+  pages: {
+    signIn: "/auth/login",
   },
 };
 
