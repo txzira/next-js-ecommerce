@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AiFillMail, AiFillLock } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 const FormContainer = ({ children }: { children: React.ReactNode }) => (
   <div className="relative m-auto w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
@@ -80,14 +81,18 @@ export const LoginForm = () => {
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    toast.loading("Loading...");
     const signInReply = await signIn("credentials", {
-      redirect: true,
+      redirect: false,
       email: email,
       password: password,
-      callbackUrl: "/",
     });
-    if (!signInReply?.error) {
+    if (signInReply.ok) {
+      toast.dismiss();
       router.replace("/");
+    } else {
+      toast.dismiss();
+      toast.error(signInReply.error);
     }
   };
 
@@ -111,7 +116,7 @@ export const LoginForm = () => {
         <FormButton>Login</FormButton>
         <div>
           Don't have an account yet?{" "}
-          <Link href="/signup" className="text-blue-800 underline">
+          <Link href="/auth/signup" className="text-blue-800 underline">
             Create an account
           </Link>
           .
@@ -177,11 +182,10 @@ export const SignupForm = () => {
             onChange={setConfirmPassword}
           />
         </FormItem>
-        <button type="submit">Sign Up</button>
-        {/* <FormButton>Sign Up</FormButton> */}
+        <FormButton>Sign Up</FormButton>
         <div>
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-800 underline">
+          <Link href="/auth/login" className="text-blue-800 underline">
             Sign In
           </Link>
           .

@@ -29,16 +29,16 @@ export const authOptions: NextAuthOptions = {
             const checkPassword = await verifyPassword(credentials?.password, user.password);
             // If entered password matches with password in database
             if (checkPassword) {
-              return user;
+              if (user.verified === true) return user;
+              throw new Error("User Not Verified.");
             }
             // Error invalid password
-            return null;
+            throw new Error("Invalid Credentials.");
           }
           //not found send error
-          return null;
-          //throw new Error("No user found with the email");
+          throw new Error("Invalid Credentials.");
         } catch (err: any) {
-          return null;
+          throw err;
         }
       },
     }),

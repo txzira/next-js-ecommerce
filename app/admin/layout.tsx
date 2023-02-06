@@ -9,8 +9,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return session?.user.role === "admin" ? (
     <>
       <nav className="flex flex-col">
-        <NavLink href="/admin/products">Products</NavLink>
+        <NavLink href="/admin/customers">Customers</NavLink>
         <NavLink href="/admin/orders">Orders</NavLink>
+        <NavLink href="/admin/products">Products</NavLink>
       </nav>
       {children}
     </>
