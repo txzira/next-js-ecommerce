@@ -8,7 +8,6 @@ import { hashPassword } from "../../../lib/hash";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { email, password, name } = req.body;
-    console.log("hello2");
     if (!email || !email.includes("@") || !password) {
       res.status(422).json({ message: "Invalid Data" });
       return;

@@ -31,7 +31,7 @@ function ProductForm() {
   }
 
   return (
-    <form onSubmit={}>
+    <form onSubmit={submitForm}>
       <label htmlFor="name">Name</label>
       <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
       <label htmlFor="price">Price</label>

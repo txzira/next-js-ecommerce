@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
@@ -8,25 +8,31 @@ import { BsFillPersonFill } from "react-icons/bs";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
-const FormContainer = ({ children }: { children: React.ReactNode }) => (
-  <div className="relative m-auto w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
-    <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30 ">{children}</div>
-  </div>
-);
+function FormContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="relative m-auto w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
+      <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30 ">{children}</div>
+    </div>
+  );
+}
 
-const FormIcon = ({ children }: { children: React.ReactNode }) => (
-  <span className="absolute opacity-40 top-4 left-7 text-lg">{children}</span>
-);
+function FormIcon({ children }: { children: React.ReactNode }) {
+  return <span className="absolute opacity-40 top-4 left-7 text-lg">{children}</span>;
+}
 
-const FormItem = ({ children }: { children: React.ReactNode }) => <div className="relative w-1/2 m-auto mb-3">{children}</div>;
+function FormItem({ children }: { children: React.ReactNode }) {
+  return <div className="relative w-1/2 m-auto mb-3">{children}</div>;
+}
 
-const FormButton = ({ children }: { children: React.ReactNode }) => (
-  <FormItem>
-    <button className="bg-slate-800  w-full text-white py-3 px-6  rounded-3xl">{children}</button>
-  </FormItem>
-);
+function FormButton({ children }: { children: React.ReactNode }) {
+  return (
+    <FormItem>
+      <button className="bg-slate-800  w-full text-white py-3 px-6  rounded-3xl">{children}</button>
+    </FormItem>
+  );
+}
 
-const FormInput = ({
+function FormInput({
   id,
   type,
   placeholder,
@@ -38,7 +44,7 @@ const FormInput = ({
   placeholder: string;
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
-}) => {
+}) {
   return (
     <input
       required
@@ -50,29 +56,7 @@ const FormInput = ({
       onChange={(event) => onChange(event.target.value)}
     />
   );
-};
-const FormInputRef = ({
-  id,
-  type,
-  placeholder,
-  ref,
-}: {
-  id: string;
-  type: string;
-  placeholder: string;
-  ref: React.RefObject<HTMLInputElement>;
-}) => {
-  return (
-    <input
-      required
-      className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
-      id={id}
-      type={type}
-      placeholder={placeholder}
-      ref={ref}
-    />
-  );
-};
+}
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
