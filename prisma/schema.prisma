@@ -26,11 +26,19 @@ model Product {
   id       Int     @id @default(autoincrement())
   name     String
   price    Decimal
-  image    String
+  image    Image   @relation(fields: [imageId], references: [assetId])
+  imageId  String
   Orders   Orders? @relation(fields: [ordersId], references: [id])
   ordersId Int?
+  @@index([imageId])
   @@index([ordersId])
+}
 
+model Image {
+  assetId  String    @id
+  publicId String
+  url      String
+  Product  Product[]
 }
 
 model Orders {
@@ -40,6 +48,5 @@ model Orders {
   date       String
   customerId Int
   customer   User      @relation(fields: [customerId], references: [id])
-
   @@index([customerId])
 }

@@ -1,6 +1,6 @@
 "use client";
 import { Product } from "@prisma/client";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
 
@@ -17,17 +17,40 @@ export default function AdminProductsPage() {
 function ProductForm() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<any>();
+  const [imageName, setImageName] = useState("");
 
-  async function submitForm(event: React.FormEvent<HTMLFormElement>) {
+  const setFileToBase = (file) => {
+    const reader = new FileReader();
+    setImageName(file.name);
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImage(reader.result);
+    };
+  };
+  const handleImage = (event) => {
+    const file = event.target.files[0];
+    setFileToBase(file);
+  };
+
+  async function submitForm(event) {
     event.preventDefault();
-    const response = await fetch("/api/product/create-product", {
+
+    await fetch("/api/cloudinary", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, price, image }),
+      body: JSON.stringify({ imagePath: image, imageName: imageName }),
     });
+
+    // const response = await fetch("/api/product/create-product", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ name, price, image }),
+    // });
   }
 
   return (
@@ -37,7 +60,8 @@ function ProductForm() {
       <label htmlFor="price">Price</label>
       <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
       <label htmlFor="productImage">Select an Image:</label>
-      <input type="file" id="productImage" />
+      <input type="file" id="productImage" onChange={handleImage} />
+      <button type="submit">Add Product</button>
     </form>
   );
 }
