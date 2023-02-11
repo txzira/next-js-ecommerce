@@ -19,3 +19,28 @@ export async function uploadImage(imagePath, imageName) {
     console.error(error);
   }
 }
+
+// await fetch("/api/admin/product/create-product", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({ name, price, imagePath: image, imageName: imageName }),
+// });
+// <label htmlFor="productImage">Select an Image:</label>
+//       <input type="file" id="productImage" onChange={handleImage} />
+// const setFileToBase = (file) => {
+//   const reader = new FileReader();
+//   setImageName(file.name);
+//   reader.readAsDataURL(file);
+//   reader.onloadend = () => {
+//     setImage(reader.result);
+//   };
+// };
+// const handleImage = (event) => {
+//   const file = event.target.files[0];
+//   setFileToBase(file);
+// };
+// const [image, setImage] = useState<any>();
+// const [imageName, setImageName] = useState("");
+// image: { create: { assetId: imageObj.asset_id, publicId: imageObj.public_id, url: imageObj.url } }

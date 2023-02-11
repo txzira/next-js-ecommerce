@@ -19,34 +19,42 @@ model User {
   role      String
   password  String   @db.Char(60)
   verified  Boolean
-  Orders    Orders[]
+  Orders    Order[]
 }
 
 model Product {
   id       Int     @id @default(autoincrement())
-  name     String
-  price    Decimal
-  image    Image   @relation(fields: [imageId], references: [assetId])
-  imageId  String
-  Orders   Orders? @relation(fields: [ordersId], references: [id])
-  ordersId Int?
-  @@index([imageId])
-  @@index([ordersId])
+  name     String @unique
+  price    Float
+  order orderProduct[] 
 }
 
 model Image {
   assetId  String    @id
   publicId String
   url      String
-  Product  Product[]
+  order Order[]
+}
+model orderProduct {
+  orderId Int 
+  order Order @relation(fields: [orderId], references: [id])
+  productId Int
+  product Product  @relation(fields:[productId], references: [id])
+  quantity Int
+  @@id([orderId,productId])
+  @@index([orderId])
+  @@index([productId])
 }
 
-model Orders {
+model Order {
   id         Int       @id @default(autoincrement())
-  products   Product[]
-  amount     Decimal
-  date       String
+  products   orderProduct[]
+  amount     Float
+  date       DateTime @default(now())
   customerId Int
   customer   User      @relation(fields: [customerId], references: [id])
+  image    Image   @relation(fields: [imageId], references: [assetId])
+  imageId  String
   @@index([customerId])
+  @@index([imageId])
 }

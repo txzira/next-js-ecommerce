@@ -3,6 +3,8 @@ import { Product } from "@prisma/client";
 import React, { FormEvent, useState } from "react";
 import Image from "next/image";
 import useSWR from "swr";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export default function AdminProductsPage() {
   return (
@@ -15,42 +17,26 @@ export default function AdminProductsPage() {
 }
 
 function ProductForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState<any>();
-  const [imageName, setImageName] = useState("");
-
-  const setFileToBase = (file) => {
-    const reader = new FileReader();
-    setImageName(file.name);
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
-  };
-  const handleImage = (event) => {
-    const file = event.target.files[0];
-    setFileToBase(file);
-  };
 
   async function submitForm(event) {
     event.preventDefault();
 
-    await fetch("/api/cloudinary", {
+    const response = await fetch("/api/admin/product/create-product", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ imagePath: image, imageName: imageName }),
+      body: JSON.stringify({ name, price }),
     });
-
-    // const response = await fetch("/api/product/create-product", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ name, price, image }),
-    // });
+    const data = await response.json();
+    data.status === "ok" ? toast.success(data.message) : toast.error(data.message);
+    console.log(data);
+    setName("");
+    setPrice("");
+    router.refresh();
   }
 
   return (
@@ -59,8 +45,6 @@ function ProductForm() {
       <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
       <label htmlFor="price">Price</label>
       <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
-      <label htmlFor="productImage">Select an Image:</label>
-      <input type="file" id="productImage" onChange={handleImage} />
       <button type="submit">Add Product</button>
     </form>
   );
@@ -68,28 +52,30 @@ function ProductForm() {
 
 function ProductTable() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR("/api/product/get-product?limit=10&page=0&sortId=asc", fetcher);
-  console.log(data);
+  // const { data, error, isLoading } = useSWR("/api/admin/product/get-product?limit=10&page=0&sortId=asc", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/product/get-product", fetcher);
+  if (data) {
+    console.log(data.products);
+  }
+  console.log(isLoading);
   return (
     <table>
       <tr>
-        <th>Id</th>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
+        <th className="px-2">Id</th>
+        <th className="px-2">Name</th>
+        <th className="px-2">Price</th>
       </tr>
-      {/* {products.map((product) => {
-        return (
-          <tr>
-            <td>{product.id}</td>
-            <td>
-              <Image src={product.image} alt="product image" />
-            </td>
-            <td>{product.name}</td>
-            <td>{product.price.toString()}</td>
-          </tr>
-        );
-      })} */}
+      {data
+        ? data.products.map((product) => {
+            return (
+              <tr>
+                <td className="px-2">{product.id}</td>
+                <td className="px-2">{product.name}</td>
+                <td className="px-2">{product.price.toString()}</td>
+              </tr>
+            );
+          })
+        : null}
       <tr></tr>
     </table>
   );

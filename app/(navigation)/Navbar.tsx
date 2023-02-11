@@ -18,6 +18,7 @@ export default function Navbar() {
     <nav className="flex flex-row justify-evenly">
       <NavLink href="/">Home</NavLink>
       {status === "authenticated" && session.user.role === "admin" ? <NavLink href="/admin">Admin</NavLink> : null}
+      {status === "authenticated" ? <NavLink href="/products">Products</NavLink> : null}
       <div>
         {status === "authenticated" ? <NavLink href="/account">Account</NavLink> : null}
         {status === "authenticated" ? <button onClick={() => signOut()}>sign out</button> : null}
