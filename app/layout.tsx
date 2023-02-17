@@ -1,8 +1,5 @@
-"use client";
-import { Toaster } from "react-hot-toast";
-import Header from "./(navigation)/Header";
 import "./globals.css";
-import ClientProviders from "./SessionProivder";
+import ClientProviders from "./ClientProivders";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,11 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       */}
       <head />
       <body>
-        <ClientProviders>
-          <Toaster />
-          <Header />
-          {children}
-        </ClientProviders>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

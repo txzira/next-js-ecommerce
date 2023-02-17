@@ -5,7 +5,7 @@ import useSWR from "swr";
 function Product({ product }) {
   const [quantity, setQuantity] = useState(0);
   return (
-    <tr id="product">
+    <tr>
       <td className="px-2">
         <input className="bg-inherit focus:outline-none" type="text" name="name" value={product.name} readOnly />
       </td>
@@ -22,20 +22,29 @@ function Product({ product }) {
 function ProductTable() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data, error, isLoading } = useSWR("/api/admin/product/get-product?limit=10&page=0&sortId=asc", fetcher);
-  function submitForm(event) {
+
+  async function submitForm(event) {
     event.preventDefault();
     const names: any = document.getElementsByName("name");
     const prices: any = document.getElementsByName("price");
     const quantities: any = document.getElementsByName("quantity");
+    const cart = [];
 
     // const form = event.target;
     // const formFields = form.elements;
     for (let i = 0; i < prices.length; i++) {
-      console.log(names[i].value);
-      console.log(prices[i].value);
-      console.log(quantities[i].value);
+      cart.push({ name: names[i].value, price: prices[i].value, quantity: quantities[i].value });
+
       // console.log(formFields[i].value, formFields[i].name);
     }
+    const order = await fetch("/api/customer/order/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cart }),
+    });
+    console.log(cart);
   }
 
   return (
@@ -48,7 +57,7 @@ function ProductTable() {
         </tr>
         {data
           ? data.products.map((product) => {
-              return <Product product={product} />;
+              return <Product key={product.id} product={product} />;
             })
           : null}
         <tr></tr>

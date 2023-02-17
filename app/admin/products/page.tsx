@@ -68,7 +68,7 @@ function ProductTable() {
       {data
         ? data.products.map((product) => {
             return (
-              <tr>
+              <tr key={product.id}>
                 <td className="px-2">{product.id}</td>
                 <td className="px-2">{product.name}</td>
                 <td className="px-2">{product.price.toString()}</td>
