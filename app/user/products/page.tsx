@@ -21,7 +21,7 @@ function Product({ product }) {
 
 function ProductTable() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR("/api/admin/product/get-product?limit=10&page=0&sortId=asc", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/product/get-product", fetcher);
 
   async function submitForm(event) {
     event.preventDefault();
@@ -33,8 +33,9 @@ function ProductTable() {
     // const form = event.target;
     // const formFields = form.elements;
     for (let i = 0; i < prices.length; i++) {
-      cart.push({ name: names[i].value, price: prices[i].value, quantity: quantities[i].value });
-
+      if (quantities[i].value > 0) {
+        cart.push({ name: names[i].value, price: prices[i].value, quantity: quantities[i].value });
+      }
       // console.log(formFields[i].value, formFields[i].name);
     }
     const order = await fetch("/api/customer/order/create-order", {

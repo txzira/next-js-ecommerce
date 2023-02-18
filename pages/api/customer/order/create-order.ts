@@ -5,8 +5,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const { cart } = req.body;
-      console.log(cart);
-      // const order = await prisma.order.
+      console.log({ cart });
+      const order = await prisma.orders.create({ data: { customerId } });
       // res.status(200).json({ message: `Added product '${product.name}' successfully!`, status: "ok" });
     } catch (error) {
       // if (error.code === "P2002") {
