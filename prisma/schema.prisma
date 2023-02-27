@@ -55,6 +55,7 @@ model Order {
   customer   User      @relation(fields: [customerId], references: [id])
   image    Image   @relation(fields: [imageId], references: [assetId])
   imageId  String
+  approved Boolean @default(false)
   @@index([customerId])
   @@index([imageId])
 }

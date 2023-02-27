@@ -11,7 +11,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       <SessionProvider>
         <Toaster />
         <Header />
-        {children}
+        <main>{children}</main>
       </SessionProvider>
     </>
   );
