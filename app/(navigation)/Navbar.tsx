@@ -1,11 +1,24 @@
 "use client";
 import Link from "next/link";
-import { useSelectedLayoutSegments } from "next/navigation";
+import { useSelectedLayoutSegments, useSelectedLayoutSegment } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
-export function NavLink({ children, href }) {
+function NavLink({ children, href }: { children: React.ReactNode; href: string }) {
+  let segment: any = useSelectedLayoutSegments();
+  let active = false;
+
+  if (href === "/admin" && `/${segment[0]}` === href) active = true;
+  else if (href === "/" && segment.length === 0) active = true;
+  else if (segment[1] !== undefined && href.split("/")[2] !== undefined) active = segment[1] === href.split("/")[2];
+
   return (
-    <Link href={href} className="flex items-center h-full px-4 hover:bg-white hover:text-black">
+    <Link
+      href={href}
+      className={`
+      flex items-center h-full px-4 hover:bg-white hover:text-black
+       ${active ? "bg-white text-black" : null}
+       `}
+    >
       {children}
     </Link>
   );

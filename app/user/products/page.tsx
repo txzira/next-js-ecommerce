@@ -116,7 +116,7 @@ function ProductTable() {
 export default function ProductsPage() {
   return (
     <div>
-      <h1>Products</h1>
+      <h1 className="text-center py-6">Products</h1>
       <ProductTable />
     </div>
   );

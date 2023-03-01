@@ -9,11 +9,13 @@ const ACTIONS = {
   DECREMENT: "decrement",
   SET_CART: "SET_CART",
 };
+
 const initialState = {
   total_items: 0,
   total_unique_items: 0,
   line_items: [],
 };
+
 const reducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.SET_CART:
