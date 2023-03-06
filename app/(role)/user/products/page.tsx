@@ -41,7 +41,7 @@ function ProductTable() {
   const [imageName, setImageName] = useState("");
   const { data: session, status } = useSession();
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR("/api/admin/product/get-product", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/product/get-products", fetcher);
   const router = useRouter();
 
   const setFileToBase = (file) => {

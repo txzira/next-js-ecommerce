@@ -5,7 +5,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head />
-      <body className="w-screen h-screen">
+      <body>
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

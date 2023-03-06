@@ -28,7 +28,7 @@ export default function Navbar() {
   const { data: session, status } = useSession();
 
   return (
-    <nav className="flex flex-row justify-center bg-black text-white h-10">
+    <nav className="flex flex-row justify-center bg-black text-white h-14">
       <NavLink href="/">Home</NavLink>
       {status === "authenticated" && session.user.role === "admin" ? <NavLink href="/admin">Admin</NavLink> : null}
       {status === "authenticated" ? <NavLink href="/user/products">Products</NavLink> : null}

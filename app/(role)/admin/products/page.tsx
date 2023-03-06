@@ -53,7 +53,7 @@ function ProductForm() {
 function ProductTable() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
   // const { data, error, isLoading } = useSWR("/api/admin/product/get-product?limit=10&page=0&sortId=asc", fetcher);
-  const { data, error, isLoading } = useSWR("/api/admin/product/get-product", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/product/get-products", fetcher);
   if (data) {
     console.log(data.products);
   }

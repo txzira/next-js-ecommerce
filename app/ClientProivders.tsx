@@ -11,7 +11,7 @@ export default function ClientProviders({ children }: { children: React.ReactNod
       <SessionProvider>
         <Toaster />
         <Header />
-        <main>{children}</main>
+        <main className="md:h-[calc(100vh_-_3.5rem)]">{children}</main>
       </SessionProvider>
     </>
   );
