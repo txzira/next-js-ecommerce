@@ -2,8 +2,18 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  console.log(authOptions);
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  // if (session) {
+  //   redirect("/user/products");
+  // } else {
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-center relative py-16">
@@ -27,3 +37,4 @@ export default function Home() {
     </div>
   );
 }
+// }

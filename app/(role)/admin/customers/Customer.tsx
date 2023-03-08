@@ -1,14 +1,14 @@
 "use client";
+import { User } from "@prisma/client";
 import React, { useState } from "react";
 import useSWR from "swr";
 
-export default function CustomerTable() {
+export function CustomerTable() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [sort, setSort] = useState("asc");
   const fetcher = (url) => fetch(url, { method: "GET" }).then((res) => res.json());
   const { data, error, isLoading } = useSWR(`/admin/customers/get-customer/${page}/${limit}/${sort}`, fetcher);
-  console.log(data);
 
   return (
     <table className="border-2 border-black text-center">
@@ -49,5 +49,13 @@ export default function CustomerTable() {
         </td>
       </tr>
     </table>
+  );
+}
+
+export function CustomerDetails({ customer }: { customer: User }) {
+  return (
+    <div>
+      <h1>hello</h1>
+    </div>
   );
 }

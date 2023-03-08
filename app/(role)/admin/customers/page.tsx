@@ -1,6 +1,6 @@
 import prisma from "lib/prisma";
 import React from "react";
-import CustomerTable from "./CustomerTable";
+import { CustomerTable, CustomerDetails } from "./Customer";
 
 export default async function CustomerPage() {
   // async function getCustomers(limit, pageNum, sortId, cursorId = null) {
@@ -17,29 +17,10 @@ export default async function CustomerPage() {
   return (
     <div>
       CustomerPage
-      <CustomerTable />
-      {/* <table>
-        <tr>
-          <th>Id</th>
-          <th>Email</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Role</th>
-          <th>Verified</th>
-        </tr>
-        {customers.map((customer) => {
-          return (
-            <tr key={customer.id}>
-              <td>{customer.id}</td>
-              <td>{customer.email}</td>
-              <td>{customer.firstName}</td>
-              <td>{customer.lastName}</td>
-              <td>{customer.role}</td>
-              <td>{customer.verified ? "yes" : "no"}</td>
-            </tr>
-          );
-        })}
-      </table> */}
+      <div className="flex flex-row">
+        <CustomerTable />
+        <CustomerDetails />
+      </div>
     </div>
   );
 }
