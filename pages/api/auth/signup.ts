@@ -40,7 +40,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      console.log("User", newUser);
       res.status(200).json({ message: "User created" });
     }
   } else {

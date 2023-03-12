@@ -1,14 +1,13 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-const USERTYPE = { USER: "customer", ADMIN: "admin" };
+export const USERTYPE = { USER: "customer", ADMIN: "admin" };
 export const config = {
   matcher: ["/admin/:path*", "/user/:path*"],
 };
 
 export default withAuth(
   function middleware(req) {
-    console.log(req.nextauth.token);
     //user is not admin, redirect from admin pages
     if (req.nextUrl.pathname.startsWith("/admin")) {
       if (req.nextauth.token?.role !== USERTYPE.ADMIN) {

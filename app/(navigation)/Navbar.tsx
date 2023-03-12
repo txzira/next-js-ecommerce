@@ -6,10 +6,9 @@ import { useSession, signOut } from "next-auth/react";
 function NavLink({ children, href }: { children: React.ReactNode; href: string }) {
   let segment: any = useSelectedLayoutSegments();
   let active = false;
-
-  if (href === "/admin" && `/${segment[0]}` === href) active = true;
+  if (href === "/admin" && `/${segment[1]}` === href) active = true;
   else if (href === "/" && segment.length === 0) active = true;
-  else if (segment[1] !== undefined && href.split("/")[2] !== undefined) active = segment[1] === href.split("/")[2];
+  else if (segment[2] !== undefined && href.split("/")[2] !== undefined) active = segment[2] === href.split("/")[2];
 
   return (
     <Link
