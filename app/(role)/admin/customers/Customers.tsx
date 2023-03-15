@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { verify } from "crypto";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export function CustomerTable({
   setCustomer,
@@ -25,6 +26,7 @@ export function CustomerTable({
       {isLoading ? (
         <div>Loading...</div>
       ) : (
+        data &&
         data.customers.map((customer) => {
           return (
             <tr key={customer.id} className="hover:bg-white" onClick={() => setCustomer(customer)}>
@@ -74,17 +76,11 @@ export function CustomerDetails({ customer, mutate }: { customer: User; mutate: 
     mutate();
     console.log(message);
   };
-  const deleteCustomer = async (id) => {
-    const response = await fetch(`/admin/customers/delete-customer/${id}`, {
-      method: "DELETE",
-    });
-    mutate();
-  };
 
   console.log(customer);
   return customer ? (
     <div>
-      {show && <ConfirmationModal setShow={setShow} />}
+      {show && <DeleteConfirmationModal setShow={setShow} mutate={mutate} customerId={customer.id} />}
       <CustomerField title="Id" value={customer.id} />
       <CustomerField title="Email" value={customer.email} />
       <CustomerField title="First Name" value={customer.firstName} />
@@ -92,7 +88,9 @@ export function CustomerDetails({ customer, mutate }: { customer: User; mutate: 
       <CustomerField title="Role" value={customer.role} />
       <CustomerField title="Verification Status" value={customer.verified ? "Approved" : "Awaiting Approval"} />
       <button
-        className="rounded-full border-black border-2 p-2 hover:bg-yellow-400 hover:text-white"
+        className={`rounded-full border-black border-2 p-2 hover:text-white ${
+          customer.verified ? "hover:bg-yellow-400 " : "hover:bg-green-600"
+        }`}
         onClick={() => verifyCustomer(customer.id, customer.verified)}
       >
         {customer.verified ? "Cancel Membership" : "Approve Membership"}
@@ -113,7 +111,28 @@ export function CustomerDetails({ customer, mutate }: { customer: User; mutate: 
   );
 }
 
-function ConfirmationModal({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
+function DeleteConfirmationModal({
+  setShow,
+  customerId,
+  mutate,
+}: {
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  customerId: number;
+  mutate: any;
+}) {
+  const deleteCustomer = async () => {
+    toast.loading("Loading...");
+    const response = await fetch(`/admin/customers/delete-customer/${customerId}`, {
+      method: "DELETE",
+    });
+    const json = await response.json();
+    console.log(json);
+    mutate();
+    toast.dismiss();
+    toast.success(json.message);
+    setShow(false);
+  };
+
   function closeOnEscKeyDown(event) {
     if ((event.charCode || event.keyCode) === 27) {
       setShow(false);
@@ -141,7 +160,10 @@ function ConfirmationModal({ setShow }: { setShow: React.Dispatch<React.SetState
             >
               Cancel
             </button>
-            <button className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2">
+            <button
+              className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
+              onClick={() => deleteCustomer()}
+            >
               Delete
             </button>
           </div>

@@ -14,8 +14,6 @@ export async function DELETE(request: NextRequest, context: { params }) {
         throw new Error("Unauthorized Request");
       }
       const deleteCustomer = await prisma.user.delete({ where: { id: Number(id) } });
-      console.log(id);
-      console.log(deleteCustomer);
       return NextResponse.json({ message: `User: ${deleteCustomer.firstName + " " + deleteCustomer.lastName} was deleted.`, status: 200 });
     } catch (error) {
       throw error;
