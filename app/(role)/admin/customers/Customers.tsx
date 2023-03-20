@@ -129,8 +129,12 @@ function DeleteConfirmationModal({
     console.log(json);
     mutate();
     toast.dismiss();
-    toast.success(json.message);
+    if (json.status === 200) toast.success(json.message);
+    else {
+      toast.error(json.message);
+    }
     setShow(false);
+    window.location.reload();
   };
 
   function closeOnEscKeyDown(event) {
@@ -150,10 +154,10 @@ function DeleteConfirmationModal({
       className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4 overflow-x-hidden overflow-y-auto bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
       onClick={() => setShow(false)}
     >
-      <div className="relative w-2/5 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
+      <div className="relative w-1/3 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
         <div className=" flex flex-col items-center relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-          <h1>Are you sure?</h1>
-          <div className="flex flex-row gap-4">
+          <h1 className="text-lg p-2">Are you sure you wanted to delete this user? This action is irreversible.</h1>
+          <div className="flex flex-row gap-8 p-2">
             <button
               className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
               onClick={() => setShow(false)}

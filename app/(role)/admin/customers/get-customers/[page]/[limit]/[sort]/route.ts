@@ -26,6 +26,7 @@ export async function GET(request: NextRequest, context: { params }) {
 
 function exclude(users: User[], keys) {
   for (let x = 0; x < users.length; x++) {
+    if (users[x]["role"] === "admin") users.splice(x, 1);
     for (let key of keys) {
       delete users[x][key];
     }

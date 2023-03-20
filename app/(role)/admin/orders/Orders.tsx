@@ -79,6 +79,22 @@ export function OrderTable({ initialOrders }: { initialOrders: string }) {
   );
 }
 
+export function OrderDetails({
+  order,
+}: {
+  order: Order & {
+    image: Img;
+    products: (orderProduct & { product: Product })[];
+    customer: User;
+  };
+}) {
+  return (
+    <div>
+      <h1></h1>
+    </div>
+  );
+}
+
 function OrdersProductModal({
   order,
   setShow,
@@ -104,12 +120,12 @@ function OrdersProductModal({
     const message = await response.json();
     toast.success(message.message);
   }
-  useEffect(() => {
-    document.body.addEventListener("keydown", closeOnEscKeyDown);
-    return function cleanup() {
-      document.body.removeEventListener("keydown", closeOnEscKeyDown);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.body.addEventListener("keydown", closeOnEscKeyDown);
+  //   return function cleanup() {
+  //     document.body.removeEventListener("keydown", closeOnEscKeyDown);
+  //   };
+  // }, []);
   return (
     <div className="fixed bg-opacity-50 bg-black right-0 top-0 w-screen z-50 " onClick={() => setShow(false)}>
       <div className="bg-white float-right h-screen py-10 px-2.5 relative w-3/5 " onClick={(e) => e.stopPropagation()}>
