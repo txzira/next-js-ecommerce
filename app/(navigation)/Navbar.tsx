@@ -8,8 +8,8 @@ function NavLink({ children, href }: { children: React.ReactNode; href: string }
   let active = false;
   if (href === "/admin" && `/${segment[1]}` === href) active = true;
   else if (href === "/" && segment.length === 0) active = true;
-  else if (segment[2] !== undefined && href.split("/")[2] !== undefined) active = segment[2] === href.split("/")[2];
-
+  else if (segment[2] !== undefined && href.split("/")[2] !== undefined && segment[1] !== "admin")
+    active = segment[2] === href.split("/")[2];
   return (
     <Link
       href={href}

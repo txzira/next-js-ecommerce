@@ -34,6 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <NavLink href="/admin/customers">Customers</NavLink>
         <NavLink href="/admin/orders">Orders</NavLink>
         <NavLink href="/admin/products">Products</NavLink>
+        <NavLink href="/admin/wallets">Wallets</NavLink>
       </nav>
       <div className="w-5/6 mx-auto mt-10">{children}</div>
     </div>

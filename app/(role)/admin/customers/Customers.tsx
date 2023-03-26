@@ -3,6 +3,8 @@ import { verify } from "crypto";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Loader from "app/Loader";
+import { KeyedMutator } from "swr";
 
 export function CustomerTable({
   setCustomer,
@@ -14,49 +16,58 @@ export function CustomerTable({
   isLoading: boolean;
 }) {
   return (
-    <table className="border-2 border-black text-center">
-      <tr className="bg-black text-white">
-        <th className="p-3">Id</th>
-        <th className="p-3">Email</th>
-        <th className="p-3">First Name</th>
-        <th className="p-3">Last Name</th>
-        <th className="p-3">Role</th>
-        <th className="p-3">Verified</th>
-      </tr>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        data &&
+    <div className="grid border-2 relative border-black text-center">
+      <div className="grid grid-cols-6 bg-black text-white font-bold">
+        <div className="py-3">Id</div>
+        <div className="py-3">Email</div>
+        <div className="py-3">First Name</div>
+        <div className="py-3">Last Name</div>
+        <div className="py-3">Role</div>
+        <div className="py-3">Verified</div>
+      </div>
+      {!isLoading ? (
         data.customers.map((customer) => {
           return (
-            <tr key={customer.id} className="hover:bg-white" onClick={() => setCustomer(customer)}>
-              <td className="p-2">{customer.id}</td>
-              <td className="p-2">{customer.email}</td>
-              <td className="p-2">{customer.firstName}</td>
-              <td className="p-2">{customer.lastName}</td>
-              <td className="p-2">{customer.role}</td>
-              <td className="p-2">{customer.verified ? "yes" : "no"}</td>
-            </tr>
+            <div key={customer.id} className="grid grid-cols-6 hover:bg-white" onClick={() => setCustomer(customer)}>
+              <div className="py-2">{customer.id}</div>
+              <div className="py-2">{customer.email}</div>
+              <div className="py-2">{customer.firstName}</div>
+              <div className="py-2">{customer.lastName}</div>
+              <div className="py-2">{customer.role}</div>
+              <div className="py-2">{customer.verified ? "yes" : "no"}</div>
+            </div>
           );
         })
+      ) : (
+        <div className="flex justify-center py-5">
+          <Loader />
+        </div>
       )}
-      <tr>
-        <td className="p-2">
+      <div className="grid grid-cols-6">
+        <div className="py-2">
           <button>&lt;-</button>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td className="p-2">
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div className="py-2">
           <button>-&gt;</button>
-        </td>
-      </tr>
-    </table>
+        </div>
+      </div>
+    </div>
   );
 }
 
-export function CustomerDetails({ customer, mutate }: { customer: User; mutate: any }) {
+export function CustomerDetails({
+  customer,
+  setCustomer,
+  mutate,
+}: {
+  customer: User;
+  setCustomer: React.Dispatch<React.SetStateAction<User>>;
+  mutate: KeyedMutator<any>;
+}) {
   const [show, setShow] = useState(false);
 
   function CustomerField({ title, value }) {
@@ -68,13 +79,14 @@ export function CustomerDetails({ customer, mutate }: { customer: User; mutate: 
     );
   }
   const verifyCustomer = async (id, status) => {
-    const response = await fetch("/admin/customers/verify-customer", {
+    const data = await fetch("/admin/customers/verify-customer", {
       method: "POST",
       body: JSON.stringify({ id, verify: status }),
     });
-    const message = await response.json();
+    const response = await data.json();
     mutate();
-    console.log(message);
+    setCustomer(null);
+    toast.success(response.message);
   };
 
   console.log(customer);

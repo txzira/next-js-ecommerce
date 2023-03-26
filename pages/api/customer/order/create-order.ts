@@ -12,7 +12,7 @@ async function getOrderTotal(cart) {
 }
 async function getOrderProducts(cart) {
   const orderProducts = await cart.map((product) => {
-    return { productId: Number(product.id), quantity: Number(product.quantity) };
+    return { productId: Number(product.id), quantity: Number(product.quantity), pricePaidPer: Number(product.pricePaidPer) };
   });
   return orderProducts;
 }
