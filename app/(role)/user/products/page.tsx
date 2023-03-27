@@ -5,7 +5,7 @@ import { ProductTable } from "./Product";
 export default async function ProductsPage() {
   const wallets = await prisma.walletAddress.findMany({
     where: { active: true },
-    select: { address: true, type: { select: { name: true } } },
+    select: { id: true, address: true, type: { select: { name: true } } },
   });
 
   return (
@@ -15,7 +15,7 @@ export default async function ProductsPage() {
         <span className="text-sm">Note: Send payment to one of these addresses.</span>
         {wallets.map((wallet) => {
           return (
-            <div className="flex flex-row gap-6">
+            <div key={wallet.id} className="flex flex-row gap-6">
               <div>{wallet.type.name}</div>
               <div>{wallet.address} </div>
             </div>

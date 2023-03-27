@@ -26,7 +26,7 @@ export default function AccountHistory({ session }: { session: Session }) {
       ) : (
         data.userOrders.map((order) => {
           return (
-            <tr>
+            <tr key={order.id}>
               <td className="p-3">{order.id}</td>
               <td className="p-3">{new Date(order.date).toDateString()}</td>
               <td className="p-3">{order.amount}</td>

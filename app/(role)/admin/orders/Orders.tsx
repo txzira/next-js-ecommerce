@@ -29,7 +29,7 @@ export function OrderTable({
       {!isLoading ? (
         data.orders.map((order) => {
           return (
-            <div className="grid grid-cols-4 border-[1px] border-black p-2 hover:bg-white" onClick={() => setOrder(order)}>
+            <div key={order.id} className="grid grid-cols-4 border-[1px] border-black p-2 hover:bg-white" onClick={() => setOrder(order)}>
               <div className="py-2">{`${order.customer.firstName} ${order.customer.lastName}`}</div>
               <div className="py-2">{new Date(order.date).toDateString()}</div>
               <div className="py-2">${order.amount}</div>
@@ -150,7 +150,7 @@ export function OrderDetails({
         </tr>
         {order.products.map((productObj) => {
           return (
-            <tr className="border-b-[1px] border-black">
+            <tr key={productObj.productId} className="border-b-[1px] border-black">
               <td>{productObj.product.name}</td>
               <td>{productObj.quantity}</td>
               <td>{productObj.product.price}</td>

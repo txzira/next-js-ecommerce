@@ -56,7 +56,7 @@ export function WalletTypeList({
         {!isLoading ? (
           walletTypesData.walletTypes.map((type) => {
             return (
-              <div className="grid grid-cols-1 hover:bg-white cursor-pointer" onClick={() => setWalletType(type)}>
+              <div key={type.id} className="grid grid-cols-1 hover:bg-white cursor-pointer" onClick={() => setWalletType(type)}>
                 {type.name}
               </div>
             );
@@ -169,7 +169,7 @@ export function WalletAddressForm({
         <select value={walletTypeName} onChange={(event) => setWalletType(event.target.value)}>
           {walletTypes.map((walletType) => {
             return (
-              <option id={walletType.id.toString()} value={walletType.name}>
+              <option key={walletType.id} id={walletType.id.toString()} value={walletType.name}>
                 {walletType.name}
               </option>
             );
@@ -311,7 +311,7 @@ function WalletAddressInfo({
           <select value={formWallet.type.name} onChange={(event) => setWalletType(event.target.value)}>
             {walletTypes.map((type) => {
               return (
-                <option id={type.id.toString()} value={type.name}>
+                <option key={type.id} id={type.id.toString()} value={type.name}>
                   {type.name}
                 </option>
               );
@@ -382,7 +382,7 @@ function WalletAddressInfo({
       return function cleanup() {
         document.body.removeEventListener("keydown", closeOnEscKeyDown);
       };
-    }, []);
+    });
 
     return (
       <div

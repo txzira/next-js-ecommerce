@@ -115,19 +115,26 @@ export const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password === confirmPassword) {
-      await fetch("/api/auth/signup", {
+      const data = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password, name }),
       });
+      const response = await data.json();
+      toast.success(response.message);
+      router.push("/auth/login");
     } else {
       //error passwords do not match
+      toast.error("Passwords do not match");
+      setPassword("");
+      setConfirmPassword("");
     }
   };
 
