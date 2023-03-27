@@ -214,7 +214,7 @@ export function WalletAddressList({
         </div>
         {walletAddresses.map((wallet) => {
           return (
-            <div className="grid grid-cols-2 cursor-pointer hover:bg-white" onClick={() => setWalletAddress(wallet)}>
+            <div key={wallet.id} className="grid grid-cols-2 cursor-pointer hover:bg-white" onClick={() => setWalletAddress(wallet)}>
               <div>{wallet.address}</div>
               <div className="grid grid-cols-2">
                 <div>{wallet.type.name}</div>

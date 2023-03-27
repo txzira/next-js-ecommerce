@@ -99,7 +99,7 @@ export const LoginForm = () => {
         </FormItem>
         <FormButton>Login</FormButton>
         <div>
-          Don't have an account yet?{" "}
+          Don&apos;t have an account yet?{" "}
           <Link href="/auth/signup" className="text-blue-800 underline">
             Create an account
           </Link>
