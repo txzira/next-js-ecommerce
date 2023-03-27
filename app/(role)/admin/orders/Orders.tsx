@@ -69,19 +69,21 @@ export function OrderDetails({
 }) {
   useEffect(() => {
     setApproved(order.approved);
+    order.trackingNumber === null ? setTrackingNumber("") : setTrackingNumber(order.trackingNumber);
   }, [order]);
   const [show, setShow] = useState(false);
-
+  const [trackingNumber, setTrackingNumber] = useState("");
   const [approved, setApproved] = useState<boolean>(false);
-
-  async function handleApproval(event) {
+  console.log(order);
+  console.log(trackingNumber);
+  async function saveOrder(event) {
     event.preventDefault();
-    const data = await fetch("/admin/orders/approve-order", {
+    const data = await fetch("/admin/orders/save-order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderId: order.id, approved }),
+      body: JSON.stringify({ orderId: order.id, approved, trackingNumber }),
     });
     const response = await data.json();
     mutate();
@@ -89,6 +91,21 @@ export function OrderDetails({
   }
   return order ? (
     <div>
+      <div>
+        <h1>Customer Information</h1>
+        <div>
+          <div>{order.customer.email}</div>
+          <div>{order.customer.firstName}</div>
+          <div>{order.customer.lastName}</div>
+        </div>
+      </div>
+      <div>
+        <h1>Shipping</h1>
+        <div>
+          <label>Tracking Number</label>
+          <input type="text" value={trackingNumber} onChange={(event) => setTrackingNumber(event.target.value)} />
+        </div>
+      </div>
       <span>Products</span>
       <div className="flex flex-col  items-center">
         <ProductTable order={order} />
@@ -106,7 +123,7 @@ export function OrderDetails({
         <button
           type="button"
           className={`bg-blue-700 text-white rounded-full px-3 my-5 active:border-black active:border-2`}
-          onClick={(event) => handleApproval(event)}
+          onClick={(event) => saveOrder(event)}
         >
           Save
         </button>
