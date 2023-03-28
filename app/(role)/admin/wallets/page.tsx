@@ -21,7 +21,6 @@ export default function WalletPage() {
     isLoading: walletAdressesIsLoading,
     mutate: walletAddressesMutate,
   } = useSWR("/admin/wallets/get-wallet-addresses", fetcher);
-
   return (
     <div className="h-full">
       <h1 className="text-3xl font-bold">Wallets</h1>
@@ -39,17 +38,21 @@ export default function WalletPage() {
         <div className=" border-2 border-black px-10 pt-5 pb-10 ">
           <h1 className="text-2xl">Wallet Addresses</h1>
           {!walletTypesIsLoading ? (
-            <WalletAddressForm walletTypes={walletTypesData.walletTypes} walletAddressesMutate={walletAddressesMutate} />
+            walletTypesData.walletTypes.length > 0 ? (
+              <WalletAddressForm walletTypes={walletTypesData.walletTypes} walletAddressesMutate={walletAddressesMutate} />
+            ) : null
           ) : (
             <Loader />
           )}
           <div className="border-b-[1px] border-gray-400 my-5"></div>
           {!walletAdressesIsLoading && !walletTypesIsLoading ? (
-            <WalletAddressList
-              walletAddresses={walletAddressesData.walletAddress}
-              walletAddressesMutate={walletAddressesMutate}
-              walletTypes={walletTypesData.walletTypes}
-            />
+            walletAddressesData && walletTypesData ? (
+              <WalletAddressList
+                walletAddresses={walletAddressesData.walletAddress}
+                walletAddressesMutate={walletAddressesMutate}
+                walletTypes={walletTypesData.walletTypes}
+              />
+            ) : null
           ) : (
             <Loader />
           )}

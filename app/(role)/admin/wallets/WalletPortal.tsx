@@ -54,13 +54,15 @@ export function WalletTypeList({
           <div>Wallet Type Name</div>
         </div>
         {!isLoading ? (
-          walletTypesData.walletTypes.map((type) => {
-            return (
-              <div key={type.id} className="grid grid-cols-1 hover:bg-white cursor-pointer" onClick={() => setWalletType(type)}>
-                {type.name}
-              </div>
-            );
-          })
+          walletTypesData ? (
+            walletTypesData.walletTypes.map((type) => {
+              return (
+                <div key={type.id} className="grid grid-cols-1 hover:bg-white cursor-pointer" onClick={() => setWalletType(type)}>
+                  {type.name}
+                </div>
+              );
+            })
+          ) : null
         ) : (
           <div>
             <Loader />
@@ -122,8 +124,8 @@ export function WalletAddressForm({
   walletAddressesMutate: KeyedMutator<any>;
 }) {
   const [walletAddress, setWalletAddress] = useState("");
-  const [walletTypeId, setWalletTypeId] = useState(walletTypes[0].id);
-  const [walletTypeName, setWalletTypeName] = useState(walletTypes[0].name);
+  const [walletTypeId, setWalletTypeId] = useState<number>();
+  const [walletTypeName, setWalletTypeName] = useState<string>();
 
   const setWalletType = (name: string) => {
     let id;
@@ -152,6 +154,10 @@ export function WalletAddressForm({
       toast.success(response.message);
     }
   };
+  useEffect(() => {
+    if (walletTypes) setWalletTypeId(walletTypes[0].id);
+    setWalletTypeName(walletTypes[0].name);
+  }, [walletTypes]);
 
   return (
     <form className="flex flex-row items-center">

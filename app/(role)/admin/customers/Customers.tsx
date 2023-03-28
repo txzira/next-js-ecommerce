@@ -26,18 +26,20 @@ export function CustomerTable({
         <div className="py-3">Verified</div>
       </div>
       {!isLoading ? (
-        data.customers.map((customer) => {
-          return (
-            <div key={customer.id} className="grid grid-cols-6 hover:bg-white" onClick={() => setCustomer(customer)}>
-              <div className="py-2">{customer.id}</div>
-              <div className="py-2">{customer.email}</div>
-              <div className="py-2">{customer.firstName}</div>
-              <div className="py-2">{customer.lastName}</div>
-              <div className="py-2">{customer.role}</div>
-              <div className="py-2">{customer.verified ? "yes" : "no"}</div>
-            </div>
-          );
-        })
+        data ? (
+          data.customers.map((customer) => {
+            return (
+              <div key={customer.id} className="grid grid-cols-6 hover:bg-white" onClick={() => setCustomer(customer)}>
+                <div className="py-2">{customer.id}</div>
+                <div className="py-2">{customer.email}</div>
+                <div className="py-2">{customer.firstName}</div>
+                <div className="py-2">{customer.lastName}</div>
+                <div className="py-2">{customer.role}</div>
+                <div className="py-2">{customer.verified ? "yes" : "no"}</div>
+              </div>
+            );
+          })
+        ) : null
       ) : (
         <div className="flex justify-center py-5">
           <Loader />
