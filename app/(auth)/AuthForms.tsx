@@ -120,6 +120,7 @@ export const SignupForm = () => {
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password === confirmPassword) {
+      toast.loading("Loading...");
       const data = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -128,10 +129,17 @@ export const SignupForm = () => {
         body: JSON.stringify({ email, password, name }),
       });
       const response = await data.json();
-      toast.success(response.message);
-      router.push("/auth/login");
+      toast.dismiss();
+      if (data.status === 200) {
+        toast.success(response.message);
+        router.push("/auth/login");
+      } else {
+        toast.error(response.message);
+      }
     } else {
       //error passwords do not match
+      toast.dismiss();
+
       toast.error("Passwords do not match");
       setPassword("");
       setConfirmPassword("");

@@ -35,7 +35,7 @@ export default function Navbar() {
       {status === "authenticated" ? <NavLink href="/user/account">Account</NavLink> : null}
       {status === "authenticated" ? (
         <button className="h-full px-4 hover:bg-white hover:text-black" onClick={() => signOut()}>
-          sign out
+          Sign Out
         </button>
       ) : null}
       {status === "unauthenticated" ? <NavLink href="/auth/login">Login</NavLink> : null}

@@ -8,13 +8,25 @@ import { KeyedMutator } from "swr";
 
 export function CustomerTable({
   setCustomer,
+  setCursor,
   data,
   isLoading,
+  mutate,
 }: {
   setCustomer: React.Dispatch<React.SetStateAction<User>>;
+  setCursor: React.Dispatch<React.SetStateAction<number>>;
   data: any;
   isLoading: boolean;
+  mutate: KeyedMutator<any>;
 }) {
+  useEffect(() => {
+    if (data) {
+      console.log(data.customers[data.customers.length - 1].id);
+      setCursor(data.customers[data.customers.length - 1].id);
+      mutate();
+    }
+  }, [data]);
+
   return (
     <div className="grid border-2 relative border-black text-center">
       <div className="grid grid-cols-6 bg-black text-white font-bold">

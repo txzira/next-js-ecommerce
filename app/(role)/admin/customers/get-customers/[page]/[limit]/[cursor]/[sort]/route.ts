@@ -7,13 +7,14 @@ export async function GET(request: NextRequest, context: { params }) {
     const page = Number(context.params.page);
     const limit = Number(context.params.limit);
     const sort = context.params.sort;
+    const cursor = Number(context.params.cursor);
 
     // console.log({ page, limit, sort });
     let customers = await prisma.user.findMany({
       take: Number(limit),
       ...(page === 0 && { skip: 0 }),
       ...(page !== 0 && { skip: 1 }),
-      // ...(cursorId && { cursor: { id: cursorId } }),
+      // ...(cursor && { cursor: { id: cursor } }),
       orderBy: { id: sort },
     });
     customers = exclude(customers, ["password"]);
