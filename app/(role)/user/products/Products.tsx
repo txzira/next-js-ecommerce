@@ -37,7 +37,17 @@ function Product({ product }) {
   );
 }
 
-export function ProductTable() {
+export function ProductTable({
+  wallets,
+}: {
+  wallets: {
+    id: number;
+    address: string;
+    type: {
+      name: string;
+    };
+  }[];
+}) {
   const [image, setImage] = useState<any>();
   const [imageName, setImageName] = useState("");
   const { data: session, status } = useSession();
@@ -91,31 +101,65 @@ export function ProductTable() {
   }
 
   return (
-    <form className="flex flex-col w-2/5 items-center mx-auto justify-center gap-4" id="order" onSubmit={submitForm}>
-      <table className="w-full table-fixed border-black border-2">
-        <tr>
-          <th className="px-2 text-center bg-black text-white">Name</th>
-          <th className="px-2 text-center bg-black text-white">Price</th>
-          <th className="px-2 text-center bg-black text-white">Quanity</th>
-        </tr>
-        {data
-          ? data.products.map((product) => {
-              return <Product key={product.id} product={product} />;
+    <>
+      <h1 className="text-center py-6 text-2xl font-semibold">Products</h1>
+      <form className="flex flex-col w-2/5 items-center mx-auto justify-center gap-4" id="order" onSubmit={submitForm}>
+        <table className="w-full table-fixed border-black border-2">
+          <tr>
+            <th className="px-2 text-center bg-black text-white">Name</th>
+            <th className="px-2 text-center bg-black text-white">Price</th>
+            <th className="px-2 text-center bg-black text-white">Quanity</th>
+          </tr>
+          {data
+            ? data.products.map((product) => {
+                return <Product key={product.id} product={product} />;
+              })
+            : null}
+          <tr></tr>
+        </table>
+        <div>
+          <h2 className="text-2xl font-semibold">Payment</h2>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold">Wallet Addresses</h3>
+          {wallets.length > 0 ? (
+            wallets.map((wallet) => {
+              return (
+                <div key={wallet.id} className="flex flex-row gap-6">
+                  <div>{wallet.type.name}</div>
+                  <div>{wallet.address} </div>
+                </div>
+              );
             })
-          : null}
-        <tr></tr>
-      </table>
-      <span>
-        <u>Proof of Payment Image</u>
-      </span>
-      <div>
-        <label htmlFor="productImage">Select an Image:</label>
-        <input type="file" id="productImage" onChange={handleImage} />
-      </div>
-      {image ? <Image id="preview" src={image} alt="payment preview" width={250} height={100} /> : null}
-      <button className="bg-blue-900 text-white rounded-2xl px-3 py-1" type="submit">
-        Submit Order
-      </button>
-    </form>
+          ) : (
+            <div>Admin has not set wallet address(es)</div>
+          )}
+          <span className="text-sm">
+            Note: Send payment to one of these addresses. Screenshot the transaction between your wallet address and one of these addresses
+            and attach it as your proof of payment image.
+          </span>
+        </div>
+        <span>
+          <u className="font-semibold">Crypto Proof of Payment Image</u>
+        </span>
+        <div>
+          <label htmlFor="productImage">Select an Image:</label>
+          <input type="file" id="productImage" onChange={handleImage} />
+        </div>
+        {image ? <Image id="preview" src={image} alt="payment preview" width={250} height={100} /> : null}
+        <div className="w-full">
+          <h3 className="text-lg font-semibold">Cash Address</h3>
+          <span>If you wish to pay with cash, send it to the address below.</span>
+          <div>
+            <p>Fabian P.</p>
+            <p>325 N Larchmont Blvd, Los Angeles, CA 90004</p>
+          </div>
+        </div>
+        <p>ORDERS WILL NOT SHIP UNTIL PAYMENT IS RECEIVED/VERIFIED.</p>
+        <button className="bg-blue-900 text-white rounded-2xl px-3 py-1" type="submit">
+          Submit Order
+        </button>
+      </form>
+    </>
   );
 }

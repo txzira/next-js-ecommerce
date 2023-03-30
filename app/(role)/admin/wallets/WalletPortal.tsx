@@ -11,7 +11,7 @@ export function WalletTypeForm({ walletTypesMutate }: { walletTypesMutate: Keyed
     if (walletType === "") {
       toast.error("Cannot add empty wallet type.");
     } else {
-      const data = await fetch("/admin/add-wallet-type", {
+      const data = await fetch("/admin/wallets/add-wallet-type", {
         method: "POST",
         body: JSON.stringify({ walletType }),
       });

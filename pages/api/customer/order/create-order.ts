@@ -23,16 +23,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const orderProducts = await getOrderProducts(cart);
       const total = await getOrderTotal(cart);
-      const imageObj = await uploadImage(imagePath, imageName);
+      if (imagePath && imageName) {
+        const imageObj = await uploadImage(imagePath, imageName);
 
-      await prisma.order.create({
-        data: {
-          customer: { connect: { id: Number(customerId) } },
-          products: { createMany: { data: orderProducts } },
-          amount: total,
-          image: { create: { assetId: imageObj.asset_id, publicId: imageObj.public_id, url: imageObj.url } },
-        },
-      });
+        await prisma.order.create({
+          data: {
+            customer: { connect: { id: Number(customerId) } },
+            products: { createMany: { data: orderProducts } },
+            amount: total,
+            image: { create: { assetId: imageObj.asset_id, publicId: imageObj.public_id, url: imageObj.url } },
+          },
+        });
+      } else {
+        await prisma.order.create({
+          data: {
+            customer: { connect: { id: Number(customerId) } },
+            products: { createMany: { data: orderProducts } },
+            amount: total,
+            isCash: true,
+          },
+        });
+      }
       res.status(200).json({ message: `Order created successfully!`, status: "ok" });
     } catch (error) {
       if (error.code === "P2002") {

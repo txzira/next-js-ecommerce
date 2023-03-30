@@ -55,8 +55,9 @@ model Order {
   date       DateTime @default(now())
   customerId Int
   customer   User      @relation(fields: [customerId], references: [id])
-  image    Image   @relation(fields: [imageId], references: [assetId])
-  imageId  String
+  image    Image?   @relation(fields: [imageId], references: [assetId])
+  imageId  String?
+  isCash Boolean @default(false)
   approved Boolean @default(false)
   trackingNumber String?
   @@index([customerId])

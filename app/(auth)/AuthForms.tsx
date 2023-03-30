@@ -83,7 +83,7 @@ export const LoginForm = () => {
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/insertimagehere.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <Image src="/images/logo.JPEG" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         <h1 className="text-white font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Login</h1>
         <FormItem>
           <FormIcon>
@@ -149,7 +149,7 @@ export const SignupForm = () => {
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/insertimagehere.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <Image src="/images/logo.JPEG" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         <h1 className="text-white font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Registration</h1>
         <FormItem>
           <FormIcon>

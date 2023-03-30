@@ -1,7 +1,5 @@
 import { User } from "@prisma/client";
-import { verify } from "crypto";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Loader from "app/Loader";
 import { KeyedMutator } from "swr";
@@ -9,64 +7,115 @@ import { KeyedMutator } from "swr";
 export function CustomerTable({
   setCustomer,
   setCursor,
+  setLimit,
   data,
   isLoading,
-  mutate,
+  limit,
 }: {
   setCustomer: React.Dispatch<React.SetStateAction<User>>;
   setCursor: React.Dispatch<React.SetStateAction<number>>;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
   data: any;
   isLoading: boolean;
-  mutate: KeyedMutator<any>;
+  limit: number;
 }) {
+  const [pages, setPages] = useState<number>();
+  const [page, setPage] = useState<number>(1);
+
   useEffect(() => {
-    if (data) {
-      console.log(data.customers[data.customers.length - 1].id);
-      setCursor(data.customers[data.customers.length - 1].id);
-      mutate();
+    if (data?.count) {
+      setPages(Math.ceil(Number(data.count) / Math.abs(limit)));
     }
   }, [data]);
+  const changeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    event.preventDefault();
+    setLimit(Number(event.target.value));
+    setPage(1);
+    setCursor(0);
+  };
+
+  const prevPage = () => {
+    if (page > 1) {
+      setCursor(data.customers[0].id);
+      if (limit > 0) {
+        setLimit(limit * -1);
+      }
+
+      setPage(page - 1);
+      setCustomer(null);
+    } else {
+      toast.error("Request page out of bounds");
+    }
+  };
+  const nextPage = () => {
+    if (page < pages) {
+      setCursor(data.customers[data.customers.length - 1].id);
+      if (limit < 0) {
+        setLimit(limit * -1);
+      }
+      setPage(page + 1);
+      setCustomer(null);
+    } else {
+      toast.error("Request page out of bounds");
+    }
+  };
 
   return (
-    <div className="grid border-2 relative border-black text-center">
-      <div className="grid grid-cols-6 bg-black text-white font-bold">
-        <div className="py-3">Id</div>
-        <div className="py-3">Email</div>
-        <div className="py-3">First Name</div>
-        <div className="py-3">Last Name</div>
-        <div className="py-3">Role</div>
-        <div className="py-3">Verified</div>
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-between items-center">
+        <h1 className="text-4xl font-bold pb-5">Customer List</h1>
+        <select onChange={(event) => changeLimit(event)}>
+          <option value="10" selected={true}>
+            10
+          </option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
       </div>
-      {!isLoading ? (
-        data ? (
-          data.customers.map((customer) => {
-            return (
-              <div key={customer.id} className="grid grid-cols-6 hover:bg-white" onClick={() => setCustomer(customer)}>
-                <div className="py-2">{customer.id}</div>
-                <div className="py-2">{customer.email}</div>
-                <div className="py-2">{customer.firstName}</div>
-                <div className="py-2">{customer.lastName}</div>
-                <div className="py-2">{customer.role}</div>
-                <div className="py-2">{customer.verified ? "yes" : "no"}</div>
+      <div className="flex flex-col justify-between border-2 border-black text-center h-[500px]  ">
+        <div>
+          <div className="grid grid-cols-6 bg-black text-white font-bold h-12">
+            <div className="py-3">Id</div>
+            <div className="py-3">Email</div>
+            <div className="py-3">First Name</div>
+            <div className="py-3">Last Name</div>
+            <div className="py-3">Role</div>
+            <div className="py-3">Verified</div>
+          </div>
+          <div className="h-[400px] overflow-y-scroll">
+            {!isLoading ? (
+              data ? (
+                data.customers.map((customer) => {
+                  return (
+                    <div key={customer.id} className="grid grid-cols-6 hover:bg-white h-10 " onClick={() => setCustomer(customer)}>
+                      <div className="py-2">{customer.id}</div>
+                      <div className="py-2">{customer.email}</div>
+                      <div className="py-2">{customer.firstName}</div>
+                      <div className="py-2">{customer.lastName}</div>
+                      <div className="py-2">{customer.role}</div>
+                      <div className="py-2">{customer.verified ? "yes" : "no"}</div>
+                    </div>
+                  );
+                })
+              ) : null
+            ) : (
+              <div className="flex justify-center py-5">
+                <Loader />
               </div>
-            );
-          })
-        ) : null
-      ) : (
-        <div className="flex justify-center py-5">
-          <Loader />
+            )}
+          </div>
         </div>
-      )}
-      <div className="grid grid-cols-6">
-        <div className="py-2">
-          <button>&lt;-</button>
-        </div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div className="py-2">
-          <button>-&gt;</button>
+        <div className="grid grid-cols-3 border-t-[1px] items-center border-black h-10">
+          <div className="py-2">{page > 1 ? <button onClick={() => prevPage()}>&lt;-</button> : null}</div>
+          {pages ? (
+            <div>
+              Page {page} of {pages}
+            </div>
+          ) : (
+            <div>Page - of -</div>
+          )}
+          <div className="py-2">{page < pages ? <button onClick={() => nextPage()}>-&gt;</button> : null}</div>
         </div>
       </div>
     </div>
@@ -103,7 +152,6 @@ export function CustomerDetails({
     toast.success(response.message);
   };
 
-  console.log(customer);
   return customer ? (
     <div>
       {show && <DeleteConfirmationModal setShow={setShow} mutate={mutate} customerId={customer.id} />}
