@@ -27,7 +27,7 @@ export function OrderTable({
     if (data?.count) {
       setPages(Math.ceil(Number(data.count) / Math.abs(limit)));
     }
-  }, [data]);
+  }, [data, limit]);
 
   const changeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();

@@ -3,7 +3,7 @@ import { Order, orderProduct, Product, Image } from "@prisma/client";
 import React, { useState } from "react";
 import { AccountInformation, AccountHistory, OrderDetails } from "./AccountHistory";
 
-export default function page() {
+export default function AccountPage() {
   const [order, setOrder] = useState<
     Order & {
       image: Image;
