@@ -14,11 +14,11 @@ export function AccountInformation() {
       <div className="flex flex-row justify-between">
         <div>
           <h2 className="text-lg font-semibold">Full Name</h2>
-          <div>{session.data.user.name}</div>
+          <div>{session.data?.user.name}</div>
         </div>
         <div>
           <h2 className="text-lg font-semibold">Email</h2>
-          <div>{session.data.user.email}</div>
+          <div>{session.data?.user.email}</div>
         </div>
       </div>
     </div>
