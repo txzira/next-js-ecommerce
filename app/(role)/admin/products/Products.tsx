@@ -124,7 +124,7 @@ export function ProductDetails({
 
   useEffect(() => {
     setChecker(productsAreEqual(product, formProduct));
-  }, [formProduct]);
+  }, [formProduct, product]);
   useEffect(() => {
     setFormProduct(product);
     setActive(product.active);

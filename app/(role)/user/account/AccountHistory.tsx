@@ -55,7 +55,7 @@ export function AccountHistory({
     if (data?.count) {
       setPages(Math.ceil(Number(data.count) / Math.abs(limit)));
     }
-  }, [data]);
+  }, [data, limit]);
   const changeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     setLimit(Number(event.target.value));
@@ -207,7 +207,7 @@ export function OrderDetails({
           </div>
           {order.products.map((orderProduct) => {
             return (
-              <div className="grid grid-cols-4 h-10">
+              <div key={orderProduct.productId} className="grid grid-cols-4 h-10">
                 <div className="py-2">{orderProduct.product.name}</div>
                 <div className="py-2">{orderProduct.quantity}</div>
                 <div className="py-2">${orderProduct.pricePaidPer}</div>
