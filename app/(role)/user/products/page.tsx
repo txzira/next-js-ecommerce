@@ -9,7 +9,7 @@ export default async function ProductsPage() {
   });
 
   return (
-    <div>
+    <div className="h-full">
       <ProductTable wallets={wallets} />
     </div>
   );

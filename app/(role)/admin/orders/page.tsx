@@ -18,7 +18,7 @@ export default function AdminOrdersPage() {
       <div className="border-l-[1px] border-slate-600"></div>
       <div className="flex flex-col">
         <h1 className="text-4xl font-bold pb-5">Order Information</h1>
-        {order ? <OrderDetails order={order} mutate={mutate} /> : <div>Click on an order for more information.</div>}
+        {order ? <OrderDetails order={order} mutate={mutate} setOrder={setOrder} /> : <div>Click on an order for more information.</div>}
       </div>
     </div>
   );

@@ -124,13 +124,11 @@ export function OrderTable({
 
 export function OrderDetails({
   order,
+  setOrder,
   mutate,
 }: {
-  order: Order & {
-    image: Img;
-    products: (orderProduct & { product: Product })[];
-    customer: User;
-  };
+  order: OrderSummary;
+  setOrder: React.Dispatch<OrderSummary>;
   mutate: KeyedMutator<any>;
 }) {
   useEffect(() => {
@@ -155,6 +153,7 @@ export function OrderDetails({
   }
   return order ? (
     <div>
+      {show ? <DeleteConfirmationModal orderId={order.id} mutate={mutate} setShow={setShow} setOrder={setOrder} /> : null}
       <div>
         <h2 className="text-2xl font-semibold underline">Customer Information</h2>
         <div>
@@ -212,19 +211,18 @@ export function OrderDetails({
         >
           Save
         </button>
+        <button
+          type="button"
+          className={`bg-red-700 text-white rounded-full px-3 my-5 active:border-black active:border-2`}
+          onClick={() => setShow(true)}
+        >
+          Delete
+        </button>
       </div>
     </div>
   ) : null;
 
-  function ProductTable({
-    order,
-  }: {
-    order: Order & {
-      image: Img;
-      products: (orderProduct & { product: Product })[];
-      customer: User;
-    };
-  }) {
+  function ProductTable({ order }: { order: OrderSummary }) {
     return (
       <table className="w-4/5 border-2 border-black text-center my-5">
         <tr className=" bg-black text-white border-2 border-black">
@@ -235,7 +233,7 @@ export function OrderDetails({
         </tr>
         {order.products.map((productObj) => {
           return (
-            <tr key={productObj.productId} className="border-b-[1px] border-black">
+            <tr key={productObj.product.name} className="border-b-[1px] border-black">
               <td>{productObj.product.name}</td>
               <td>{productObj.quantity}</td>
               <td>${productObj.product.price}</td>
@@ -252,17 +250,70 @@ export function OrderDetails({
       </table>
     );
   }
+}
+
+function DeleteConfirmationModal({
+  setShow,
+  orderId,
+  setOrder,
+  mutate,
+}: {
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  orderId: number;
+  setOrder: React.Dispatch<React.SetStateAction<OrderSummary>>;
+  mutate: KeyedMutator<any>;
+}) {
+  const deleteOrder = async (event) => {
+    event.preventDefault();
+    toast.loading("Loading...");
+
+    const data = await fetch(`/admin/orders/delete-order/${orderId}`, {
+      method: "DELETE",
+    });
+    const response = await data.json();
+    toast.dismiss();
+    mutate();
+    setOrder(null);
+    setShow(false);
+    toast.success(response.message);
+  };
 
   function closeOnEscKeyDown(event) {
     if ((event.charCode || event.keyCode) === 27) {
       setShow(false);
     }
   }
-}
+  useEffect(() => {
+    document.body.addEventListener("keydown", closeOnEscKeyDown);
+    return function cleanup() {
+      document.body.removeEventListener("keydown", closeOnEscKeyDown);
+    };
+  });
 
-// useEffect(() => {
-//   document.body.addEventListener("keydown", closeOnEscKeyDown);
-//   return function cleanup() {
-//     document.body.removeEventListener("keydown", closeOnEscKeyDown);
-//   };
-// }, []);
+  return (
+    <div
+      className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4 overflow-x-hidden overflow-y-auto bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
+      onClick={() => setShow(false)}
+    >
+      <div className="relative w-1/3 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
+        <div className=" flex flex-col items-center relative bg-white rounded-lg shadow dark:bg-gray-700 ">
+          <h1 className="text-lg p-2">Are you sure you wanted to delete this order? This action is irreversible and cannot be canceled.</h1>
+          <div className="flex flex-row gap-8 p-2">
+            <button
+              className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
+              onClick={() => setShow(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
+              onClick={(event) => deleteOrder(event)}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

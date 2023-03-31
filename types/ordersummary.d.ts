@@ -1,3 +1,5 @@
+import { Order } from "@prisma/client";
+
 export declare type OrderSummary = Order & {
   products: {
     quantity: number;

@@ -88,7 +88,11 @@ export function CustomerTable({
               data ? (
                 data.customers.map((customer) => {
                   return (
-                    <div key={customer.id} className="grid grid-cols-6 hover:bg-white h-10 " onClick={() => setCustomer(customer)}>
+                    <div
+                      key={customer.id}
+                      className="grid grid-cols-6 hover:bg-white cursor-pointer h-10 "
+                      onClick={() => setCustomer(customer)}
+                    >
                       <div className="py-2">{customer.id}</div>
                       <div className="py-2">{customer.email}</div>
                       <div className="py-2">{customer.firstName}</div>
