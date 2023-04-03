@@ -16,7 +16,7 @@ export default function AccountPage() {
   return (
     <div className="flex flex-col">
       <AccountInformation />
-      <div className="flex flex-row gap-32 h-full">
+      <div className="flex flex-row gap-2 md:gap-32 h-full">
         <AccountHistory order={order} setOrder={setOrder} />
         <div className="border-l-[1px] border-slate-600"></div>
         <div>

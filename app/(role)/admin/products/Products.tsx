@@ -57,7 +57,7 @@ export function ProductTable({
 }) {
   console.log(data);
   return (
-    <div className="grid border-2 relative border-black text-center">
+    <div className="grid border-2 relative border-black text-center w-1/2">
       <div className="grid grid-cols-4 bg-black text-white font-bold">
         <div className="px-2">Id</div>
         <div className="px-2">Name</div>
@@ -131,7 +131,7 @@ export function ProductDetails({
   }, [product]);
 
   return product ? (
-    <form className="flex flex-col items-center ">
+    <form className="flex flex-col items-center  ">
       <div className="flex flex-row">
         <div className="flex flex-col mr-3 gap-2">
           <div className="flex justify-between  gap-2">

@@ -6,16 +6,17 @@ import useSWR from "swr";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Loader from "app/Loader";
 
 function Product({ product }) {
   const [quantity, setQuantity] = useState(0);
   return (
-    <tr>
+    <div className="grid grid-cols-3 text-sm md:text-base">
       <input hidden name="id" value={product.id} />
-      <td className="">
+      <div className="">
         <input className="px-2 w-full text-center bg-inherit focus:outline-none" type="text" name="name" value={product.name} readOnly />
-      </td>
-      <td className="">
+      </div>
+      <div className="">
         <input
           className="px-2 w-full text-center bg-inherit focus:outline-none"
           type="number"
@@ -23,8 +24,8 @@ function Product({ product }) {
           value={product.price}
           readOnly
         />
-      </td>
-      <td className="">
+      </div>
+      <div className="">
         <input
           className="px-2 w-full text-center bg-white border-b-[1px] border-l-[1px]  border-black"
           type="number"
@@ -32,8 +33,8 @@ function Product({ product }) {
           value={quantity}
           onChange={(event) => setQuantity(parseInt(event.target.value))}
         />
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 }
 
@@ -102,21 +103,24 @@ export function ProductTable({
 
   return (
     <>
-      <h1 className="text-center py-6 text-2xl font-semibold">Products</h1>
-      <form className="flex flex-col w-2/5 items-center mx-auto justify-center gap-4" id="order" onSubmit={submitForm}>
-        <table className="w-full table-fixed border-black border-2">
-          <tr>
-            <th className="px-2 text-center bg-black text-white">Name</th>
-            <th className="px-2 text-center bg-black text-white">Price</th>
-            <th className="px-2 text-center bg-black text-white">Quanity</th>
-          </tr>
-          {data
-            ? data.products.map((product) => {
-                return <Product key={product.id} product={product} />;
-              })
-            : null}
-          <tr></tr>
-        </table>
+      <h1 className="text-center py-6 text-base md:text-2xl  font-semibold">Products</h1>
+      <form className="flex flex-col w-5/6 md:w-2/5 items-center mx-auto justify-center gap-4" id="order" onSubmit={submitForm}>
+        <div className="w-full border-black border-2">
+          <div className="grid grid-cols-3 font-bold text-sm md:text-base text-center bg-black text-white">
+            <div className="md:px-2">Name</div>
+            <div className="md:px-2">Price</div>
+            <div className="md:px-2">Quanity</div>
+          </div>
+          {!isLoading ? (
+            data.products.map((product) => {
+              return <Product key={product.id} product={product} />;
+            })
+          ) : (
+            <div>
+              <Loader />
+            </div>
+          )}
+        </div>
         <div>
           <h2 className="text-2xl font-semibold">Payment</h2>
         </div>
@@ -143,14 +147,16 @@ export function ProductTable({
           <u className="font-semibold">Crypto Proof of Payment Image</u>
         </span>
         <div>
-          <label htmlFor="productImage">Select an Image:</label>
+          <label htmlFor="productImage" className="text-sm">
+            Select an Image:
+          </label>
           <input type="file" id="productImage" onChange={handleImage} />
         </div>
         {image ? <Image id="preview" src={image} alt="payment preview" width={250} height={100} /> : null}
         <div className="w-full">
           <h3 className="text-lg font-semibold">Cash Address</h3>
-          <span>If you wish to pay with cash, send it to the address below.</span>
-          <div>
+          <span className="text-sm">If you wish to pay with cash, send it to the address below.</span>
+          <div className="text-sm">
             <p>Fabian P.</p>
             <p>325 N Larchmont Blvd, Los Angeles, CA 90004</p>
           </div>

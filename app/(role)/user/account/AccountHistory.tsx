@@ -90,9 +90,9 @@ export function AccountHistory({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-1/3">
       <div className="flex flex-row justify-between items-center">
-        <h1 className="text-4xl font-bold pb-5">Order List</h1>
+        <h1 className="text-base md:text-4xl font-bold pb-5">Order List</h1>
         <select onChange={(event) => changeLimit(event)}>
           <option value="10" selected={true}>
             10
@@ -102,15 +102,15 @@ export function AccountHistory({
           <option value="100">100</option>
         </select>
       </div>
-      <div className="border-2 border-black text-center h-[500px]">
-        <div>
-          <div className="grid grid-cols-6 bg-black text-white h-12 font-bold">
-            <div className="p-3">Order #</div>
-            <div className="p-3">Date</div>
-            <div className="p-3">Total</div>
-            <div className="p-3">Order Status</div>
-            <div className="p-3">Shipping</div>
-            <div className="p-3">Tracking #</div>
+      <div className="container border-2 border-black text-center h-[500px]  w-auto">
+        <div className="">
+          <div className="grid grid-cols-6 bg-black text-white h-12 font-bold items-center ">
+            <div className="md:px-1">Order #</div>
+            <div className="md:px-1">Date</div>
+            <div className="md:px-1">Total</div>
+            <div className="md:px-1">Order Status</div>
+            <div className="md:px-1">Shipping</div>
+            <div className="md:px-1">Tracking#</div>
           </div>
           <div className="h-[400px] overflow-y-scroll">
             {!isLoading ? (
@@ -124,7 +124,7 @@ export function AccountHistory({
                 ) => {
                   return (
                     <div
-                      className="grid grid-cols-6 hover:bg-white cursor-pointer h-10 items-center"
+                      className="grid grid-cols-6 text-sm hover:bg-white cursor-pointer h-10 items-center"
                       key={order.id}
                       onClick={() => setOrder(order)}
                     >
