@@ -1,4 +1,4 @@
-import { Order } from "@prisma/client";
+import { Order, ShippingAddress } from "@prisma/client";
 import prisma from "lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,6 +24,7 @@ export async function GET(request: NextRequest, context: { params }) {
       image: {
         url: string;
       };
+      shipping: ShippingAddress;
     })[];
     const count = await prisma.order.count();
     if (cursor === 0) {
@@ -32,6 +33,7 @@ export async function GET(request: NextRequest, context: { params }) {
           customer: { select: { firstName: true, lastName: true, email: true } },
           image: { select: { url: true } },
           products: { select: { quantity: true, product: { select: { name: true, price: true } } } },
+          shipping: true,
         },
         take: limit,
         orderBy: { id: sort },
@@ -42,6 +44,7 @@ export async function GET(request: NextRequest, context: { params }) {
           customer: { select: { firstName: true, lastName: true, email: true } },
           image: { select: { url: true } },
           products: { select: { quantity: true, product: { select: { name: true, price: true } } } },
+          shipping: true,
         },
         take: limit,
         skip: 1,

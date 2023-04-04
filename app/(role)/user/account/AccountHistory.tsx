@@ -1,4 +1,4 @@
-import { Order, orderProduct, Product, Image as Img } from "@prisma/client";
+import { Order, orderProduct, Product, Image as Img, ShippingAddress } from "@prisma/client";
 import Loader from "app/Loader";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -33,6 +33,7 @@ export function AccountHistory({
     products: (orderProduct & {
       product: Product;
     })[];
+    shipping: ShippingAddress;
   };
   setOrder: React.Dispatch<
     React.SetStateAction<
@@ -40,6 +41,7 @@ export function AccountHistory({
         products: (orderProduct & {
           product: Product;
         })[];
+        shipping: ShippingAddress;
       }
     >
   >;
@@ -120,6 +122,7 @@ export function AccountHistory({
                     products: (orderProduct & {
                       product: Product;
                     })[];
+                    shipping: ShippingAddress;
                   }
                 ) => {
                   return (
@@ -170,6 +173,7 @@ export function OrderDetails({
     products: (orderProduct & {
       product: Product;
     })[];
+    shipping: ShippingAddress;
   };
   setOrder: React.Dispatch<
     React.SetStateAction<
@@ -178,6 +182,7 @@ export function OrderDetails({
         products: (orderProduct & {
           product: Product;
         })[];
+        shipping: ShippingAddress;
       }
     >
   >;
@@ -186,6 +191,19 @@ export function OrderDetails({
 
   return (
     <div>
+      <div className="flex flex-col">
+        <h2 className="font-semibold text-lg">Full Name</h2>
+        <div>
+          {order.shipping.firstName} {order.shipping.lastName}
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <label className="text-lg font-semibold">Address</label>
+        <div>
+          {order.shipping.streetAddress} {order.shipping.streetAddress2} {order.shipping.city}, {order.shipping.state}{" "}
+          {order.shipping.zipCode}
+        </div>
+      </div>
       <div className="flex flex-row justify-between">
         <div>
           <h2 className="font-semibold text-lg">Order Date</h2>

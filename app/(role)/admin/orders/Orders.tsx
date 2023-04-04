@@ -175,6 +175,19 @@ export function OrderDetails({
       </div>
       <div>
         <h2 className="text-2xl font-semibold underline mb-2">Shipping</h2>
+        <div className="flex flex-col">
+          <label className="text-lg font-semibold">Full Name</label>
+          <span>
+            {order.shipping.firstName} {order.shipping.lastName}
+          </span>
+        </div>
+        <div className="flex flex-col">
+          <label className="text-lg font-semibold">Address</label>
+          <span>
+            {order.shipping.streetAddress} {order.shipping.streetAddress2} {order.shipping.city}, {order.shipping.state}{" "}
+            {order.shipping.zipCode}
+          </span>
+        </div>
         <div className="flex flex-col w-64">
           <label className="text-lg font-semibold">Tracking Number</label>
           <input

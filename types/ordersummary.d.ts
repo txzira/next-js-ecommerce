@@ -1,4 +1,4 @@
-import { Order } from "@prisma/client";
+import { Order, ShippingAddress } from "@prisma/client";
 
 export declare type OrderSummary = Order & {
   products: {
@@ -16,4 +16,5 @@ export declare type OrderSummary = Order & {
   image: {
     url: string;
   };
+  shipping: ShippingAddress;
 };

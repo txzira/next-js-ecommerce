@@ -1,5 +1,5 @@
 "use client";
-import { Order, orderProduct, Product, Image } from "@prisma/client";
+import { Order, orderProduct, Product, Image, ShippingAddress } from "@prisma/client";
 import React, { useState } from "react";
 import { AccountInformation, AccountHistory, OrderDetails } from "./AccountHistory";
 
@@ -10,6 +10,7 @@ export default function AccountPage() {
       products: (orderProduct & {
         product: Product;
       })[];
+      shipping: ShippingAddress;
     }
   >();
 

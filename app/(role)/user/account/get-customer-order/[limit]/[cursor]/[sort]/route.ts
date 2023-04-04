@@ -1,4 +1,4 @@
-import { Order, orderProduct, Product, Image } from "@prisma/client";
+import { Order, orderProduct, Product, Image, ShippingAddress } from "@prisma/client";
 import prisma from "lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,13 +16,14 @@ export async function GET(request: NextRequest, context: { params }) {
       products: (orderProduct & {
         product: Product;
       })[];
+      shipping: ShippingAddress;
     })[];
     if (cursor === 0) {
       userOrders = await prisma.order.findMany({
         where: { customerId: session.user.id },
         take: limit,
         orderBy: { id: sort },
-        include: { products: { include: { product: true } }, image: true },
+        include: { products: { include: { product: true } }, image: true, shipping: true },
       });
     } else {
       userOrders = await prisma.order.findMany({
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest, context: { params }) {
         skip: 1,
         cursor: { id: cursor },
         orderBy: { id: sort },
-        include: { products: { include: { product: true } }, image: true },
+        include: { products: { include: { product: true } }, image: true, shipping: true },
       });
     }
     return NextResponse.json({ userOrders, count, status: 200 });
