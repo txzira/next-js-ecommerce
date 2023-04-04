@@ -55,9 +55,8 @@ export function ProductTable({
   data: any;
   isLoading: boolean;
 }) {
-  console.log(data);
   return (
-    <div className="grid border-2 relative border-black text-center w-1/2">
+    <div className="grid border-2 relative border-black text-center ">
       <div className="grid grid-cols-4 bg-black text-white font-bold">
         <div className="px-2">Id</div>
         <div className="px-2">Name</div>
@@ -96,7 +95,6 @@ export function ProductDetails({
   const [formProduct, setFormProduct] = useState<Product>(product);
   const [checker, setChecker] = useState<boolean>(productsAreEqual(product, formProduct));
   const [active, setActive] = useState<boolean>(false);
-  // const [show, setShow] = useState<boolean>(false);
 
   const editProduct = async (event) => {
     event.preventDefault();

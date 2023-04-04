@@ -252,13 +252,8 @@ export function ProductTable({
     };
   }[];
 }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
-  const [streetAddress2, setStreetAddress2] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
+  const initialShipping = { firstName: "", lastName: "", streetAddress: "", streetAddress2: "", city: "", state: "AL", zipCode: "" };
+  const [shipping, setShipping] = useState(initialShipping);
 
   const [image, setImage] = useState<any>();
   const [imageName, setImageName] = useState("");
@@ -288,6 +283,7 @@ export function ProductTable({
     const prices: any = document.getElementsByName("price");
     const quantities: any = document.getElementsByName("quantity");
     const cart = [];
+    toast.loading("Loading...");
     for (let i = 0; i < prices.length; i++) {
       if (quantities[i].value > 0) {
         cart.push({
@@ -304,9 +300,10 @@ export function ProductTable({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ cart, customerId: session.user.id, imagePath: image, imageName: imageName }),
+      body: JSON.stringify({ cart, customerId: session.user.id, imagePath: image, imageName: imageName, shipping }),
     });
     orderResponse = await orderResponse.json();
+    toast.dismiss();
     if (orderResponse.status === "ok") {
       toast.success(orderResponse.message);
       router.push("/");
@@ -343,16 +340,22 @@ export function ProductTable({
               <input
                 required={true}
                 id="firstName"
-                value={firstName}
+                value={shipping.firstName}
                 placeholder="John"
-                onChange={(event) => setFirstName(event.target.value)}
+                onChange={(event) => setShipping({ ...shipping, firstName: event.target.value })}
               />
             </div>
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" placeholder="Smith" htmlFor="lastName">
+              <label className="font-semibold md:text-lg" htmlFor="lastName">
                 Last Name
               </label>
-              <input required={true} id="lastName" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+              <input
+                required={true}
+                id="lastName"
+                value={shipping.lastName}
+                placeholder="Smith"
+                onChange={(event) => setShipping({ ...shipping, lastName: event.target.value })}
+              />
             </div>
           </div>
 
@@ -364,9 +367,9 @@ export function ProductTable({
               <input
                 required={true}
                 id="streetAddress"
-                value={streetAddress}
+                value={shipping.streetAddress}
                 placeholder="123 Rainy St."
-                onChange={(event) => setStreetAddress2(event.target.value)}
+                onChange={(event) => setShipping({ ...shipping, streetAddress: event.target.value })}
               />
             </div>
             <div className="flex flex-col">
@@ -375,9 +378,9 @@ export function ProductTable({
               </label>
               <input
                 id="streetAddress2"
-                value={streetAddress2}
+                value={shipping.streetAddress2}
                 placeholder="Apt. 2"
-                onChange={(event) => setStreetAddress2(event.target.value)}
+                onChange={(event) => setShipping({ ...shipping, streetAddress2: event.target.value })}
               />
             </div>
           </div>
@@ -387,13 +390,19 @@ export function ProductTable({
               <label className="font-semibold md:text-lg" htmlFor="city">
                 City
               </label>
-              <input required={true} id="city" value={city} placeholder="Beckley" onChange={(event) => setCity(event.target.value)} />
+              <input
+                required={true}
+                id="city"
+                value={shipping.city}
+                placeholder="Beckley"
+                onChange={(event) => setShipping({ ...shipping, city: event.target.value })}
+              />
             </div>
             <div className="flex flex-col">
               <label className="font-semibold md:text-lg" htmlFor="state">
                 State
               </label>
-              <select id="state" onChange={(event) => setState(event.target.value)}>
+              <select id="state" onChange={(event) => setShipping({ ...shipping, state: event.target.value })}>
                 {states.map((state) => {
                   return <option value={state.code}>{state.name}</option>;
                 })}
@@ -403,11 +412,17 @@ export function ProductTable({
               <label className="font-semibold md:text-lg" htmlFor="zipCode">
                 Zip
               </label>
-              <input required={true} id="zipCode" value={zip} placeholder="25919" onChange={(event) => setZip(event.target.value)} />
+              <input
+                required={true}
+                id="zipCode"
+                value={shipping.zipCode}
+                placeholder="25919"
+                onChange={(event) => setShipping({ ...shipping, zipCode: event.target.value })}
+              />
             </div>
           </div>
         </div>
-
+        <pre>{JSON.stringify(shipping)}</pre>
         <div>
           <div>
             <h2 className="text-2xl font-semibold text-center">Payment</h2>

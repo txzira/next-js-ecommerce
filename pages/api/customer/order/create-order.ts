@@ -19,7 +19,7 @@ async function getOrderProducts(cart) {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { cart, customerId, imagePath, imageName } = req.body;
+    const { cart, customerId, imagePath, imageName, shipping } = req.body;
     try {
       const orderProducts = await getOrderProducts(cart);
       const total = await getOrderTotal(cart);
@@ -32,6 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             products: { createMany: { data: orderProducts } },
             amount: total,
             image: { create: { assetId: imageObj.asset_id, publicId: imageObj.public_id, url: imageObj.url } },
+            shipping: { create: shipping },
           },
         });
       } else {
@@ -41,6 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             products: { createMany: { data: orderProducts } },
             amount: total,
             isCash: true,
+            shipping: { create: shipping },
           },
         });
       }

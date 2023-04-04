@@ -18,8 +18,8 @@ export default function AdminProductsPage() {
       </div>
       <div className="border-b-[1px] border-slate-600"></div>
 
-      <div className="flex flex-row gap-20 h-full">
-        <div>
+      <div className="flex flex-row md:gap-20 h-full">
+        <div className="w-1/2">
           <h1 className="text-4xl font-bold pb-5">Products</h1>
           <ProductTable data={data} isLoading={isLoading} setProduct={setProduct} />
         </div>

@@ -55,6 +55,8 @@ model Order {
   date       DateTime @default(now())
   customerId Int
   customer   User      @relation(fields: [customerId], references: [id])
+  shippingId Int @unique
+  shipping ShippingAddress @relation(fields: [shippingId], references: [id])
   image    Image?   @relation(fields: [imageId], references: [assetId])
   imageId  String?
   isCash Boolean @default(false)
@@ -78,4 +80,16 @@ model WalletType{
   id Int @id @default(autoincrement())
   name String @unique
   wallets WalletAddress[]
+}
+
+model ShippingAddress{
+  id Int @id @default(autoincrement())
+  firstName String 
+  lastName String
+  streetAddress String
+  streetAddress2 String?
+  city String
+  state String
+  zipCode String
+  order Order?
 }
