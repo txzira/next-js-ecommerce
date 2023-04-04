@@ -404,7 +404,11 @@ export function ProductTable({
               </label>
               <select id="state" onChange={(event) => setShipping({ ...shipping, state: event.target.value })}>
                 {states.map((state) => {
-                  return <option value={state.code}>{state.name}</option>;
+                  return (
+                    <option key={state.code} value={state.code}>
+                      {state.name}
+                    </option>
+                  );
                 })}
               </select>
             </div>
