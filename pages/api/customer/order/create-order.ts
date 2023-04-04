@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             products: { createMany: { data: orderProducts } },
             amount: total,
             image: { create: { assetId: imageObj.asset_id, publicId: imageObj.public_id, url: imageObj.url } },
-            shipping: { create: shipping },
+            shipping: { create: { ...shipping } },
           },
         });
       } else {
@@ -42,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             products: { createMany: { data: orderProducts } },
             amount: total,
             isCash: true,
-            shipping: { create: shipping },
+            shipping: { create: { ...shipping } },
           },
         });
       }
