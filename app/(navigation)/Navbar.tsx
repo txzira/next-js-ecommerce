@@ -14,7 +14,7 @@ function NavLink({ children, href }: { children: React.ReactNode; href: string }
     <Link
       href={href}
       className={`
-      flex items-center h-full px-4 hover:bg-white hover:text-black
+      flex items-center h-full px-2 md:px-4 hover:bg-white hover:text-black
        ${active ? "bg-white text-black" : null}
        `}
     >
@@ -34,8 +34,8 @@ export default function Navbar() {
 
       {status === "authenticated" ? <NavLink href="/user/account">Account</NavLink> : null}
       {status === "authenticated" ? (
-        <button className="h-full px-4 hover:bg-white hover:text-black" onClick={() => signOut()}>
-          Sign Out
+        <button className="flex items-center  h-full px-2 md:px-4 hover:bg-white hover:text-black" onClick={() => signOut()}>
+          Logout
         </button>
       ) : null}
       {status === "unauthenticated" ? <NavLink href="/auth/login">Login</NavLink> : null}

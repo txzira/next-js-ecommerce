@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 function FormContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative m-auto w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
+    <div className="relative m-auto w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
       <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30 ">{children}</div>
     </div>
   );
@@ -21,7 +21,7 @@ function FormIcon({ children }: { children: React.ReactNode }) {
 }
 
 function FormItem({ children }: { children: React.ReactNode }) {
-  return <div className="relative w-1/2 m-auto mb-3">{children}</div>;
+  return <div className="relative w-full md:w-1/2 m-auto mb-3">{children}</div>;
 }
 
 function FormButton({ children }: { children: React.ReactNode }) {
@@ -83,7 +83,7 @@ export const LoginForm = () => {
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/logo.JPEG" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         <h1 className="text-black font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Login</h1>
         <FormItem>
           <FormIcon>
@@ -149,7 +149,7 @@ export const SignupForm = () => {
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/logo.JPEG" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         <h1 className="text-black font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Registration</h1>
         <FormItem>
           <FormIcon>

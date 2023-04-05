@@ -313,7 +313,7 @@ export function ProductTable({
   return (
     <>
       <form className="flex flex-col w-5/6 md:w-2/5 items-center mx-auto justify-center gap-4" id="order" onSubmit={submitForm}>
-        <h1 className="text-center py-6 text-base md:text-2xl  font-semibold">Products</h1>
+        <h1 className="text-center my-2 text-base md:text-2xl  font-semibold">Products</h1>
         <div className="w-full border-black border-2">
           <div className="grid grid-cols-3 font-bold text-sm md:text-base text-center bg-black text-white">
             <div className="md:px-2">Name</div>
@@ -330,15 +330,16 @@ export function ProductTable({
             </div>
           )}
         </div>
-        <div className="flex flex-col">
+        <div className="w-full mx-auto">
           <h2 className="text-2xl font-semibold text-center">Shipping</h2>
           <div className="flex flex-row">
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="firstName">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="firstName">
                 First Name
               </label>
               <input
                 required={true}
+                className="text-xs md:text-base"
                 id="firstName"
                 value={shipping.firstName}
                 placeholder="John"
@@ -346,11 +347,12 @@ export function ProductTable({
               />
             </div>
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="lastName">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="lastName">
                 Last Name
               </label>
               <input
                 required={true}
+                className="text-xs md:text-base"
                 id="lastName"
                 value={shipping.lastName}
                 placeholder="Smith"
@@ -361,11 +363,12 @@ export function ProductTable({
 
           <div className="flex flex-row">
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="streetAddress">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="streetAddress">
                 Street Address
               </label>
               <input
                 required={true}
+                className="text-xs md:text-base"
                 id="streetAddress"
                 value={shipping.streetAddress}
                 placeholder="123 Rainy St."
@@ -373,10 +376,11 @@ export function ProductTable({
               />
             </div>
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="streetAddress2">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="streetAddress2">
                 Street Address 2
               </label>
               <input
+                className="text-xs md:text-base"
                 id="streetAddress2"
                 value={shipping.streetAddress2}
                 placeholder="Apt. 2"
@@ -386,12 +390,13 @@ export function ProductTable({
           </div>
 
           <div className="flex flex-row">
-            <div className="flex flex-col w-4/6">
-              <label className="font-semibold md:text-lg" htmlFor="city">
+            <div className="flex flex-col ">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="city">
                 City
               </label>
               <input
                 required={true}
+                className="text-xs md:text-base"
                 id="city"
                 value={shipping.city}
                 placeholder="Beckley"
@@ -399,10 +404,14 @@ export function ProductTable({
               />
             </div>
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="state">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="state">
                 State
               </label>
-              <select id="state" onChange={(event) => setShipping({ ...shipping, state: event.target.value })}>
+              <select
+                className="text-xs md:text-base"
+                id="state"
+                onChange={(event) => setShipping({ ...shipping, state: event.target.value })}
+              >
                 {states.map((state) => {
                   return (
                     <option key={state.code} value={state.code}>
@@ -413,11 +422,12 @@ export function ProductTable({
               </select>
             </div>
             <div className="flex flex-col">
-              <label className="font-semibold md:text-lg" htmlFor="zipCode">
+              <label className="font-semibold text-sm md:text-lg" htmlFor="zipCode">
                 Zip
               </label>
               <input
                 required={true}
+                className="text-xs md:text-base"
                 id="zipCode"
                 value={shipping.zipCode}
                 placeholder="25919"
@@ -426,7 +436,7 @@ export function ProductTable({
             </div>
           </div>
         </div>
-        <pre>{JSON.stringify(shipping)}</pre>
+
         <div>
           <div>
             <h2 className="text-2xl font-semibold text-center">Payment</h2>
@@ -444,9 +454,9 @@ export function ProductTable({
           ) : (
             <div>Admin has not set wallet address(es)</div>
           )}
-          <span className="text-sm">
-            Note: Send payment to one of these addresses. Screenshot the transaction between your wallet address and one of these addresses
-            and attach it as your proof of payment image.
+          <span className="text-xs md:text-sm">
+            Note: Screenshot the transaction between your wallet address and one of these addresses and attach it as your proof of payment
+            image, leave image blank if cash order.
           </span>
         </div>
         <span>
@@ -462,7 +472,7 @@ export function ProductTable({
         <div className="w-full">
           <h3 className="text-lg font-semibold">Cash Address</h3>
           <span className="text-sm">If you wish to pay with cash, send it to the address below.</span>
-          <div className="text-sm">
+          <div className="text-xs md:text-sm">
             <p>Fabian P.</p>
             <p>325 N Larchmont Blvd, Los Angeles, CA 90004</p>
           </div>
