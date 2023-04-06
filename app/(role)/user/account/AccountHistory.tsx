@@ -226,7 +226,7 @@ export function OrderDetails({
     shipping: ShippingAddress;
   };
 }) {
-  console.log(window.matchMedia("(min-width: 768px)").matches);
+  // console.log(window.matchMedia("(min-width: 768px)").matches);
   return (
     <div>
       <h1 className="text-4xl font-bold pb-5">Order Details</h1>
