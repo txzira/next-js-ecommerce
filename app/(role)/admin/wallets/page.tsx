@@ -13,14 +13,14 @@ export default function WalletPage() {
     error: walletTypesError,
     isLoading: walletTypesIsLoading,
     mutate: walletTypesMutate,
-  } = useSWR("/admin/wallets/get-wallet-types", fetcher);
+  } = useSWR("/admin/wallets/get-wallet-types", fetcher, { refreshInterval: 1000 });
 
   const {
     data: walletAddressesData,
     error: walletAddressesError,
     isLoading: walletAdressesIsLoading,
     mutate: walletAddressesMutate,
-  } = useSWR("/admin/wallets/get-wallet-addresses", fetcher);
+  } = useSWR("/admin/wallets/get-wallet-addresses", fetcher, { refreshInterval: 1000 });
   return (
     <div className="h-full">
       <h1 className="text-3xl font-bold">Wallets</h1>
