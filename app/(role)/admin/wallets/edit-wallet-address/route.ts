@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   if (request.method === "POST") {
     const { formWallet } = await request.json();
-    console.log({ formWallet });
     const walletAddress = await prisma.walletAddress.update({
       where: { id: formWallet.id },
       data: {

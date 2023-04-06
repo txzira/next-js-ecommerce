@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 function FormContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative m-auto w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
-      <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30 ">{children}</div>
+      <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30">{children}</div>
     </div>
   );
 }

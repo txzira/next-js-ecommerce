@@ -17,13 +17,16 @@ export default function AccountPage() {
   return (
     <div className="flex flex-col">
       <AccountInformation />
-      <div className="flex flex-row gap-2 md:gap-32 h-full">
+      <div className="flex flex-row md:gap-32 h-full">
         <AccountHistory order={order} setOrder={setOrder} />
-        <div className="border-l-[1px] border-slate-600"></div>
-        <div>
-          <h1 className="text-4xl font-bold pb-5">Order Details</h1>
-          {order ? <OrderDetails order={order} setOrder={setOrder} /> : <div>Click on an order for more information</div>}
-        </div>
+        {window.matchMedia("(min-width: 768px)").matches ? (
+          <>
+            <div className="border-l-[1px] border-slate-600"></div>
+            <div>
+              <OrderDetails order={order} />
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );

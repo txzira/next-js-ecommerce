@@ -11,11 +11,11 @@ export default async function Home() {
     redirect("/user/products");
   } else {
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full md:justify-center md:pb-16">
         <div className="flex justify-center items-center relative py-16">
           <Image className={styles.logo} src="/images/logo.png" alt="Your logo here" width={180} height={37} priority />
         </div>
-        <div className="grid grid-rows-1 grid-cols-2 justify-items-center gap-10 m-auto">
+        <div className="grid grid-rows-1 grid-cols-2 justify-items-center gap-10 mx-auto">
           <Link
             className="flex items-center justify-center text-xl w-32 h-16 rounded-[30px] bg-blue-900 text-white active:bg-black"
             href="/auth/login"

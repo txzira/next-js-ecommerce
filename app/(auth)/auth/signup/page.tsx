@@ -7,9 +7,10 @@ import { redirect } from "next/navigation";
 export default async function SignupPage() {
   const session = await getServerSession(authOptions);
 
-  session ? redirect("/user/products") : null;
-  return (
-    <div>
+  return session ? (
+    redirect("/user/products")
+  ) : (
+    <div className="flex md:justify-center h-full">
       <SignupForm />
     </div>
   );

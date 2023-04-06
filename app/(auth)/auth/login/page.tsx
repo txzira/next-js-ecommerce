@@ -9,7 +9,7 @@ export default async function LoginPage() {
 
   session ? redirect("/user/products") : null;
   return (
-    <div>
+    <div className="flex md:justify-center h-full">
       <LoginForm />
     </div>
   );

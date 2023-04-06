@@ -8,8 +8,26 @@ import useSWR from "swr";
 
 export function AccountInformation() {
   const session = useSession();
+  // const [currentPassword, setCurrentPassword] = useState("");
+  // const [newPassword, setNewPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+
+  // const changePassword = async (event) => {
+  //   event.preventDefault();
+  //   if (newPassword === confirmPassword) {
+  //     const data = await fetch("/user/account/change-password", {
+  //       method: "POST",
+  //       body: JSON.stringify({ currentPassword, newPassword }),
+  //     });
+  //     // const response = await data.json();
+  //     // console.log();
+  //   } else {
+  //     toast.error("New passwords do not match");
+  //   }
+  // };
+
   return (
-    <div className="w-1/2">
+    <div className="w-1/3">
       <h1 className="text-4xl font-bold pb-5">Customer Information</h1>
       <div className="flex flex-row justify-between">
         <div>
@@ -21,6 +39,39 @@ export function AccountInformation() {
           <div>{session.data?.user.email}</div>
         </div>
       </div>
+      {/* <form className="border-[1px] border-black p-2">
+        <h1 className="text-lg font-semibold">Change Password</h1>
+        <div className="flex flex-col w-1/2 pb-2">
+          <label>Current Password</label>
+          <input
+            type="password"
+            className="border-[1px] border-black"
+            value={currentPassword}
+            onChange={(event) => setCurrentPassword(event.target.value)}
+          />
+        </div>
+        <div className="flex flex-col w-1/2 pb-2">
+          <label>New Password</label>
+          <input
+            type="password"
+            className="border-[1px] border-black"
+            value={newPassword}
+            onChange={(event) => setNewPassword(event.target.value)}
+          />
+        </div>
+        <div className="flex flex-col w-1/2 pb-2">
+          <label>Re-type New Password</label>
+          <input
+            type="password"
+            className="border-[1px] border-black"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+          />
+        </div>
+        <button className="bg-blue-800 text-white rounded-full p-2" onClick={(event) => changePassword(event)}>
+          Change Password
+        </button>
+      </form> */}
     </div>
   );
 }
@@ -92,8 +143,8 @@ export function AccountHistory({
   };
 
   return (
-    <div className="flex flex-col w-1/3">
-      <div className="flex flex-row justify-between items-center">
+    <div className="flex flex-col md:w-1/3 p-5">
+      <div className="flex flex-row sm justify-between items-center">
         <h1 className="text-base md:text-4xl font-bold pb-5">Order List</h1>
         <select onChange={(event) => changeLimit(event)}>
           <option value="10" selected={true}>
@@ -104,7 +155,7 @@ export function AccountHistory({
           <option value="100">100</option>
         </select>
       </div>
-      <div className="container border-2 border-black text-center h-[500px]  w-auto">
+      <div className="container border-2  border-black text-center h-[500px]  w-auto">
         <div className="">
           <div className="grid grid-cols-6 bg-black text-white h-12 font-bold items-center ">
             <div className="md:px-1">Order #</div>
@@ -166,7 +217,6 @@ export function AccountHistory({
 
 export function OrderDetails({
   order,
-  setOrder,
 }: {
   order: Order & {
     image: Img;
@@ -175,73 +225,69 @@ export function OrderDetails({
     })[];
     shipping: ShippingAddress;
   };
-  setOrder: React.Dispatch<
-    React.SetStateAction<
-      Order & {
-        image: Img;
-        products: (orderProduct & {
-          product: Product;
-        })[];
-        shipping: ShippingAddress;
-      }
-    >
-  >;
 }) {
-  console.log(order);
-
+  console.log(window.matchMedia("(min-width: 768px)").matches);
   return (
     <div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold text-lg">Full Name</h2>
+      <h1 className="text-4xl font-bold pb-5">Order Details</h1>
+
+      {order ? (
         <div>
-          {order.shipping.firstName} {order.shipping.lastName}
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <label className="text-lg font-semibold">Address</label>
-        <div>
-          {order.shipping.streetAddress} {order.shipping.streetAddress2} {order.shipping.city}, {order.shipping.state}{" "}
-          {order.shipping.zipCode}
-        </div>
-      </div>
-      <div className="flex flex-row justify-between">
-        <div>
-          <h2 className="font-semibold text-lg">Order Date</h2>
-          <div>{new Date(order.date).toLocaleDateString()}</div>
-        </div>
-        <div>
-          <h2 className="font-semibold text-lg">Tracking Number</h2>
-          <div>{order.trackingNumber ? order.trackingNumber : "N/A"}</div>
-        </div>
-      </div>
-      <div>
-        <h2 className="font-semibold text-lg text-center py-2">Product List</h2>
-        <div className="flex flex-col text-center border-black border-2">
-          <div className="grid grid-cols-4 bg-black text-white font-bold h-12 items-center">
-            <div className="p-3">Name</div>
-            <div className="p-3">Quantity</div>
-            <div className="p-3">Price per</div>
-            <div className="p-3">Total</div>
+          <div className="flex flex-col">
+            <h2 className="font-semibold text-lg">Full Name</h2>
+            <div>
+              {order.shipping.firstName} {order.shipping.lastName}
+            </div>
           </div>
-          {order.products.map((orderProduct) => {
-            return (
-              <div key={orderProduct.productId} className="grid grid-cols-4 h-10">
-                <div className="py-2">{orderProduct.product.name}</div>
-                <div className="py-2">{orderProduct.quantity}</div>
-                <div className="py-2">${orderProduct.pricePaidPer}</div>
-                <div className="py-2">${orderProduct.pricePaidPer * orderProduct.quantity}</div>
+          <div className="flex flex-col">
+            <label className="text-lg font-semibold">Address</label>
+            <div>
+              {order.shipping.streetAddress} {order.shipping.streetAddress2} {order.shipping.city}, {order.shipping.state}{" "}
+              {order.shipping.zipCode}
+            </div>
+          </div>
+          <div className="flex flex-row justify-between">
+            <div>
+              <h2 className="font-semibold text-lg">Order Date</h2>
+              <div>{new Date(order.date).toLocaleDateString()}</div>
+            </div>
+            <div>
+              <h2 className="font-semibold text-lg">Tracking Number</h2>
+              <div>{order.trackingNumber ? order.trackingNumber : "N/A"}</div>
+            </div>
+          </div>
+          <div>
+            <h2 className="font-semibold text-lg text-center py-2">Product List</h2>
+            <div className="flex flex-col text-center border-black border-2">
+              <div className="grid grid-cols-4 bg-black text-white font-bold h-12 items-center">
+                <div className="p-3">Name</div>
+                <div className="p-3">Quantity</div>
+                <div className="p-3">Price per</div>
+                <div className="p-3">Total</div>
               </div>
-            );
-          })}
-        </div>
-      </div>
-      {order.image ? (
-        <div>
-          <h2 className="text-center font-semibold text-lg py-2">Crypto Proof of Payment Image</h2>
-          <Image src={order.image.url} height={200} width={500} alt="Proof of payment" />
+              {order.products.map((orderProduct) => {
+                return (
+                  <div key={orderProduct.productId} className="grid grid-cols-4 h-10">
+                    <div className="py-2">{orderProduct.product.name}</div>
+                    <div className="py-2">{orderProduct.quantity}</div>
+                    <div className="py-2">${orderProduct.pricePaidPer}</div>
+                    <div className="py-2">${orderProduct.pricePaidPer * orderProduct.quantity}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {order.image ? (
+            <div>
+              <h2 className="text-center font-semibold text-lg py-2">Crypto Proof of Payment Image</h2>
+              <Image src={order.image.url} height={200} width={500} alt="Proof of payment" />
+            </div>
+          ) : (
+            <div className="text-center font-semibold text-lg py-2">Cash Payment Order</div>
+          )}
         </div>
       ) : (
-        <div className="text-center font-semibold text-lg py-2">Cash Payment Order</div>
+        <div>Click on an order for more information</div>
       )}
     </div>
   );

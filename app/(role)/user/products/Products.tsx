@@ -260,7 +260,7 @@ export function ProductTable({
 
   const { data: session, status } = useSession();
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR("/api/admin/product/get-products", fetcher);
+  const { data, error, isLoading } = useSWR("/user/products/get-products", fetcher);
   const router = useRouter();
 
   const setFileToBase = (file) => {
@@ -325,7 +325,7 @@ export function ProductTable({
               return <Product key={product.id} product={product} />;
             })
           ) : (
-            <div>
+            <div className="flex justify-center py-5">
               <Loader />
             </div>
           )}
