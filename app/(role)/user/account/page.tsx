@@ -19,14 +19,14 @@ export default function AccountPage() {
       <AccountInformation />
       <div className="flex flex-row md:gap-32 h-full">
         <AccountHistory order={order} setOrder={setOrder} />
-        {window.matchMedia("(min-width: 768px)").matches ? (
-          <>
-            <div className="border-l-[1px] border-slate-600"></div>
-            <div>
-              <OrderDetails order={order} />
-            </div>
-          </>
-        ) : null}
+        {/* {window.matchMedia("(min-width: 768px)").matches ? ( */}
+        <>
+          <div className="border-l-[1px] border-slate-600"></div>
+          <div>
+            <OrderDetails order={order} />
+          </div>
+        </>
+        {/* ) : null} */}
       </div>
     </div>
   );
