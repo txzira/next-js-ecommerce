@@ -3,9 +3,9 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   if (request.method === "GET") {
-    const products = await prisma.product.findMany({});
+    const productTypes = await prisma.productType.findMany({});
 
-    return NextResponse.json({ products, status: 200 });
+    return NextResponse.json({ productTypes, status: 200 });
   } else {
     return NextResponse.json({ message: "Route no valid", status: 500 });
   }

@@ -4,10 +4,11 @@ import prisma from "lib/prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
-    const { name, price } = req.body;
+    const { name, price, productType } = req.body;
+    console.log(productType);
     try {
       const product = await prisma.product.create({
-        data: { name: name, price: Number(price) },
+        data: { name: name, price: Number(price), productTypeId: Number(productType) },
       });
       res.status(200).json({ message: `Added product '${product.name}' successfully!`, status: "ok" });
     } catch (error) {

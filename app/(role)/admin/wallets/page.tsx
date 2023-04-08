@@ -5,7 +5,6 @@ import useSWR from "swr";
 import Loader from "app/Loader";
 
 export default function WalletPage() {
-  const [show, setShow] = useState(false);
   const fetcher = (url) => fetch(url, { method: "GET" }).then((res) => res.json());
 
   const {

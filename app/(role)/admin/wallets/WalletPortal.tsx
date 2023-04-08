@@ -17,9 +17,9 @@ export function WalletTypeForm({ walletTypesMutate }: { walletTypesMutate: Keyed
         body: JSON.stringify({ walletType }),
       });
       const response = await data.json();
-      walletTypesMutate();
       setWalletType("");
       toast.dismiss();
+      walletTypesMutate();
       toast.success(response.message);
     }
   };

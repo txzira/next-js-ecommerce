@@ -19,7 +19,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
-    const products = await prisma.product.findMany({});
+    const products = await prisma.product.findMany({ include: { type: true } });
     res.status(200).json({ products });
   } else {
     res.status(500).json({ message: "Route not valid" });
