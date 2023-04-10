@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <NavLink href="/admin/customers">Customers</NavLink>
         <NavLink href="/admin/orders">Orders</NavLink>
       </nav>
-      <div className="w-5/6 mx-auto mt-10">{children}</div>
+      <div className="w-full p-10 overflow-y-scroll">{children}</div>
     </div>
   ) : (
     <>Unauthorized User</>

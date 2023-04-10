@@ -28,7 +28,7 @@ model Product {
   name     String @unique
   price    Float
   productTypeId Int? 
-  type ProductType? @relation(fields: [productTypeId], references: [id])
+  type Category? @relation(fields: [productTypeId], references: [id])
   productVariants ProductVariant[] 
   active Boolean @default(true)
   order orderProduct[] 
@@ -46,7 +46,7 @@ model ProductVariant{
 
 }
 
-model ProductType {
+model Category {
   id Int @id @default(autoincrement())
   name String @unique
   product Product[]

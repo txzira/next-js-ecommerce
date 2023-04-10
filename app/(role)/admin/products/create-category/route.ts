@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   if (request.method === "POST") {
     try {
-      const { productTypeName } = await request.json();
-      const productType = await prisma.productType.create({ data: { name: productTypeName } });
+      const { categoryName } = await request.json();
+      const category = await prisma.category.create({ data: { name: categoryName } });
       return NextResponse.json({
-        message: `Product type  ${productType.name} successfully added.`,
+        message: `Product type  ${category.name} successfully added.`,
         status: 200,
       });
     } catch (error) {
