@@ -42,8 +42,6 @@ export default async function AdminPage() {
   sumOfAllOrders(walletOrdersData, walletsVsCashSums);
   sumOfAllOrders(cashOrdersData, walletsVsCashSums);
 
-  console.log(approvedVsUnapprovedSums);
-
   const approvedVsUnapprovedSumsChart = {
     labels: ["Approved Order Sales", "Unapproved Order Sales"],
     datasets: [

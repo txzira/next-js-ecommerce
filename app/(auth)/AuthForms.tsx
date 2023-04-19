@@ -95,7 +95,7 @@ export const LoginForm = () => {
           <FormIcon>
             <AiFillLock />
           </FormIcon>
-          <FormInput id="password" type="password" placeholder="****" value={password} onChange={setPassword} />
+          <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
         </FormItem>
         <FormButton>Login</FormButton>
         <div>

@@ -16,7 +16,7 @@ function NavLink({ children, href }: { children: React.ReactNode; href: string }
     <Link
       href={href}
       className={`
-      flex items-center h-14 px-4 hover:bg-white hover:text-black
+      flex items-center h-14 px-4 rounded-lg hover:bg-white hover:text-black
        ${active ? "bg-white text-black" : null}
        `}
     >
@@ -29,9 +29,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { data: session, status } = useSession();
   return session?.user.role === "admin" ? (
     <div className="flex flex-row h-full">
-      <nav className="flex flex-col border-r-2 border-black ">
-        <NavLink href="/admin">Admin Home</NavLink>
+      <nav className="flex flex-col gap-2 p-2 border-r-2 border-black bg-blue-900 text-white">
+        <NavLink href="/admin">Admin</NavLink>
         <NavLink href="/admin/wallets">Wallets</NavLink>
+        <NavLink href="/admin/categories">Categories</NavLink>
         <NavLink href="/admin/products">Products</NavLink>
         <NavLink href="/admin/customers">Customers</NavLink>
         <NavLink href="/admin/orders">Orders</NavLink>
@@ -39,6 +40,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="w-full p-10 overflow-y-scroll">{children}</div>
     </div>
   ) : (
-    <>Unauthorized User</>
+    <div>Unauthorized User</div>
   );
 }

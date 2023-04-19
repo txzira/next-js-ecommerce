@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ProductCategoryPortal, ProductDetails, ProductForm, ProductTable } from "./Products";
+import { ProductDetails, ProductForm, ProductTable } from "./Products";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
 
@@ -9,7 +9,9 @@ export default function AdminProductsPage() {
 
   const [category, setCategory] = useState("All");
   const [product, setProduct] = useState<Product>();
-  const { data: productsData, error, isLoading, mutate } = useSWR(`/admin/products/get-products/${category}`, fetcher);
+  const [showProductDetails, setShowProductDetails] = useState(false);
+
+  const { data: productsData, error, isLoading, mutate: productsMutate } = useSWR(`/admin/products/get-products/${category}`, fetcher);
 
   console.log(productsData);
   const {
@@ -17,19 +19,16 @@ export default function AdminProductsPage() {
     error: categoriesError,
     isLoading: categoriesIsLoading,
     mutate: categoriesMutate,
-  } = useSWR(`/admin/products/get-categories`, fetcher);
-
+  } = useSWR(`/admin/categories/get-categories`, fetcher);
+  console.log(categoriesData);
   return (
     <div className="flex flex-col gap-5 h-full">
-      <ProductCategoryPortal />
-      <div className="border-b-[1px] border-slate-600"></div>
-
-      <ProductForm mutate={mutate} />
+      <ProductForm mutate={productsMutate} />
 
       <div className="border-b-[1px] border-slate-600"></div>
 
       <div className="flex flex-row md:gap-20 h-full">
-        <div className="w-1/2">
+        <div className="w-full">
           <ProductTable
             data={productsData}
             isLoading={isLoading}
@@ -37,17 +36,20 @@ export default function AdminProductsPage() {
             categoriesData={categoriesData}
             category={category}
             setCategory={setCategory}
+            mutate={productsMutate}
+            setShow={setShowProductDetails}
           />
         </div>
-        <div className="border-l-[1px] border-slate-600"></div>
-        <div className="flex flex-col">
-          <h1 className="text-4xl font-bold pb-5">Product Information</h1>
-          {product ? (
-            <ProductDetails product={product} setProduct={setProduct} mutate={mutate} typesData={categoriesData} />
-          ) : (
-            <div>Click on a product to edit information</div>
-          )}
-        </div>
+        {showProductDetails ? (
+          <ProductDetails
+            product={product}
+            setProduct={setProduct}
+            setShow={setShowProductDetails}
+            mutate={productsMutate}
+            categoriesData={categoriesData}
+          />
+        ) : null}
+        <div className="flex flex-col"></div>
       </div>
     </div>
   );

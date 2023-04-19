@@ -1,6 +1,6 @@
 import prisma from "lib/prisma";
 import React from "react";
-import { ProductTable } from "./Products";
+import { ProductPage } from "./Products";
 
 export default async function ProductsPage() {
   const wallets = await prisma.walletAddress.findMany({
@@ -10,7 +10,7 @@ export default async function ProductsPage() {
 
   return (
     <div className="h-full pb-5 ">
-      <ProductTable wallets={wallets} />
+      <ProductPage wallets={wallets} />
     </div>
   );
 }

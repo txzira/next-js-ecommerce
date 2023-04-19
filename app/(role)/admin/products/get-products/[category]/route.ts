@@ -6,9 +6,9 @@ export async function GET(request: NextRequest, context: { params }) {
     const category = context.params.category;
     let products;
     if (category === "All") {
-      products = await prisma.product.findMany({ include: { type: true } });
+      products = await prisma.product.findMany({ include: { category: true } });
     } else {
-      products = await prisma.product.findMany({ include: { type: true }, where: { type: { name: category } } });
+      products = await prisma.product.findMany({ include: { category: true }, where: { category: { name: category } } });
     }
     return NextResponse.json({ products, status: 200 });
   } else {

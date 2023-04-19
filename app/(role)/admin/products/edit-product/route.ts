@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       data: {
         name: formProduct.name,
         price: formProduct.price,
-        productTypeId: formProduct.productTypeId,
+        productCategoryId: formProduct.productCategoryId,
       },
     });
     console.log(product);
