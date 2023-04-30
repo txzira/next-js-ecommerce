@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { data: session, status } = useSession();
   return session?.user.role === "admin" ? (
     <div className="flex flex-row h-full">
-      <nav className="flex flex-col gap-2 p-2 border-r-2 border-black bg-blue-900 text-white">
+      <nav className="flex flex-col gap-2 p-2 border-r-2 w-44 border-black bg-green-600 text-white shadow-[10px_0_10px_0_rgb(0,0,0,0.15)]">
         <NavLink href="/admin">Admin</NavLink>
         <NavLink href="/admin/wallets">Wallets</NavLink>
         <NavLink href="/admin/categories">Categories</NavLink>

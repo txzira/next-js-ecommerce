@@ -31,7 +31,7 @@ model Product {
   category Category? @relation(fields: [productCategoryId], references: [id])
   productVariants ProductVariant[] 
   active Boolean @default(true)
-  order orderProduct[] 
+  // order orderProduct[] 
   cartItem CartItem []
   @@index([productCategoryId])
 }
@@ -42,6 +42,7 @@ model ProductVariant{
   name String
   price Float
   available Boolean @default(true)
+  cartItems CartItem[]
   @@index([productId])
 
 }
@@ -59,9 +60,11 @@ model Cart{
   currentCart Boolean @default(true)
   cartItems CartItem[]
   cartTotal Float
+  order Order?
   @@index([userId])
 }
 model CartItem{
+  id Int @id @default(autoincrement())
   cartId Int
   cart Cart @relation(fields:[cartId], references: [id])
   productId Int 
@@ -69,10 +72,15 @@ model CartItem{
   productName String
   quantity Int
   price Float
-  variant String?
-  @@id([cartId, productId])
+  variantId Int @default(0)
+  variant ProductVariant?  @relation(fields: [variantId], references: [id])
+  variantName String?
+  @@unique([cartId,productId,variantId])
+
+  @@index([id])
   @@index([cartId])
   @@index([productId])
+  @@index([variantId])
 
 }
 
@@ -82,25 +90,28 @@ model Image {
   url      String
   order Order[]
 }
-model orderProduct {
-  orderId Int 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId Int
-  product Product  @relation(fields:[productId], references: [id])
-  pricePaidPer Float
-  quantity Int
-  @@id([orderId,productId])
-  @@index([orderId])
-  @@index([productId])
-}
+
+// model orderProduct {
+//   orderId Int 
+//   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+//   productId Int
+//   product Product  @relation(fields:[productId], references: [id])
+//   pricePaidPer Float
+//   quantity Int
+//   @@id([orderId,productId])
+//   @@index([orderId])
+//   @@index([productId])
+// }
 
 model Order {
   id         Int     @id @default(autoincrement())
-  products   orderProduct[]
-  amount     Float
-  date       DateTime @default(now())
+  // products   orderProduct[]
   customerId Int
   customer   User      @relation(fields: [customerId], references: [id])
+  cartId Int
+  cart Cart @relation(fields: [cartId], references: [id])
+  amount     Float
+  date       DateTime @default(now())
   shippingId Int @unique
   shipping ShippingAddress @relation(fields: [shippingId], references: [id])
   image    Image?   @relation(fields: [imageId], references: [assetId])
@@ -109,6 +120,7 @@ model Order {
   approved Boolean @default(false)
   trackingNumber String?
   @@index([customerId])
+  @@unique([cartId])
   @@index([imageId])
 }
 
