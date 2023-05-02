@@ -29,7 +29,10 @@ export default function CheckoutPage() {
 
   console.log(cart);
   const placeOrder = async () => {
-    const data = await fetch("/checkout/place-order", { method: "POST", body: JSON });
+    console.log("lol");
+    const data = await fetch("/user/checkout/place-order", { method: "POST", body: JSON.stringify({ cartId: cart.id, shipping }) });
+    const response = await data.json();
+    console.log(response);
   };
   return (
     <div className="pb-10">
@@ -62,7 +65,7 @@ export default function CheckoutPage() {
           <Link href="/user/products" className="border-black border-[1px] text-[10px] font-medium col-span-2 p-2">
             CONTINUE SHOPPING
           </Link>
-          <button className="bg-black text-white text-[10px] p-2 font-medium" onClick={() => placeOrder()}>
+          <button className="bg-black text-white text-[10px] p-2 font-medium" onClick={placeOrder}>
             PLACE ORDER
           </button>
         </div>

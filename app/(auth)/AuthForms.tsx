@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 function FormContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative m-auto w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
+    <div className="relative mt-10 w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
       <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30">{children}</div>
     </div>
   );
@@ -27,7 +27,9 @@ function FormItem({ children }: { children: React.ReactNode }) {
 function FormButton({ children }: { children: React.ReactNode }) {
   return (
     <FormItem>
-      <button className="bg-slate-800  w-full text-white py-3 px-6  rounded-3xl">{children}</button>
+      <button className="w-full text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-3 px-6 rounded-full  bg-black ">
+        {children}
+      </button>
     </FormItem>
   );
 }
@@ -96,15 +98,21 @@ export const LoginForm = () => {
             <AiFillLock />
           </FormIcon>
           <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+          <div className="flex justify-end">
+            <Link href="/auth/forgot-password" className="text-blue-800 underline text-right">
+              Forgot your password?
+            </Link>
+          </div>
         </FormItem>
+
         <FormButton>Login</FormButton>
-        <div>
+        <p>
           Don&apos;t have an account yet?{" "}
           <Link href="/auth/signup" className="text-blue-800 underline">
             Create an account
           </Link>
           .
-        </div>
+        </p>
       </form>
     </FormContainer>
   );

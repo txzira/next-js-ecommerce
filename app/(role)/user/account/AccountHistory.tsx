@@ -167,6 +167,7 @@ export function AccountHistory({
           </div>
           <div className="h-[400px] overflow-y-scroll">
             {!isLoading ? (
+              data.userOrders &&
               data.userOrders.map(
                 (
                   order: Order & {
