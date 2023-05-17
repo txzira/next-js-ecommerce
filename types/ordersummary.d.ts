@@ -1,20 +1,16 @@
 import { Order, ShippingAddress } from "@prisma/client";
 
 export declare type OrderSummary = Order & {
-  products: {
-    quantity: number;
-    product: {
-      name: string;
-      price: number;
-    };
-  }[];
   customer: {
-    email: string;
     firstName: string;
     lastName: string;
+    email: string;
   };
+  cart: Cart & {
+    cartItems: CartItem[];
+  };
+  shipping: ShippingAddress;
   image: {
     url: string;
   };
-  shipping: ShippingAddress;
 };

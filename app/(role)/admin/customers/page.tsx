@@ -13,17 +13,9 @@ export default function CustomerPage() {
   const { data, error, isLoading, mutate } = useSWR(`/admin/customers/get-customers/${limit}/${cursor}/${sort}`, fetcher);
 
   return (
-    <div className="flex flex-row h-full gap-32">
+    <div className="h-full w-[90%] mx-auto">
       <CustomerTable data={data} setCustomer={setCustomer} isLoading={isLoading} setCursor={setCursor} limit={limit} setLimit={setLimit} />
-      <div className="border-l-[1px] border-slate-600"></div>
-      <div className="flex flex-col">
-        <h1 className="text-4xl font-bold pb-5">Customer Information</h1>
-        {customer ? (
-          <CustomerDetails customer={customer} setCustomer={setCustomer} mutate={mutate} />
-        ) : (
-          <div>Click on a customer for more information.</div>
-        )}
-      </div>
+      {customer ? <CustomerDetails customer={customer} setCustomer={setCustomer} mutate={mutate} /> : null}
     </div>
   );
 }

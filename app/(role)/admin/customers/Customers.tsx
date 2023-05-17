@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loader from "app/Loader";
 import { KeyedMutator } from "swr";
+import { BsFillTrashFill } from "react-icons/bs";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 
 export function CustomerTable({
   setCustomer,
@@ -73,32 +75,28 @@ export function CustomerTable({
           <option value="100">100</option>
         </select>
       </div>
-      <div className="flex flex-col justify-between border-2 border-black text-center h-[500px]  ">
+      <div className="flex flex-col justify-between border-2 border-black  h-[500px] rounded-lg bg-white ">
         <div>
-          <div className="grid grid-cols-6 bg-black text-white font-bold h-12">
-            <div className="py-3">Id</div>
-            <div className="py-3">Email</div>
-            <div className="py-3">First Name</div>
-            <div className="py-3">Last Name</div>
-            <div className="py-3">Role</div>
+          <div className="grid grid-cols-5 bg-black text-white font-bold h-12">
+            <div className="py-3 col-span-2 pl-1">Email</div>
+            <div className="py-3 col-span-2 pl-2">Name</div>
             <div className="py-3">Verified</div>
           </div>
           <div className="h-[400px] overflow-y-scroll">
             {!isLoading ? (
               data ? (
-                data.customers.map((customer) => {
+                data.customers.map((customer: User) => {
                   return (
                     <div
                       key={customer.id}
-                      className="grid grid-cols-6 hover:bg-white cursor-pointer h-10 "
+                      className="grid grid-cols-5 hover:bg-white cursor-pointer h-10 "
                       onClick={() => setCustomer(customer)}
                     >
-                      <div className="py-2">{customer.id}</div>
-                      <div className="py-2">{customer.email}</div>
-                      <div className="py-2">{customer.firstName}</div>
-                      <div className="py-2">{customer.lastName}</div>
-                      <div className="py-2">{customer.role}</div>
-                      <div className="py-2">{customer.verified ? "yes" : "no"}</div>
+                      <div className="py-2 col-span-2 overflow-x-scroll pl-1">{customer.email}</div>
+                      <div className="py-2 col-span-2 overflow-x-scroll pl-2">
+                        {customer.firstName} {customer.lastName}
+                      </div>
+                      <div className="py-2">{customer.verifiedByAdmin ? "yes" : "no"}</div>
                     </div>
                   );
                 })
@@ -139,9 +137,9 @@ export function CustomerDetails({
 
   function CustomerField({ title, value }) {
     return (
-      <div>
-        <span>{title}:</span>
-        <span>{value}</span>
+      <div className="flex flex-col">
+        <h2 className="text-lg font-semibold">{title}</h2>
+        <p>{value}</p>
       </div>
     );
   }
@@ -156,35 +154,69 @@ export function CustomerDetails({
     toast.success(response.message);
   };
 
-  return customer ? (
-    <div>
-      {show && <DeleteConfirmationModal setShow={setShow} mutate={mutate} customerId={customer.id} />}
-      <CustomerField title="Id" value={customer.id} />
-      <CustomerField title="Email" value={customer.email} />
-      <CustomerField title="First Name" value={customer.firstName} />
-      <CustomerField title="Last Name" value={customer.lastName} />
-      <CustomerField title="Role" value={customer.role} />
-      <CustomerField title="Verification Status" value={customer.verified ? "Approved" : "Awaiting Approval"} />
-      <button
-        className={`rounded-full border-black border-2 p-2 hover:text-white ${
-          customer.verified ? "hover:bg-yellow-400 " : "hover:bg-green-600"
-        }`}
-        onClick={() => verifyCustomer(customer.id, customer.verified)}
-      >
-        {customer.verified ? "Cancel Membership" : "Approve Membership"}
-      </button>
-      <button className="rounded-full border-black border-2 p-2 hover:bg-red-700 hover:text-white" onClick={() => setShow(true)}>
-        Delete Customer
-      </button>
-    </div>
-  ) : (
-    <div>
-      <CustomerField title="Id" value="" />
-      <CustomerField title="Email" value="" />
-      <CustomerField title="First Name" value="" />
-      <CustomerField title="Last Name" value="" />
-      <CustomerField title="Role" value="" />
-      <CustomerField title="Verification Status" value="" />
+  return (
+    <div
+      className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full h-full md:inset-0 z-50 overflow-y-scroll"
+      onClick={() => setCustomer(null)}
+    >
+      <div className="relative p-2 w-4/5 m-auto bg-white rounded-xl" onClick={(e) => e.stopPropagation()}>
+        {customer ? (
+          <div>
+            <h1 className="pb-1 text-2xl font-bold">Customer Information</h1>
+
+            <div className="flex flex-row justify-between">
+              <CustomerField title="Id" value={customer.id} />
+              <CustomerField title="Verification Status" value={customer.verifiedByAdmin ? "Approved" : "Awaiting Approval"} />
+            </div>
+            <CustomerField title="Email" value={customer.email} />
+            <div className="flex flex-row gap-10">
+              <CustomerField title="First Name" value={customer.firstName} />
+              <CustomerField title="Last Name" value={customer.lastName} />
+            </div>
+            <CustomerField title="Role" value={customer.role} />
+            <div className="flex flex-col w-3/4 mx-auto mt-5">
+              <button
+                className={`flex flex-row items-center justify-center rounded-full border-[1px] p-2  ${
+                  customer.verifiedByAdmin ? "bg-yellow-400 text-black" : "bg-green-600 text-white"
+                }`}
+                onClick={() => verifyCustomer(customer.id, customer.verifiedByAdmin)}
+              >
+                {customer.verifiedByAdmin ? (
+                  <>
+                    <AiOutlineClose size={20} />
+                    <span className="ml-2">Cancel Membership</span>
+                  </>
+                ) : (
+                  <>
+                    <AiOutlineCheck size={20} />
+                    <span className="ml-2">Approve Membership</span>
+                  </>
+                )}
+              </button>
+              {show ? (
+                <DeleteConfirmationModal setShow={setShow} mutate={mutate} customerId={customer.id} />
+              ) : (
+                <button
+                  className="flex flex-row items-center justify-center rounded-full border-[1px] p-2 bg-red-600 text-white"
+                  onClick={() => setShow(true)}
+                >
+                  <BsFillTrashFill size={20} />
+                  <span className="ml-2">Delete Customer</span>
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <CustomerField title="Id" value="" />
+            <CustomerField title="Email" value="" />
+            <CustomerField title="First Name" value="" />
+            <CustomerField title="Last Name" value="" />
+            <CustomerField title="Role" value="" />
+            <CustomerField title="Verification Status" value="" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -228,28 +260,21 @@ function DeleteConfirmationModal({
   });
 
   return (
-    <div
-      className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4 overflow-x-hidden overflow-y-auto bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
-      onClick={() => setShow(false)}
-    >
-      <div className="relative w-1/3 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
-        <div className=" flex flex-col items-center relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-          <h1 className="text-lg p-2">Are you sure you wanted to delete this user? This action is irreversible.</h1>
-          <div className="flex flex-row gap-8 p-2">
-            <button
-              className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
-              onClick={() => setShow(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
-              onClick={() => deleteCustomer()}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
+    <div className="m-auto">
+      <h1 className="text-lg p-2">Are you sure you wanted to delete this user? This action is irreversible.</h1>
+      <div className="flex flex-row justify-evenly p-2">
+        <button
+          className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
+          onClick={() => setShow(false)}
+        >
+          Cancel
+        </button>
+        <button
+          className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
+          onClick={() => deleteCustomer()}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

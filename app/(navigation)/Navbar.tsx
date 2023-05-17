@@ -1,11 +1,12 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSelectedLayoutSegments, useSelectedLayoutSegment } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
-import React, { useState } from "react";
+import useSWR from "swr";
 import CartModal from "./Cart";
+import { useSelectedLayoutSegments } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { Cart, CartItem } from "@prisma/client";
 
 function NavLink({ children, href }: { children: React.ReactNode; href: string }) {
   let segment: any = useSelectedLayoutSegments();
@@ -28,26 +29,26 @@ function NavLink({ children, href }: { children: React.ReactNode; href: string }
 }
 
 export default function Navbar() {
+  const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data: session, status } = useSession();
   const [showCart, setShowCart] = useState(false);
+  const { data, error, isLoading, mutate } = useSWR("/get-cart", fetcher);
+  const [cart, setCart] = useState<
+    Cart & {
+      cartItems: CartItem[];
+    }
+  >(null);
+  useEffect(() => {
+    if (data) {
+      setCart(data.cart);
+    }
+  }, [data]);
 
   return (
     <>
-      {showCart ? <CartModal setShow={setShowCart} /> : null}
+      {showCart ? <CartModal cart={cart} setShow={setShowCart} mutate={mutate} /> : null}
       <nav className="flex flex-row justify-center text-sm md:text-lg font-semibold bg-black text-white h-14">
-        {/* <NavLink href="/">Home</NavLink> */}
-        {/* <div className="absolute left-0 ml-2 md:ml-4 h-14 w-14 md:w-20">
-          {status === "authenticated" ? (
-            <Link href="/user/products" className="h-14 w-14 md:w-20">
-              <Image src="/images/logo.png" fill={true} alt="logo" />
-            </Link>
-          ) : (
-            <Link href="/" className="h-14 w-20  ">
-              <Image src="/images/logo.png" fill={true} alt="logo" />
-            </Link>
-          )}
-        </div> */}
-        {status === "authenticated" && session.user.role === "admin" ? <NavLink href="/admin">Admin</NavLink> : null}
+        {status === "authenticated" && session.user.role === "ADMIN" ? <NavLink href="/admin">Admin</NavLink> : null}
         {status === "authenticated" ? (
           <>
             <NavLink href="/user/products">Products</NavLink>
@@ -63,8 +64,6 @@ export default function Navbar() {
             </button>
           </>
         ) : null}
-
-        {/* {status === "unauthenticated" ? <NavLink href="/auth/login">Login</NavLink> : null} */}
       </nav>
     </>
   );

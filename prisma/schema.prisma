@@ -16,13 +16,21 @@ model User {
   email     String   @unique
   firstName String
   lastName  String
-  role      String
+  role      UserRole @default(CUSTOMER)
   password  String   @db.Char(60)
-  verified  Boolean
+  verifiedByAdmin  Boolean @default(false)
+  verifiedEmail Boolean @default(false)
+  resetToken String?
+  createdAt       DateTime @default(now())
   Orders    Order[]
   carts Cart[]
 }
 
+enum UserRole {
+  ADMIN
+  CUSTOMER
+
+}
 model Product {
   id       Int     @id @default(autoincrement())
   name     String @unique

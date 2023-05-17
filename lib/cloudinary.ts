@@ -19,13 +19,3 @@ export async function uploadImage(imagePath, imageName) {
     console.error(error);
   }
 }
-
-// await fetch("/api/admin/product/create-product", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({ name, price, imagePath: image, imageName: imageName }),
-// });
-
-//

@@ -9,7 +9,7 @@ export async function GET(request: NextRequest, context: { params }) {
     const sort = context.params.sort;
 
     let customers: User[];
-    const count = await prisma.user.count({ where: { role: "customer" } });
+    const count = await prisma.user.count({ where: { role: "CUSTOMER" } });
 
     if (cursor === 0) {
       customers = await prisma.user.findMany({
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, context: { params }) {
 
 function exclude(users: User[], keys) {
   for (let x = 0; x < users.length; x++) {
-    if (users[x]["role"] === "admin") users.splice(x, 1);
+    if (users[x]["role"] === "ADMIN") users.splice(x, 1);
   }
   for (let x = 0; x < users.length; x++) {
     for (let key of keys) {

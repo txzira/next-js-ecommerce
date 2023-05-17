@@ -1,75 +1,79 @@
 "use client";
-import { Cart, CartItem } from "@prisma/client";
+import { Cart, CartItem, WalletAddress, WalletType } from "@prisma/client";
 import Loader from "app/Loader";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import useSWR, { KeyedMutator } from "swr";
 import states from "lib/state";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
+  const fetcher = (url) => fetch(url).then((res) => res.json());
   const initialShipping = { firstName: "", lastName: "", streetAddress: "", streetAddress2: "", city: "", state: "AL", zipCode: "" };
+  const { data: cartData, error: cartError, isLoading: cartIsLoading, mutate: cartMutate } = useSWR("/get-cart", fetcher);
+  const router = useRouter();
+  const {
+    data: walletsData,
+    error: walletsError,
+    isLoading: walletsIsLoading,
+    mutate: walletsMutate,
+  } = useSWR("/user/checkout/get-wallet-address", fetcher);
 
   const [shipping, setShipping] = useState(initialShipping);
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading, mutate } = useSWR("/get-cart", fetcher);
   const [cart, setCart] = useState<
     Cart & {
       cartItems: CartItem[];
     }
   >(null);
-
   const [image, setImage] = useState<any>();
   const [imageName, setImageName] = useState("");
+
   useEffect(() => {
-    if (data) {
-      setCart(data.cart);
+    if (cartData) {
+      setCart(cartData.cart);
     }
-  }, [data]);
+  }, [cartData]);
 
   console.log(cart);
   const placeOrder = async () => {
-    console.log("lol");
-    const data = await fetch("/user/checkout/place-order", { method: "POST", body: JSON.stringify({ cartId: cart.id, shipping }) });
+    toast.loading("Loading...");
+    const data = await fetch("/user/checkout/place-order", {
+      method: "POST",
+      body: JSON.stringify({ cartId: cart.id, shipping, imagePath: image, imageName }),
+    });
     const response = await data.json();
-    console.log(response);
+    toast.dismiss();
+    if (response.status === 200) {
+      toast.success(response.message);
+      router.push("/user/products");
+    } else {
+      toast.error(response.message);
+      router.push("/user/products");
+    }
   };
-  return (
-    <div className="pb-10">
+  return cart && cart.cartItems.length > 0 ? (
+    <div className="pb-10 mt-8 ">
       <ShippingForm shipping={shipping} setShipping={setShipping} />
-      <ProductForm image={image} setImage={setImage} setImageName={setImageName} />
-      <div className="w-[90%] mx-auto bg-white rounded-xl shadow-lg p-2">
-        <h1 className="pb-3 text-xl font-bold ">Order Review</h1>
-        <div className="grid grid-cols-5 bg-gray-300">
-          <div className="col-span-2">Name</div>
-          <div>Price</div>
-          <div>Qty</div>
-          <div>Total</div>
-        </div>
-        {cart ? (
-          cart.cartItems.map((cartItem) => {
-            return <CartItem cartItem={cartItem} mutate={mutate} />;
-          })
-        ) : (
-          <Loader />
-        )}
-        <div className="grid grid-cols-5">
-          <div className="col-span-2"></div>
-          <div className="col-span-2 text-center">Total Amount</div>
-          <div className="font-black">${cart ? cart.cartTotal : null}</div>
-        </div>
-        <div className="my-4">
-          <div className="w-full border-b-[1px] border-gray-200"></div>
-        </div>
-        <div className="flex flex-row justify-end items-center gap-3">
-          <Link href="/user/products" className="border-black border-[1px] text-[10px] font-medium col-span-2 p-2">
-            CONTINUE SHOPPING
-          </Link>
-          <button className="bg-black text-white text-[10px] p-2 font-medium" onClick={placeOrder}>
-            PLACE ORDER
-          </button>
-        </div>
-      </div>
+      <PaymentForm
+        image={image}
+        setImage={setImage}
+        walletsData={walletsData}
+        walletsIsLoading={walletsIsLoading}
+        setImageName={setImageName}
+      />
+      <OrderReview cart={cart} mutate={cartMutate} placeOrder={placeOrder} />
+    </div>
+  ) : (
+    <div className="flex justify-center mt-8">
+      <p className="text-lg">
+        Cart Empty. To add items{" "}
+        <Link href="/user/products" className="text-blue-800 underline">
+          click here
+        </Link>
+        .
+      </p>
     </div>
   );
 }
@@ -147,30 +151,31 @@ function ShippingForm({
   >;
 }) {
   return (
-    <div className="w-[90%] mx-auto bg-white rounded-xl shadow-lg p-2">
+    <div className="bg-white rounded-xl shadow-lg p-2">
       <div className="w-full mx-auto">
-        <h2 className="text-2xl font-semibold pb-2">Shipping</h2>
-        <div className="flex flex-row">
-          <div className="flex flex-col">
+        <h1 className="text-2xl font-bold pb-2">Shipping</h1>
+        {/* // First and Last Name row */}
+        <div className="flex flex-row gap-1">
+          <div className="flex flex-col w-[49%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="firstName">
               First Name
             </label>
             <input
               required={true}
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="firstName"
               value={shipping.firstName}
               placeholder="John"
               onChange={(event) => setShipping({ ...shipping, firstName: event.target.value })}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-[49%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="lastName">
               Last Name
             </label>
             <input
               required={true}
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="lastName"
               value={shipping.lastName}
               placeholder="Smith"
@@ -178,27 +183,27 @@ function ShippingForm({
             />
           </div>
         </div>
-
-        <div className="flex flex-row">
-          <div className="flex flex-col">
+        {/* // Street Address row */}
+        <div className="flex flex-row gap-1">
+          <div className="flex flex-col w-[59%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="streetAddress">
               Street Address
             </label>
             <input
               required={true}
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="streetAddress"
               value={shipping.streetAddress}
               placeholder="123 Rainy St."
               onChange={(event) => setShipping({ ...shipping, streetAddress: event.target.value })}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-[39%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="streetAddress2">
               Street Address 2
             </label>
             <input
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="streetAddress2"
               value={shipping.streetAddress2}
               placeholder="Apt. 2"
@@ -206,22 +211,22 @@ function ShippingForm({
             />
           </div>
         </div>
-
-        <div className="flex flex-row">
-          <div className="flex flex-col ">
+        {/* // City State Zip row */}
+        <div className="flex flex-row gap-1">
+          <div className="flex flex-col w-[33%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="city">
               City
             </label>
             <input
               required={true}
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="city"
               value={shipping.city}
               placeholder="Beckley"
               onChange={(event) => setShipping({ ...shipping, city: event.target.value })}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-[33%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="state">
               State
             </label>
@@ -239,13 +244,13 @@ function ShippingForm({
               })}
             </select>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-[33%]">
             <label className="font-semibold text-base md:text-lg" htmlFor="zipCode">
               Zip
             </label>
             <input
               required={true}
-              className="text-sm md:text-base"
+              className="px-1 text-sm md:text-base"
               id="zipCode"
               value={shipping.zipCode}
               placeholder="25919"
@@ -257,7 +262,8 @@ function ShippingForm({
     </div>
   );
 }
-function ProductForm({ image, setImage, setImageName }) {
+
+function PaymentForm({ image, setImage, setImageName, walletsData, walletsIsLoading }) {
   const setFileToBase = (file) => {
     const reader = new FileReader();
     setImageName(file.name);
@@ -271,34 +277,114 @@ function ProductForm({ image, setImage, setImageName }) {
     setFileToBase(file);
   };
   return (
-    <div className="w-[90%] mx-auto my-10 bg-white rounded-xl shadow-lg p-2">
+    <div className="my-10 bg-white rounded-xl shadow-lg p-2">
       <div>
-        <h2 className="text-2xl font-semibold pb-2">Payment</h2>
-
-        <span className="text-xs md:text-sm">
+        <h1 className="text-2xl font-bold pb-2">Payment</h1>
+        <p className="text-xs md:text-sm">
           Note: Screenshot the transaction between your wallet address and one of these addresses and attach it as your proof of payment
           image, leave image blank if cash order.
-        </span>
+        </p>
+
+        <h1 className="text-xl font-semibold pt-3 pb-1">Wallet Addresses</h1>
+        <div className="grid grid-cols-3 bg-black text-white text-lg">
+          <div className="col-span-2 pl-2">Address</div>
+          <div className="pl-2">Type</div>
+        </div>
+        <div className="h-24 overflow-y-scroll border-2 border-black">
+          {!walletsIsLoading ? (
+            walletsData.walletAddresses.map(
+              (
+                walletAddress: WalletAddress & {
+                  type: WalletType;
+                }
+              ) => {
+                return (
+                  <div className="grid grid-cols-3 even:bg-slate-200">
+                    <div className="col-span-2 pl-2 overflow-x-scroll">{walletAddress.address}</div>
+                    <div className="pl-2">{walletAddress.type.name}</div>
+                  </div>
+                );
+              }
+            )
+          ) : (
+            <div className="flex justify-center">
+              <Loader />
+            </div>
+          )}
+        </div>
       </div>
-      <span>
+      <p className="pt-2">
         <u className="font-semibold">Crypto Proof of Payment Image</u>
-      </span>
+      </p>
       <div>
         <label htmlFor="productImage" className="text-sm">
           Select an Image:
         </label>
         <input type="file" id="productImage" onChange={handleImage} />
       </div>
-      {image ? <Image id="preview" src={image} alt="payment preview" width={250} height={100} /> : null}
+      {image ? (
+        <div className="flex justify-center w-80 h-80 relative object-contain mx-auto ">
+          <Image id="preview" src={image} fill={true} alt="payment preview" />
+        </div>
+      ) : null}
       <div className="w-full">
-        <h3 className="text-lg font-semibold">Cash Address</h3>
-        <span className="text-sm">If you wish to pay with cash, send it to the address below.</span>
-        <div className="text-xs md:text-sm">
+        <h1 className="text-xl font-semibold">Cash Address</h1>
+        <p className="text-sm">If you wish to pay with cash, send it to the address below.</p>
+        <div className="py-2 text-xs md:text-sm">
           <p>Fabian P.</p>
           <p>325 N Larchmont Blvd, Los Angeles, CA 90004</p>
         </div>
       </div>
-      <p>ORDERS WILL NOT SHIP UNTIL PAYMENT IS RECEIVED/VERIFIED.</p>
+      <p className="text-center">ORDERS WILL NOT SHIP UNTIL PAYMENT IS RECEIVED/VERIFIED.</p>
+    </div>
+  );
+}
+
+function OrderReview({
+  cart,
+  mutate,
+  placeOrder,
+}: {
+  cart: Cart & {
+    cartItems: CartItem[];
+  };
+  mutate: KeyedMutator<any>;
+  placeOrder: () => Promise<void>;
+}) {
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-2">
+      <h1 className="pb-3 text-2xl font-bold ">Order Review</h1>
+      <div className="grid grid-cols-5 bg-black text-white">
+        <div className="col-span-2 px-1">Name</div>
+        <div className="px-1">Price</div>
+        <div className="px-1">Qty</div>
+        <div className="px-1">Total</div>
+      </div>
+      {cart ? (
+        cart.cartItems.map((cartItem) => {
+          return <CartItem cartItem={cartItem} mutate={mutate} />;
+        })
+      ) : (
+        <div className="flex justify-center">
+          <Loader />
+        </div>
+      )}
+      <div className="grid grid-cols-5">
+        <div className="col-span-2"></div>
+        <div className="col-span-2 text-center">Total Amount</div>
+        <div className="font-black">${cart ? cart.cartTotal : null}</div>
+      </div>
+      <div className="my-4">
+        <div className="w-full border-b-[1px] border-gray-200"></div>
+      </div>
+      <div className="flex flex-row justify-end items-center gap-3">
+        <Link href="/user/products" className="border-black  border-[1px] text-[10px] font-medium col-span-2 p-2">
+          CONTINUE SHOPPING
+        </Link>
+        <button className="bg-green-600 text-white text-[10px] p-2 font-medium" onClick={placeOrder}>
+          PLACE ORDER
+        </button>
+      </div>
     </div>
   );
 }

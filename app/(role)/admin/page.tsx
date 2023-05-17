@@ -7,20 +7,20 @@ export default async function AdminPage() {
   const walletsVsCashSums: number[] = [];
 
   const approvedOrdersData = await prisma.order.findMany({
-    where: { customer: { role: "customer" }, approved: true },
+    where: { customer: { role: "CUSTOMER" }, approved: true },
     select: { amount: true, date: true },
   });
   const unapprovedOrdersData = await prisma.order.findMany({
-    where: { customer: { role: "customer" }, approved: false },
+    where: { customer: { role: "CUSTOMER" }, approved: false },
     select: { amount: true, date: true },
   });
 
   const walletOrdersData = await prisma.order.findMany({
-    where: { customer: { role: "customer" }, isCash: false },
+    where: { customer: { role: "CUSTOMER" }, isCash: false },
     select: { amount: true, date: true },
   });
   const cashOrdersData = await prisma.order.findMany({
-    where: { customer: { role: "customer" }, isCash: true },
+    where: { customer: { role: "CUSTOMER" }, isCash: true },
     select: { amount: true, date: true },
   });
 

@@ -1,7 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-export const USERTYPE = { USER: "customer", ADMIN: "admin" };
+export const USERTYPE = { USER: "CUSTOMER", ADMIN: "ADMIN" };
 export const config = {
   matcher: ["/admin/:path*", "/user/:path*"],
 };

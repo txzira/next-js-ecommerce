@@ -20,36 +20,28 @@ export default function AdminProductsPage() {
     isLoading: categoriesIsLoading,
     mutate: categoriesMutate,
   } = useSWR(`/admin/categories/get-categories`, fetcher);
-  console.log(categoriesData);
   return (
-    <div className="flex flex-col gap-5 h-full">
-      <ProductForm mutate={productsMutate} />
+    <div className="h-full w-[90%] mx-auto">
+      <h1 className="text-3xl font-bold pb-5">Products</h1>
+      <div className="px-2 py-5 border-2 border-black bg-white rounded-xl shadow-xl">
+        <ProductForm mutate={productsMutate} />
+        <div className="border-b-[1px] border-gray-400 my-5"></div>
 
-      <div className="border-b-[1px] border-slate-600"></div>
-
-      <div className="flex flex-row md:gap-20 h-full">
-        <div className="w-full">
-          <ProductTable
-            data={productsData}
-            isLoading={isLoading}
-            setProduct={setProduct}
-            categoriesData={categoriesData}
-            category={category}
-            setCategory={setCategory}
-            mutate={productsMutate}
-            setShow={setShowProductDetails}
-          />
+        <div className="flex flex-row md:gap-20 h-full">
+          <div className="w-full">
+            <ProductTable
+              data={productsData}
+              isLoading={isLoading}
+              setProduct={setProduct}
+              categoriesData={categoriesData}
+              setCategory={setCategory}
+            />
+          </div>
+          {product ? (
+            <ProductDetails product={product} setProduct={setProduct} mutate={productsMutate} categoriesData={categoriesData} />
+          ) : null}
+          <div className="flex flex-col"></div>
         </div>
-        {showProductDetails ? (
-          <ProductDetails
-            product={product}
-            setProduct={setProduct}
-            setShow={setShowProductDetails}
-            mutate={productsMutate}
-            categoriesData={categoriesData}
-          />
-        ) : null}
-        <div className="flex flex-col"></div>
       </div>
     </div>
   );

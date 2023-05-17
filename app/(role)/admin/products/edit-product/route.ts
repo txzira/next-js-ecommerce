@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
         name: formProduct.name,
         price: formProduct.price,
         productCategoryId: formProduct.productCategoryId,
+        active: formProduct.active,
       },
     });
     console.log(product);

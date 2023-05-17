@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
@@ -7,17 +7,19 @@ import { AiFillMail, AiFillLock } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useParams } from "next/navigation";
+import { validateEmail, validatePassword } from "pages/api/auth/[...nextauth]";
 
 function FormContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative mt-10 w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
-      <div className="relative w-full p-5 text-black bg-white border border-nonef rounded-md bg-opacity-30">{children}</div>
+      <div className="relative w-4/5 mx-auto p-5 text-black bg-white border shadow-lg rounded-md ">{children}</div>
     </div>
   );
 }
 
 function FormIcon({ children }: { children: React.ReactNode }) {
-  return <span className="absolute opacity-40 top-4 left-7 text-lg">{children}</span>;
+  return <span className="absolute opacity-40 top-3.5 left-4 text-lg">{children}</span>;
 }
 
 function FormItem({ children }: { children: React.ReactNode }) {
@@ -50,7 +52,7 @@ function FormInput({
   return (
     <input
       required
-      className="text-black  w-full rounded-3xl py-3 px-6 pl-14 bg-opacity-40 bg-white focus:bg-white focus:outline-none placeholder:text-black"
+      className="text-black border w-full rounded-3xl py-2 px-4 pl-10 bg-white focus:bg-slate-300 focus:outline-none placeholder:text-black"
       id={id}
       type={type}
       placeholder={placeholder}
@@ -59,6 +61,25 @@ function FormInput({
     />
   );
 }
+const initalErrors = {
+  uppercaseError: {
+    error: "Must include at least 1 uppercase letter",
+    status: false,
+  },
+  lowercaseError: { error: "Must include at least 1 lowercase letter.", status: false },
+  numberError: {
+    error: "Must include at least 1 number.",
+    status: false,
+  },
+  specialCharError: {
+    error: "Must include at least 1 special character (!@#$%^&*).",
+    status: false,
+  },
+  lengthError: {
+    error: "Must be between 8-16 characters.",
+    status: false,
+  },
+};
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -123,34 +144,58 @@ export const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [attemptSubmit, setAttemptSubmit] = useState(false);
   const router = useRouter();
+
+  const [formErrors, setFormErrors] = useState(initalErrors);
 
   const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (password === confirmPassword) {
-      toast.loading("Loading...");
-      const data = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, name }),
-      });
-      const response = await data.json();
-      toast.dismiss();
-      if (data.status === 200) {
-        toast.success(response.message);
-        router.push("/auth/login");
+    setAttemptSubmit(true);
+    const errors = initalErrors;
+    //uppercase validation
+    password.match(/(?=.*[A-Z])/) ? (errors.uppercaseError.status = true) : (errors.uppercaseError.status = false);
+    //lowercase validation
+    password.match(/(?=.*[a-z])/) ? (errors.lowercaseError.status = true) : (errors.lowercaseError.status = false);
+    //number validation
+    password.match(/(?=.*\d)/) ? (errors.numberError.status = true) : (errors.numberError.status = false);
+    //special character validation
+    password.match(/(?=.*[!@#$%^&*])/) ? (errors.specialCharError.status = true) : (errors.specialCharError.status = false);
+    //length validation
+    password.match(/^.{8,16}$/) ? (errors.lengthError.status = true) : (errors.lengthError.status = false);
+
+    setFormErrors(errors);
+    if (validateEmail(email)) {
+      if (password === confirmPassword) {
+        if (validatePassword(password)) {
+          toast.loading("Loading...");
+          const data = await fetch("/auth/signup/create-user", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password, name }),
+          });
+          const response = await data.json();
+          toast.dismiss();
+          if (data.status === 200) {
+            toast.success(response.message);
+            router.push("/auth/login");
+          } else {
+            toast.error(response.message);
+          }
+        } else {
+          toast.error("Unacceptable Password");
+        }
       } else {
-        toast.error(response.message);
+        //error passwords do not match
+        toast.dismiss();
+        toast.error("Passwords do not match");
+        setPassword("");
+        setConfirmPassword("");
       }
     } else {
-      //error passwords do not match
-      toast.dismiss();
-
-      toast.error("Passwords do not match");
-      setPassword("");
-      setConfirmPassword("");
+      toast.error("Invalid email address.");
     }
   };
 
@@ -176,6 +221,21 @@ export const SignupForm = () => {
             <AiFillLock />
           </FormIcon>
           <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+          {attemptSubmit ? (
+            <ul className="list-disc list-inside text-xs text-left ml-5">
+              <li className={`${formErrors.uppercaseError.status ? "text-green-600" : "text-red-600"}`}>
+                {formErrors.uppercaseError.error}
+              </li>
+              <li className={`${formErrors.lowercaseError.status ? "text-green-600" : "text-red-600"}`}>
+                {formErrors.lowercaseError.error}
+              </li>
+              <li className={`${formErrors.numberError.status ? "text-green-600" : "text-red-600"}`}>{formErrors.numberError.error}</li>
+              <li className={`${formErrors.specialCharError.status ? "text-green-600" : "text-red-600"}`}>
+                {formErrors.specialCharError.error}
+              </li>
+              <li className={`${formErrors.lengthError.status ? "text-green-600" : "text-red-600"}`}>{formErrors.lengthError.error}</li>
+            </ul>
+          ) : null}
         </FormItem>
         <FormItem>
           <FormIcon>
@@ -190,13 +250,122 @@ export const SignupForm = () => {
           />
         </FormItem>
         <FormButton>Sign Up</FormButton>
-        <div>
+        <p>
           Already have an account?{" "}
           <Link href="/auth/login" className="text-blue-800 underline">
             Sign In
           </Link>
           .
-        </div>
+        </p>
+      </form>
+    </FormContainer>
+  );
+};
+
+export const ForgotPasswordForm = () => {
+  const [email, setEmail] = useState("");
+  const requestPasswordLink = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    toast.loading("Loading...");
+
+    const data = await fetch("/auth/forgot-password/send-email-link", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+    const response = await data.json();
+    toast.dismiss();
+    console.log(response);
+  };
+  return (
+    <FormContainer>
+      <form className="w-full text-center" onSubmit={(event) => requestPasswordLink(event)}>
+        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <h1 className="text-black font-bold text-2xl  my-2 md:p-2 ">Forgot Password</h1>
+        <p className="text-sm text-gray-500  my-2">Enter your email and we'll send you a link to reset your password</p>
+        <FormItem>
+          <FormIcon>
+            <AiFillMail />
+          </FormIcon>
+          <FormInput id="email" type="email" placeholder="Email" value={email} onChange={setEmail} />
+        </FormItem>
+        <FormItem>
+          <button className="w-2/3 text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-2 px-6 rounded-full  bg-black ">
+            Submit
+          </button>
+        </FormItem>
+        <p className="text-sm">
+          Don't have an account?{" "}
+          <Link href="/auth/signup" className="text-blue-800 underline">
+            Sign Up
+          </Link>
+          .
+        </p>
+        <p className="text-sm">
+          Remembered your password?{" "}
+          <Link href="/auth/login" className="text-blue-800 underline">
+            Login
+          </Link>
+          .
+        </p>
+      </form>
+    </FormContainer>
+  );
+};
+
+export const ResetPasswordForm = () => {
+  const { token } = useParams();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+  const resetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    toast.loading("Loading...");
+
+    if (password === confirmPassword) {
+      const data = await fetch(`/auth/forgot-password/reset-password/${token}`, {
+        method: "PATCH",
+        body: JSON.stringify({ password, confirmPassword }),
+      });
+      const response = await data.json();
+      toast.dismiss();
+      if (response.status === 200) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+      router.push("/auth/login");
+    } else {
+      toast.error("Passwords mismatch.");
+    }
+  };
+  return (
+    <FormContainer>
+      <form className="w-full text-center" onSubmit={(event) => resetPassword(event)}>
+        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
+        <h1 className="text-black font-bold text-2xl  my-2 md:p-2 ">Forgot Password</h1>
+        <FormItem>
+          <FormIcon>
+            <AiFillLock />
+          </FormIcon>
+          <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+        </FormItem>
+        <FormItem>
+          <FormIcon>
+            <AiFillLock />
+          </FormIcon>
+          <FormInput
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+          />
+        </FormItem>
+        <FormItem>
+          <button className="w-2/3 text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-2 px-6 rounded-full  bg-black ">
+            Submit
+          </button>
+        </FormItem>
       </form>
     </FormContainer>
   );

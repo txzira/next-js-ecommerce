@@ -25,16 +25,20 @@ export function WalletTypeForm({ walletTypesMutate }: { walletTypesMutate: Keyed
   };
 
   return (
-    <form className="flex flex-row">
+    <form className="flex flex-row items-end">
       <div>
-        <label>Wallet Type</label>
-        <input type="text" value={walletType} placeholder="BTC" onChange={(event) => setWalletType(event.target.value)} />
+        <label className="pl-1">Wallet Type</label>
+        <input
+          type="text"
+          className="pl-1 border-[1px] rounded-lg "
+          value={walletType}
+          placeholder="BTC"
+          onChange={(event) => setWalletType(event.target.value)}
+        />
       </div>
-      <div>
-        <button type="button" className="bg-green-500 text-white rounded-full px-2" onClick={() => addWalletType()}>
-          Add
-        </button>
-      </div>
+      <button type="button" className="px-2 bg-green-500 text-white rounded-full" onClick={() => addWalletType()}>
+        Add
+      </button>
     </form>
   );
 }
@@ -50,27 +54,29 @@ export function WalletTypeList({
 }) {
   const [walletType, setWalletType] = useState<WalletType>();
   return (
-    <div className="flex flex-row">
-      <div className="grid text-center  border-2 border-black mr-10 ">
-        <div className="grid grid-cols-1 border-b-2 border-black">
-          <div>Wallet Type Name</div>
-        </div>
-        {!isLoading ? (
-          walletTypesData ? (
-            walletTypesData.walletTypes.map((type) => {
-              return (
-                <div key={type.id} className="grid grid-cols-1 hover:bg-white cursor-pointer" onClick={() => setWalletType(type)}>
-                  {type.name}
-                </div>
-              );
-            })
-          ) : null
-        ) : (
-          <div>
-            <Loader />
-          </div>
-        )}
+    <div className="grid text-center border-2 border-black rounded-lg ">
+      <div className="grid grid-cols-1 border-b-2 border-black bg-black text-white text-lg p-1 font-semibold">
+        <div>Wallet Type Name</div>
       </div>
+      {!isLoading ? (
+        walletTypesData ? (
+          walletTypesData.walletTypes.map((type) => {
+            return (
+              <div
+                key={type.id}
+                className="grid grid-cols-1 h-7 items-center hover:bg-white cursor-pointer even:bg-slate-300 last:rounded-b-md"
+                onClick={() => setWalletType(type)}
+              >
+                {type.name}
+              </div>
+            );
+          })
+        ) : null
+      ) : (
+        <div className="flex justify-center">
+          <Loader />
+        </div>
+      )}
       {walletType ? (
         <div>
           <WalletTypeInfo walletType={walletType} setWalletType={setWalletType} walletTypesMutate={walletTypesMutate} />
@@ -106,13 +112,25 @@ function WalletTypeInfo({
   }, [walletType]);
 
   return (
-    <div className="flex flex-col">
-      <label>Wallet Type Name</label>
-      <div className="flex flex-row">
-        <input type="text" value={walletTypeName} onChange={(event) => setWalletTypeName(event.target.value)} />
-        <button type="button" className="bg-yellow-500  text-white rounded-full px-2 ml-5" onClick={() => editWalletType()}>
-          Edit
-        </button>
+    <div
+      className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:inset-0 h-full z-50 overflow-y-scroll "
+      onClick={() => setWalletType(null)}
+    >
+      <div className="relative w-2/3 rounded-lg p-2 md:h-auto m-auto bg-white" onClick={(e) => e.stopPropagation()}>
+        <div className="flex flex-col">
+          <label className="text-lg font-semibold">Wallet Type Name</label>
+          <div className="flex flex-row">
+            <input
+              type="text"
+              className="pl-1 border-[1px] rounded-lg overflow-x-scroll"
+              value={walletTypeName}
+              onChange={(event) => setWalletTypeName(event.target.value)}
+            />
+            <button type="button" className="bg-yellow-500 text-white rounded-full px-2 ml-5" onClick={() => editWalletType()}>
+              Edit
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -162,33 +180,34 @@ export function WalletAddressForm({
   }, [walletTypes]);
 
   return (
-    <form className="flex flex-row items-center">
-      <div className="flex flex-col mr-5">
-        <label>Wallet Address</label>
-        <input
-          type="text"
-          value={walletAddress}
-          placeholder="1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71"
-          onChange={(event) => setWalletAddress(event.target.value)}
-        />
+    <form className="flex flex-row items-end justify-between">
+      <div className="flex flex-col">
+        <div className="flex flex-col mb-2">
+          <label className="pl-1">Wallet Address</label>
+          <input
+            type="text"
+            className="pl-1 border-[1px] rounded-lg overflow-x-scroll"
+            value={walletAddress}
+            placeholder="1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71"
+            onChange={(event) => setWalletAddress(event.target.value)}
+          />
+        </div>
+        <div className="flex flex-col">
+          <label>Wallet Type</label>
+          <select className="pl-1 border-[1px] rounded-lg" value={walletTypeName} onChange={(event) => setWalletType(event.target.value)}>
+            {walletTypes.map((walletType) => {
+              return (
+                <option key={walletType.id} id={walletType.id.toString()} value={walletType.name}>
+                  {walletType.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
-      <div className="flex flex-col mr-5">
-        <label>Wallet Type</label>
-        <select value={walletTypeName} onChange={(event) => setWalletType(event.target.value)}>
-          {walletTypes.map((walletType) => {
-            return (
-              <option key={walletType.id} id={walletType.id.toString()} value={walletType.name}>
-                {walletType.name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-      <div>
-        <button type="button" className="bg-green-500 text-white rounded-full px-2" onClick={() => addWalletAddress()}>
-          Add
-        </button>
-      </div>
+      <button type="button" className="bg-green-500 text-white rounded-full px-2" onClick={() => addWalletAddress()}>
+        Add
+      </button>
     </form>
   );
 }
@@ -212,8 +231,8 @@ export function WalletAddressList({
 
   return (
     <div className="flex flex-row">
-      <div className="grid text-center border-2 border-black">
-        <div className="grid grid-cols-2 grid- border-b-2 border-black">
+      <div className="grid text-center border-2 border-black rounded-lg w-full">
+        <div className="grid grid-cols-2 p-1 border-b-2 border-black bg-black text-white text-lg font-semibold">
           <div>Address</div>
           <div className="grid grid-cols-2">
             <div>Type</div>
@@ -222,12 +241,14 @@ export function WalletAddressList({
         </div>
         {walletAddresses.map((wallet) => {
           return (
-            <div key={wallet.id} className="grid grid-cols-2 cursor-pointer hover:bg-white" onClick={() => setWalletAddress(wallet)}>
-              <div>{wallet.address}</div>
-              <div className="grid grid-cols-2">
-                <div>{wallet.type.name}</div>
-                <div className={`${wallet.active ? "bg-green-500" : "bg-red-500"} `}>{wallet.active ? "Yes" : "No"}</div>
-              </div>
+            <div
+              key={wallet.id}
+              className="grid grid-cols-4 cursor-pointer hover:bg-white even:bg-slate-300 h-7 w-full"
+              onClick={() => setWalletAddress(wallet)}
+            >
+              <div className="col-span-2 pl-1 overflow-x-scroll">{wallet.address}</div>
+              <div>{wallet.type.name}</div>
+              <div className={`${wallet.active ? "bg-green-500" : "bg-red-500"} overflow-hidden `}>{wallet.active ? "Yes" : "No"}</div>
             </div>
           );
         })}
@@ -296,55 +317,60 @@ function WalletAddressInfo({
     setFormWallet(walletAddress);
   }, [walletAddress]);
   return (
-    <>
-      {show ? (
-        <DeleteConfirmationModal
-          walletId={formWallet.id}
-          setWalletAddress={setWalletAddress}
-          setShow={setShow}
-          walletAddressesMutate={walletAddressesMutate}
-        />
-      ) : null}
-      <div className="ml-5">
-        <div className="flex flex-col pb-1 ">
-          <label className="text-lg mr-5">Address</label>
-          <input
-            className="w-[400px]"
-            value={formWallet.address}
-            onChange={(event) => setFormWallet({ ...formWallet, address: event.target.value })}
+    <div
+      className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:inset-0 h-full z-50 overflow-y-scroll "
+      onClick={() => setWalletAddress(null)}
+    >
+      <div className="relative w-2/3 rounded-lg p-2 md:h-auto m-auto bg-white" onClick={(e) => e.stopPropagation()}>
+        {show ? (
+          <DeleteConfirmationModal
+            walletId={formWallet.id}
+            setWalletAddress={setWalletAddress}
+            setShow={setShow}
+            walletAddressesMutate={walletAddressesMutate}
           />
-        </div>
-        <div className="flex flex-col pb-2 ">
-          <label className="text-lg">Type</label>
-          <select value={formWallet.type.name} onChange={(event) => setWalletType(event.target.value)}>
-            {walletTypes.map((type) => {
-              return (
-                <option key={type.id} id={type.id.toString()} value={type.name}>
-                  {type.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div className="flex flex-row pb-2">
-          <label className="text-lg mr-5">Active:</label>
-          <button
-            className={`${formWallet.active ? "bg-green-500" : "bg-red-500"} text-white rounded-full px-2`}
-            onClick={() => setFormWallet({ ...formWallet, active: !formWallet.active })}
-          >
-            {formWallet.active ? "Enabled" : "Disabled"}
-          </button>
-        </div>
-        <div className="flex w-full">
-          <button className="mx-auto w-1/4 bg-blue-700 text-white rounded-full px-2 py-1" onClick={() => editWalletAddress()}>
-            Save
-          </button>{" "}
-          <button className="mx-auto w-1/4 bg-red-700 text-white rounded-full px-2 py-1" onClick={() => setShow(true)}>
-            Delete
-          </button>
+        ) : null}
+        <div className="">
+          <div className="flex flex-col pb-1 ">
+            <label className="text-lg mr-5 font-bold">Address</label>
+            <input
+              className="pl-1 overflow-x-scroll border-[1px] rounded-lg"
+              value={formWallet.address}
+              onChange={(event) => setFormWallet({ ...formWallet, address: event.target.value })}
+            />
+          </div>
+          <div className="flex flex-col pb-2 ">
+            <label className="text-lg font-bold">Type</label>
+            <select value={formWallet.type.name} className="pl-1 border-[1px]" onChange={(event) => setWalletType(event.target.value)}>
+              {walletTypes.map((type) => {
+                return (
+                  <option key={type.id} id={type.id.toString()} value={type.name}>
+                    {type.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="flex flex-row pb-2">
+            <label className="text-lg font-bold mr-5">Active:</label>
+            <button
+              className={`${formWallet.active ? "bg-green-500" : "bg-red-500"} text-white rounded-full px-2`}
+              onClick={() => setFormWallet({ ...formWallet, active: !formWallet.active })}
+            >
+              {formWallet.active ? "Enabled" : "Disabled"}
+            </button>
+          </div>
+          <div className="flex w-full">
+            <button className="mx-auto w-1/4 bg-blue-700 text-white rounded-full px-2 py-1" onClick={() => editWalletAddress()}>
+              Save
+            </button>{" "}
+            <button className="mx-auto w-1/4 bg-red-700 text-white rounded-full px-2 py-1" onClick={() => setShow(true)}>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 
   function DeleteConfirmationModal({

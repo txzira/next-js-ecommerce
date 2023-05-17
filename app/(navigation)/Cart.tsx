@@ -5,20 +5,21 @@ import { CartItem, Cart } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function CartModal({ setShow }: { setShow: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading, mutate } = useSWR("/get-cart", fetcher);
-  const [cart, setCart] = useState<
-    Cart & {
-      cartItems: CartItem[];
-    }
-  >(null);
+export default function CartModal({
+  cart,
+  setShow,
+  mutate,
+}: {
+  cart: Cart & {
+    cartItems: CartItem[];
+  };
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  mutate: KeyedMutator<any>;
+}) {
   useEffect(() => {
-    if (data) {
-      setCart(data.cart);
-    }
-  }, [data]);
-  console.log(data);
+    mutate();
+  }, []);
+  console.log(cart);
   return (
     <div
       className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:h-full md:inset-0 h-full z-50 overflow-y-scroll  "
