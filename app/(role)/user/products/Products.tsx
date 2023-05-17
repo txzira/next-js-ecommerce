@@ -115,7 +115,7 @@ function ProductTable({
         })
       );
     }
-  }, [categoryFilter]);
+  }, [categoryFilter, productsData.products]);
 
   return (
     <div>
@@ -198,12 +198,11 @@ function ProductDetails({
     if (variants.length > 0) {
       setSelectedVariant({ variantId: variants[0].id, variantPrice: variants[0].price });
       setCartItem({ ...cartItem, variantId: variants[0].id, productId: productDetails.id });
-      console.log(variants[0].id);
     } else {
       setCartItem({ ...cartItem, productId: productDetails.id });
     }
     // setProduct(productDetails);
-  }, [productDetails]);
+  }, [productDetails, cartItem, variants]);
 
   const handleVariantSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
@@ -224,7 +223,6 @@ function ProductDetails({
     }
   };
   const addToCart = async () => {
-    console.log(cartItem);
     const data = await fetch("/user/products/add-to-cart", {
       method: "POST",
       body: JSON.stringify({ cartItem }),
@@ -233,7 +231,6 @@ function ProductDetails({
     response.status === 200 ? toast.success(response.message) : toast.error(response.error);
     setProductDetails(null);
   };
-  console.log(productDetails);
   return (
     <div
       className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
@@ -256,7 +253,7 @@ function ProductDetails({
             <select className="relative w-1/3 right-1" onChange={(event) => handleVariantSelect(event)}>
               {variants.map((variant) => {
                 return (
-                  <option value={variant.id} id={variant.price.toString()}>
+                  <option key={variant.id} value={variant.id} id={variant.price.toString()}>
                     {variant.name} - ${variant.price}
                   </option>
                 );

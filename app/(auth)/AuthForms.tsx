@@ -281,7 +281,7 @@ export const ForgotPasswordForm = () => {
       <form className="w-full text-center" onSubmit={(event) => requestPasswordLink(event)}>
         <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
         <h1 className="text-black font-bold text-2xl  my-2 md:p-2 ">Forgot Password</h1>
-        <p className="text-sm text-gray-500  my-2">Enter your email and we'll send you a link to reset your password</p>
+        <p className="text-sm text-gray-500  my-2">Enter your email and we&apos;ll send you a link to reset your password</p>
         <FormItem>
           <FormIcon>
             <AiFillMail />
@@ -294,7 +294,7 @@ export const ForgotPasswordForm = () => {
           </button>
         </FormItem>
         <p className="text-sm">
-          Don't have an account?{" "}
+          Don&apos;t have an account?
           <Link href="/auth/signup" className="text-blue-800 underline">
             Sign Up
           </Link>

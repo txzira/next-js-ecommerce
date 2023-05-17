@@ -1,8 +1,8 @@
-import useSWR, { KeyedMutator } from "swr";
+import { KeyedMutator } from "swr";
 import { AiOutlineClose } from "react-icons/ai";
 import { BsDashCircleFill, BsFillTrashFill, BsPlusCircleFill } from "react-icons/bs";
 import { CartItem, Cart } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 
 export default function CartModal({
@@ -18,8 +18,7 @@ export default function CartModal({
 }) {
   useEffect(() => {
     mutate();
-  }, []);
-  console.log(cart);
+  }, [mutate]);
   return (
     <div
       className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:h-full md:inset-0 h-full z-50 overflow-y-scroll  "
@@ -46,7 +45,7 @@ export default function CartModal({
           {cart && cart.cartItems.length > 0 ? (
             <>
               {cart.cartItems.map((cartItem: CartItem) => {
-                return <CItem cartId={cart.id} cartItem={cartItem} mutate={mutate} />;
+                return <CItem key={cart.id} cartId={cart.id} cartItem={cartItem} mutate={mutate} />;
               })}
               <div className="border-b-2 border-black"></div>
               <div className="grid grid-cols-9 font-bold">

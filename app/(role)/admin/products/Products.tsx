@@ -78,7 +78,11 @@ export function ProductForm({ mutate }: { mutate: KeyedMutator<any> }) {
             <option value={null}>None</option>
             {categoriesData &&
               categoriesData.categories.map((category) => {
-                return <option value={category.id}>{category.name}</option>;
+                return (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                );
               })}
           </select>
         </div>
@@ -115,7 +119,11 @@ export function ProductTable({
           <option value="All">All</option>
           {categoriesData
             ? categoriesData.categories.map((category) => {
-                return <option value={category.name}>{category.name}</option>;
+                return (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                );
               })
             : null}
         </select>
@@ -198,7 +206,6 @@ export function ProductDetails({
     const response = await data.json();
     variantsMutate();
     toast.success(response.message);
-    console.log(response);
   };
 
   useEffect(() => {
@@ -252,7 +259,11 @@ export function ProductDetails({
                   </option>
                   {categoriesData &&
                     categoriesData.categories.map((type) => {
-                      return <option value={type.id}>{type.name}</option>;
+                      return (
+                        <option key={type.id} value={type.id}>
+                          {type.name}
+                        </option>
+                      );
                     })}
                 </select>
               </div>
@@ -370,7 +381,7 @@ function ProductVariantsTable({
         {variantsData && variantsData.productVariants.length > 0 ? (
           variantsData.productVariants.map((variant: ProductVariant) => {
             return (
-              <div className="grid grid-cols-6 even:bg-slate-300 last:rounded-b-lg">
+              <div key={variant.id} className="grid grid-cols-6 even:bg-slate-300 last:rounded-b-lg">
                 <div className="pl-1 col-span-2">{variant.name}</div>
                 <div className="">{variant.price}</div>
                 <div className="col-span-2">{variant.available ? "In Stock" : "Out of Stock"}</div>
@@ -483,12 +494,10 @@ function DeleteConfirmation({
   mutate: KeyedMutator<any>;
   setShowDelete;
 }) {
-  console.log(variant);
   const deleteVariant = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     const data = await fetch(`/admin/products/delete-product-variant/${variant.id}`, { method: "DELETE" });
     const response = await data.json();
-    console.log(response);
     if (response.status === 200) {
       toast.success(response.message);
       mutate();
@@ -506,7 +515,7 @@ function DeleteConfirmation({
 
   return (
     <div>
-      <p>Are you sure you want to delete variant "{variant.name}"? </p>
+      <p>Are you sure you want to delete variant &quot;{variant.name}&quot;? </p>
       <div className="flex flex-row justify-evenly">
         <button className="px-2 py-1 bg-gray-300 text-white rounded-full" onClick={() => handleCancel()}>
           Cancel

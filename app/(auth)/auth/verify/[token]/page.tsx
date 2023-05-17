@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-export default function page() {
+export default function Page() {
   const { token } = useParams();
   useEffect(() => {
     const confirmEmail = async () => {
@@ -18,6 +18,6 @@ export default function page() {
     if (token) {
       confirmEmail();
     }
-  }, []);
+  }, [token]);
   return <div>page</div>;
 }

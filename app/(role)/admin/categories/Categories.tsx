@@ -69,7 +69,7 @@ export function CategoryList({ categoriesData, categoriesMutate }: { categoriesD
       {categoriesData && categoriesData.categories.length > 0 ? (
         categoriesData.categories.map((cat: Category) => {
           return (
-            <div className="grid grid-cols-3 h-7 items-center even:bg-slate-300">
+            <div key={cat.id} className="grid grid-cols-3 h-7 items-center even:bg-slate-300">
               <div className="pl-1 col-span-2">{cat.name}</div>
               <div className="flex justify-evenly items-center">
                 <button title="Edit" onClick={() => handleUpdate(cat, true)}>

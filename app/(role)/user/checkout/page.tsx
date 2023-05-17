@@ -109,7 +109,11 @@ function CartItem({ cartItem, mutate }: { cartItem: CartItem; mutate: KeyedMutat
         <div className="relative flex flex-col">
           <select className="w-max " value={quantity} onChange={(event) => setQuantity(Number(event.target.value))}>
             {listOfQuantities().map((quantity) => {
-              return <option value={quantity}>{quantity}</option>;
+              return (
+                <option key={quantity} value={quantity}>
+                  {quantity}
+                </option>
+              );
             })}
           </select>
           <button className="absolute top-6 text-xs underline text-blue-600" onClick={() => changeQuantity()}>
@@ -299,7 +303,7 @@ function PaymentForm({ image, setImage, setImageName, walletsData, walletsIsLoad
                 }
               ) => {
                 return (
-                  <div className="grid grid-cols-3 even:bg-slate-200">
+                  <div key={walletAddress.id} className="grid grid-cols-3 even:bg-slate-200">
                     <div className="col-span-2 pl-2 overflow-x-scroll">{walletAddress.address}</div>
                     <div className="pl-2">{walletAddress.type.name}</div>
                   </div>
@@ -362,7 +366,7 @@ function OrderReview({
       </div>
       {cart ? (
         cart.cartItems.map((cartItem) => {
-          return <CartItem cartItem={cartItem} mutate={mutate} />;
+          return <CartItem key={cartItem.id} cartItem={cartItem} mutate={mutate} />;
         })
       ) : (
         <div className="flex justify-center">
