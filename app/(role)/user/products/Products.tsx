@@ -11,19 +11,7 @@ import Loader from "app/Loader";
 import { GrAdd, GrSubtract } from "react-icons/gr";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
-export function ProductPage({
-  wallets,
-  categories,
-}: {
-  wallets: {
-    id: number;
-    address: string;
-    type: {
-      name: string;
-    };
-  }[];
-  categories: Category[];
-}) {
+export function ProductPage({ categories }: { categories: Category[] }) {
   const [productDetails, setProductDetails] = useState<
     Prod & {
       category: Category;
@@ -88,8 +76,6 @@ function ProductTable({
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data: productsData, error: productsError, isLoading: productsIsLoading } = useSWR("/user/products/get-products", fetcher);
 
-  const [image, setImage] = useState<any>();
-  const [imageName, setImageName] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [products, setProducts] = useState<
     (Prod & {
@@ -98,13 +84,12 @@ function ProductTable({
     })[]
   >();
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
   useEffect(() => {
     if (productsData) {
       setProducts(productsData.products);
     }
   }, [productsData]);
+
   useEffect(() => {
     if (categoryFilter === "All") {
       setProducts(productsData?.products);
@@ -115,7 +100,7 @@ function ProductTable({
         })
       );
     }
-  }, [categoryFilter, productsData.products]);
+  }, [categoryFilter, productsData?.products]);
 
   return (
     <div>
