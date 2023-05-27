@@ -37,9 +37,10 @@ export default function CryptoWalletPage() {
       <div className="border-2 border-black py-3 px-2 bg-white rounded-xl shadow-xl">
         <h2 className="pb-1 text-2xl font-semibold">Create Crypto Wallet</h2>
         {!cryptoWalletTypesIsLoading ? (
-          cryptoWalletTypesData.cryptoWalletTypes && cryptoWalletTypesData.cryptoWalletTypes.length > 0 ? (
-            <CryptoWalletForm cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes} cryptoWalletsMutate={cryptoWalletsMutate} />
-          ) : null
+          cryptoWalletTypesData.cryptoWalletTypes &&
+          cryptoWalletTypesData.cryptoWalletTypes.length >
+            0 ? null : // <CryptoWalletForm cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes} cryptoWalletsMutate={cryptoWalletsMutate} />
+          null
         ) : (
           <div className="flex justify-center">
             <Loader />
