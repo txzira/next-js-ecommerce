@@ -5,19 +5,19 @@ import { USERTYPE } from "middleware";
 import prisma from "lib/prisma";
 
 export async function DELETE(request: NextRequest, context: { params }) {
-  if (request.method === "DELETE") {
-    try {
-      const { id } = context.params;
+  try {
+    if (request.method === "DELETE") {
       const session = await getServerSession(authOptions);
       if (session.user.role !== USERTYPE.ADMIN) {
         throw new Error("Unauthorized Request");
       }
-      const deletedWalletAddress = await prisma.walletAddress.delete({ where: { id: Number(id) } });
-      return NextResponse.json({ message: `Wallet Address: ${deletedWalletAddress.address} was deleted.`, status: 200 });
-    } catch (error) {
-      throw error;
+      const { id } = context.params;
+      const deletedCryptoWallet = await prisma.cryptoWallet.delete({ where: { id: Number(id) } });
+      return NextResponse.json({ message: `Wallet Address: ${deletedCryptoWallet.address} was deleted.`, status: 200 });
+    } else {
+      return NextResponse.json({ message: "Route no valid", status: 500 });
     }
-  } else {
-    return NextResponse.json({ message: "Route no valid", status: 500 });
+  } catch (error) {
+    return NextResponse.json({ message: error.message, status: 400 });
   }
 }

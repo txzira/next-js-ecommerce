@@ -1,7 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-export const USERTYPE = { USER: "CUSTOMER", ADMIN: "ADMIN" };
+export const USERTYPE = { CUSTOMER: "CUSTOMER", ADMIN: "ADMIN" };
 export const config = {
   matcher: ["/admin/:path*", "/user/:path*"],
 };
@@ -10,15 +10,19 @@ export default withAuth(
   function middleware(req) {
     //user is not admin, redirect from admin pages
     if (req.nextUrl.pathname.startsWith("/admin")) {
+      // If on admin path
       if (req.nextauth.token?.role !== USERTYPE.ADMIN) {
-        return req.nextauth.token?.role === USERTYPE.USER
+        // If user is not admin
+        return req.nextauth.token?.role === USERTYPE.CUSTOMER
           ? NextResponse.redirect(new URL("/user/products?message=You Are Not Authorized!", req.url))
           : NextResponse.redirect(new URL("/auth/login?message=You Are Not Logined!", req.url));
       }
     } else if (req.nextUrl.pathname.startsWith("/user")) {
-      //user is not signed in, redirect from user based pages
+      //If on user path
       if (req.nextauth.token?.role === USERTYPE.ADMIN) return;
-      else if (req.nextauth.token?.role === USERTYPE.USER) return;
+      // If user is admin allow
+      else if (req.nextauth.token?.role === USERTYPE.CUSTOMER) return;
+      // If user is
       else return NextResponse.redirect(new URL("/auth/login?message=You Are Not Logined!", req.url));
     }
   },

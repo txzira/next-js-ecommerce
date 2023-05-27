@@ -2,11 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { CartItem, Category, Product as Prod, ProductVariant } from "@prisma/client";
 
-import { useSession } from "next-auth/react";
 import useSWR from "swr";
-import Image from "next/image";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import Loader from "app/Loader";
 import { GrAdd, GrSubtract } from "react-icons/gr";
 import { AiOutlineShoppingCart } from "react-icons/ai";
@@ -20,7 +17,7 @@ export function ProductPage({ categories }: { categories: Category[] }) {
   >(null);
 
   return (
-    <div>
+    <div className="h-full pb-5">
       <ProductTable categories={categories} setProductDetails={setProductDetails} />
       {productDetails ? <ProductDetails productDetails={productDetails} setProductDetails={setProductDetails} /> : null}
     </div>
@@ -170,12 +167,7 @@ function ProductDetails({
 }) {
   const variants = productDetails.productVariants;
   const [selectedVariant, setSelectedVariant] = useState({ variantId: 0, variantPrice: 0 });
-  // const [product, setProduct] = useState<
-  //   Prod & {
-  //     category: Category;
-  //     productVariants: ProductVariant[];
-  //   }
-  // >();
+
   const initalCartItem = { productId: 0, quantity: 1, variantId: 0 };
   const [cartItem, setCartItem] = useState(initalCartItem);
 

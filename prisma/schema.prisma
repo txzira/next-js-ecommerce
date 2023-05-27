@@ -99,17 +99,6 @@ model Image {
   order Order[]
 }
 
-// model orderProduct {
-//   orderId Int 
-//   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-//   productId Int
-//   product Product  @relation(fields:[productId], references: [id])
-//   pricePaidPer Float
-//   quantity Int
-//   @@id([orderId,productId])
-//   @@index([orderId])
-//   @@index([productId])
-// }
 
 model Order {
   id         Int     @id @default(autoincrement())
@@ -132,22 +121,20 @@ model Order {
   @@index([imageId])
 }
 
-
-
-model WalletAddress{
+model CryptoWallet{
   id Int @id @default(autoincrement())
   address String
   active Boolean @default(false)
-  type WalletType @relation(fields: [typeId], references: [id])
+  type CryptoWalletType @relation(fields: [typeId], references: [id])
   typeId Int
   @@index([typeId])
   @@unique([address,typeId])
 }
 
-model WalletType{
+model CryptoWalletType{
   id Int @id @default(autoincrement())
   name String @unique
-  wallets WalletAddress[]
+  wallets CryptoWallet[]
 }
 
 model ShippingAddress{

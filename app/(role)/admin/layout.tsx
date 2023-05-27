@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <NavLink href="/admin" setShowPanel={setShowPanel}>
             Admin
           </NavLink>
-          <NavLink href="/admin/wallets" setShowPanel={setShowPanel}>
+          <NavLink href="/admin/cryptowallets" setShowPanel={setShowPanel}>
             Wallets
           </NavLink>
           <NavLink href="/admin/categories" setShowPanel={setShowPanel}>
