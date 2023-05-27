@@ -60,7 +60,7 @@ export function CryptoWalletTypeList({
       </div>
       {!cryptoWalletIsLoading ? (
         cryptoWalletTypesData ? (
-          cryptoWalletTypesData.cryptoWalletTypes.map((walletType: CryptoWalletType) => {
+          cryptoWalletTypesData.cryptoWalletTypes?.map((walletType: CryptoWalletType) => {
             return (
               <div
                 key={walletType.id}
