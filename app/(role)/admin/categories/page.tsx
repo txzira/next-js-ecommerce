@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect } from "react";
 import { CategoryList, CategoryCreateForm } from "./Categories";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 
 export default function AdminCategoryPage() {
-  const fetcher = async (url) => fetch(url).then((res) => res.json());
+  const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data: categoriesData, error, isLoading, mutate: categoriesMutate } = useSWR("/admin/categories/get-categories", fetcher);
 
   useEffect(() => {
-    categoriesMutate();
+    mutate("/admin/categories/get-categories");
   });
 
   return (
