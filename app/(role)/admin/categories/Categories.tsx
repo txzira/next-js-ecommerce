@@ -19,7 +19,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
     });
     const data = await response.json();
     const res2 = await fetch("/admin/categories/get-categories");
-    const dat2 = await response.json();
+    const dat2 = await res2.json();
     console.log(dat2);
     categoriesMutate();
     setCategoryName("");
