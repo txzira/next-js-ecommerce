@@ -2,7 +2,7 @@ import { Category } from "@prisma/client";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
-import { KeyedMutator } from "swr";
+import { KeyedMutator, mutate } from "swr";
 
 export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
   const [categoryName, setCategoryName] = useState("");
@@ -19,7 +19,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
     const data = await response.json();
     categoriesData.categories.push(data.category);
     console.log(categoriesData);
-    categoriesMutate(categoriesData, { optimisticData: categoriesData });
+    mutate("/admin/categories/get-categories", categoriesData, { optimisticData: categoriesData });
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
