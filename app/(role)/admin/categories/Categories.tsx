@@ -4,9 +4,9 @@ import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { KeyedMutator } from "swr";
 
-export function CategoryCreateForm({ categoriesMutate }: { categoriesMutate: KeyedMutator<any> }) {
+export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
   const [categoryName, setCategoryName] = useState("");
-
+  console.log(categoriesData);
   const AddCategory = async (event) => {
     event.preventDefault();
     const response = await fetch("/admin/categories/create-category", {
@@ -17,7 +17,9 @@ export function CategoryCreateForm({ categoriesMutate }: { categoriesMutate: Key
       body: JSON.stringify({ categoryName }),
     });
     const data = await response.json();
-    categoriesMutate();
+    categoriesData.categories.push(data.category);
+    console.log(categoriesData);
+    categoriesMutate(categoriesData, { optimisticData: categoriesData });
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
