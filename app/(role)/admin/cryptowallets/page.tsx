@@ -37,7 +37,9 @@ export default function CryptoWalletPage() {
       <div className="border-2 border-black py-3 px-2 bg-white rounded-xl shadow-xl">
         <h2 className="pb-1 text-2xl font-semibold">Create Crypto Wallet</h2>
         {!cryptoWalletTypesIsLoading ? (
-          cryptoWalletTypesData.cryptoWalletTypes && cryptoWalletTypesData.cryptoWalletTypes.length > 0 ? null : null // <CryptoWalletForm cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes} cryptoWalletsMutate={cryptoWalletsMutate} />
+          cryptoWalletTypesData.cryptoWalletTypes && cryptoWalletTypesData.cryptoWalletTypes.length > 0 ? (
+            <CryptoWalletForm cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes} cryptoWalletsMutate={cryptoWalletsMutate} />
+          ) : null
         ) : (
           <div className="flex justify-center">
             <Loader />
@@ -45,11 +47,13 @@ export default function CryptoWalletPage() {
         )}
         <div className="border-b-[1px] border-gray-400 my-5"></div>
         {!cryptoWalletsIsLoading && !cryptoWalletTypesIsLoading ? (
-          cryptoWalletsData && cryptoWalletTypesData ? //   cryptoWallets={cryptoWalletsData.cryptoWallets} // <CryptoWalletList
-          //   cryptoWalletsMutate={cryptoWalletsMutate}
-          //   cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes}
-          // />
-          null : null
+          cryptoWalletsData && cryptoWalletTypesData ? (
+            <CryptoWalletList
+              cryptoWallets={cryptoWalletsData.cryptoWallets}
+              cryptoWalletsMutate={cryptoWalletsMutate}
+              cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes}
+            />
+          ) : null
         ) : (
           <div className="flex justify-center">
             <Loader />
