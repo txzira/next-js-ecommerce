@@ -9,6 +9,8 @@ export default function AdminCategoryPage() {
 
   useEffect(() => {
     mutate("/admin/categories/get-categories");
+    console.log(categoriesData);
+    console.log("mutate");
   });
 
   return (
