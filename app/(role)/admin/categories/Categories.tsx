@@ -7,9 +7,8 @@ import { KeyedMutator } from "swr";
 export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
   const [categoryName, setCategoryName] = useState("");
   console.log(categoriesData);
-  async function AddCategory(event) {
+  const AddCategory = async (event) => {
     event.preventDefault();
-    toast.loading("Loading...");
     const response = await fetch("/admin/categories/create-category", {
       method: "POST",
       headers: {
@@ -18,14 +17,12 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
       body: JSON.stringify({ categoryName }),
     });
     const data = await response.json();
-    const res2 = await fetch("/admin/categories/get-categories");
-    const dat2 = await res2.json();
-    console.log(dat2);
-    categoriesMutate();
+    categoriesData.categories.push(data.category);
+    console.log(categoriesData);
+    categoriesMutate(categoriesData, { optimisticData: categoriesData, revalidate: true, populateCache: true });
     setCategoryName("");
-    toast.dismiss();
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
-  }
+  };
 
   return (
     <form>
@@ -44,7 +41,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
             onChange={(e) => setCategoryName(e.target.value)}
           />
         </div>
-        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={AddCategory}>
+        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => AddCategory(event)}>
           Add
         </button>
       </div>
