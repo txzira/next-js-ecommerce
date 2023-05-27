@@ -7,7 +7,7 @@ import { KeyedMutator } from "swr";
 export function CategoryCreateForm({ categoriesMutate }: { categoriesMutate: KeyedMutator<any> }) {
   const [categoryName, setCategoryName] = useState("");
 
-  const addCategory = async (event) => {
+  const AddCategory = async (event) => {
     event.preventDefault();
     const response = await fetch("/admin/categories/create-category", {
       method: "POST",
@@ -17,7 +17,7 @@ export function CategoryCreateForm({ categoriesMutate }: { categoriesMutate: Key
       body: JSON.stringify({ categoryName }),
     });
     const data = await response.json();
-    categoriesMutate();
+    categoriesMutate("/admin/categories/get-categories");
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
@@ -39,7 +39,7 @@ export function CategoryCreateForm({ categoriesMutate }: { categoriesMutate: Key
             onChange={(e) => setCategoryName(e.target.value)}
           />
         </div>
-        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => addCategory(event)}>
+        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => AddCategory(event)}>
           Add
         </button>
       </div>
