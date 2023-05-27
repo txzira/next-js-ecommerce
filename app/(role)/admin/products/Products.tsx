@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { Product, ProductVariant } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import Loader from "app/Loader";
-import { AiOutlineClose, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { BsFillArrowLeftSquareFill } from "react-icons/bs";
 
@@ -19,7 +19,7 @@ export function ProductForm({ mutate }: { mutate: KeyedMutator<any> }) {
     mutate: categoriesMutate,
   } = useSWR("/admin/categories/get-categories", fetcher);
 
-  async function submitForm(event) {
+  async function CreateProduct(event) {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/products/create-product", {
@@ -39,7 +39,7 @@ export function ProductForm({ mutate }: { mutate: KeyedMutator<any> }) {
   }
 
   return (
-    <form className="" onSubmit={submitForm}>
+    <form className="" onSubmit={CreateProduct}>
       <h1 className="pb-1 text-2xl font-semibold">Create Product</h1>
       <div className="flex flex-row justify-between mb-2">
         <div className="flex flex-col w-2/3">
@@ -86,7 +86,7 @@ export function ProductForm({ mutate }: { mutate: KeyedMutator<any> }) {
               })}
           </select>
         </div>
-        <button type="submit" className="px-2 bg-green-500 rounded-xl text-white" onClick={(event) => submitForm(event)}>
+        <button type="submit" className="px-2 bg-green-500 rounded-xl text-white" onClick={(event) => CreateProduct(event)}>
           Add
         </button>
       </div>
