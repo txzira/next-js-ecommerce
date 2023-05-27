@@ -27,11 +27,11 @@ export default function CryptoWalletPage() {
         <h2 className="pb-1 text-2xl font-semibold">Create Crypto Wallet Type</h2>
         <CryptoWalletTypeForm cryptoWalletTypesMutate={cryptoWalletTypesMutate} />
         <div className="border-b-[1px] border-gray-400 my-5"></div>
-        <CryptoWalletTypeList
+        {/* <CryptoWalletTypeList
           cryptoWalletTypesData={cryptoWalletTypesData}
           cryptoWalletIsLoading={cryptoWalletTypesIsLoading}
           cryptoWalletTypesMutate={cryptoWalletTypesMutate}
-        />
+        /> */}
       </div>
       <div className="border-b-[1px] border-gray-400 my-5"></div>
       <div className="border-2 border-black py-3 px-2 bg-white rounded-xl shadow-xl">
@@ -45,8 +45,7 @@ export default function CryptoWalletPage() {
         )}
         <div className="border-b-[1px] border-gray-400 my-5"></div>
         {!cryptoWalletsIsLoading && !cryptoWalletTypesIsLoading ? (
-          cryptoWalletsData && cryptoWalletTypesData ? // <CryptoWalletList
-          //   cryptoWallets={cryptoWalletsData.cryptoWallets}
+          cryptoWalletsData && cryptoWalletTypesData ? //   cryptoWallets={cryptoWalletsData.cryptoWallets} // <CryptoWalletList
           //   cryptoWalletsMutate={cryptoWalletsMutate}
           //   cryptoWalletTypes={cryptoWalletTypesData.cryptoWalletTypes}
           // />
