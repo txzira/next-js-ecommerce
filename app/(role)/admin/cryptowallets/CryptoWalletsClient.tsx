@@ -200,7 +200,7 @@ export function CryptoWalletForm({
             value={cryptoWalletTypeName}
             onChange={(event) => SetCryptoWalletType(event.target.value)}
           >
-            {cryptoWalletTypes.map((cryptoWalletType) => {
+            {cryptoWalletTypes?.map((cryptoWalletType) => {
               return (
                 <option key={cryptoWalletType.id} id={cryptoWalletType.id.toString()} value={cryptoWalletType.name}>
                   {cryptoWalletType.name}
@@ -244,7 +244,7 @@ export function CryptoWalletList({
             <div>Active</div>
           </div>
         </div>
-        {cryptoWallets.map((wallet) => {
+        {cryptoWallets?.map((wallet) => {
           return (
             <div
               key={wallet.id}
@@ -346,7 +346,7 @@ function CryptoWalletInfo({
           <div className="flex flex-col pb-2 ">
             <label className="text-lg font-bold">Type</label>
             <select value={formWallet.type.name} className="pl-1 border-[1px]" onChange={(event) => SetWalletType(event.target.value)}>
-              {cryptoWalletTypes.map((type) => {
+              {cryptoWalletTypes?.map((type) => {
                 return (
                   <option key={type.id} id={type.id.toString()} value={type.name}>
                     {type.name}
