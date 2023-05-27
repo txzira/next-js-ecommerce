@@ -1,5 +1,5 @@
 "use client";
-import { Cart, CartItem, WalletAddress, WalletType } from "@prisma/client";
+import { Cart, CartItem, CryptoWallet, CryptoWalletType } from "@prisma/client";
 import Loader from "app/Loader";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function CheckoutPage() {
     error: walletsError,
     isLoading: walletsIsLoading,
     mutate: walletsMutate,
-  } = useSWR("/user/checkout/get-wallet-address", fetcher);
+  } = useSWR("/user/checkout/get-crypto-wallets", fetcher);
 
   const [shipping, setShipping] = useState(initialShipping);
   const [cart, setCart] = useState<
@@ -296,10 +296,10 @@ function PaymentForm({ image, setImage, setImageName, walletsData, walletsIsLoad
         </div>
         <div className="h-24 overflow-y-scroll border-2 border-black">
           {!walletsIsLoading ? (
-            walletsData.walletAddresses.map(
+            walletsData.cryptoWallets.map(
               (
-                walletAddress: WalletAddress & {
-                  type: WalletType;
+                walletAddress: CryptoWallet & {
+                  type: CryptoWalletType;
                 }
               ) => {
                 return (
