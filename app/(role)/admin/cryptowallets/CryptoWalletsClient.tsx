@@ -59,19 +59,17 @@ export function CryptoWalletTypeList({
         <div>Wallet Type Name</div>
       </div>
       {!cryptoWalletIsLoading ? (
-        cryptoWalletTypesData ? (
-          cryptoWalletTypesData.cryptoWalletTypes?.map((walletType: CryptoWalletType) => {
-            return (
-              <div
-                key={walletType.id}
-                className="grid grid-cols-1 h-7 items-center hover:bg-white cursor-pointer even:bg-slate-300 last:rounded-b-md"
-                onClick={() => setCryptoWalletType(walletType)}
-              >
-                {walletType.name}
-              </div>
-            );
-          })
-        ) : null
+        cryptoWalletTypesData.cryptoWalletTypes.map((walletType: CryptoWalletType) => {
+          return (
+            <div
+              key={walletType.id}
+              className="grid grid-cols-1 h-7 items-center hover:bg-white cursor-pointer even:bg-slate-300 last:rounded-b-md"
+              onClick={() => setCryptoWalletType(walletType)}
+            >
+              {walletType.name}
+            </div>
+          );
+        })
       ) : (
         <div className="flex justify-center">
           <Loader />
