@@ -9,16 +9,16 @@ export default function AdminCategoryPage() {
     data: categoriesData,
     error,
     isLoading,
-    mutate: categoriesMutate,
+    mutate,
   } = useSWR("/admin/categories/get-categories", fetcher, { revalidateOnMount: true });
 
   return (
     <div className="h-full w-[90%] mx-auto">
       <h1 className="text-3xl font-bold pb-5">Categories</h1>
       <div className="px-2 py-5 border-2 border-black bg-white rounded-xl shadow-xl">
-        <CategoryCreateForm categoriesData={categoriesData} categoriesMutate={categoriesMutate} />
+        <CategoryCreateForm categoriesData={categoriesData} categoriesMutate={mutate} />
         <div className="border-b-[1px] border-gray-400 my-5"></div>
-        <CategoryList categoriesData={categoriesData} categoriesMutate={categoriesMutate} />
+        <CategoryList categoriesData={categoriesData} categoriesMutate={mutate} />
       </div>
     </div>
   );
