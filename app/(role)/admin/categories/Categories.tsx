@@ -2,13 +2,14 @@ import { Category } from "@prisma/client";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
-import { KeyedMutator, mutate } from "swr";
+import { KeyedMutator } from "swr";
 
 export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
   const [categoryName, setCategoryName] = useState("");
   console.log(categoriesData);
-  const AddCategory = async (event) => {
+  async function AddCategory(event) {
     event.preventDefault();
+    toast.loading("Loading...");
     const response = await fetch("/admin/categories/create-category", {
       method: "POST",
       headers: {
@@ -17,12 +18,11 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
       body: JSON.stringify({ categoryName }),
     });
     const data = await response.json();
-    categoriesData.categories.push(data.category);
-    console.log(categoriesData);
-    mutate("/admin/categories/get-categories", categoriesData, { optimisticData: categoriesData });
+    categoriesMutate();
     setCategoryName("");
+    toast.dismiss();
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
-  };
+  }
 
   return (
     <form>
@@ -41,7 +41,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
             onChange={(e) => setCategoryName(e.target.value)}
           />
         </div>
-        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => AddCategory(event)}>
+        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={AddCategory}>
           Add
         </button>
       </div>
