@@ -5,13 +5,12 @@ import useSWR, { mutate } from "swr";
 
 export default function AdminCategoryPage() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data: categoriesData, error, isLoading, mutate: categoriesMutate } = useSWR("/admin/categories/get-categories", fetcher);
-
-  useEffect(() => {
-    mutate("/admin/categories/get-categories");
-    console.log(categoriesData);
-    console.log("mutate");
-  });
+  const {
+    data: categoriesData,
+    error,
+    isLoading,
+    mutate: categoriesMutate,
+  } = useSWR("/admin/categories/get-categories", fetcher, { revalidateOnMount: true });
 
   return (
     <div className="h-full w-[90%] mx-auto">
