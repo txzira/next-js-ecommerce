@@ -17,10 +17,12 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ categoryName }),
-    }).then(async (response) => {
-      data = await response.json();
-      categoriesMutate();
-    });
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        categoriesMutate();
+        data.status === 200 ? toast.success(data.message) : toast.error(data.message);
+      });
 
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
