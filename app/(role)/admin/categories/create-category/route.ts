@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     try {
       const { categoryName } = await request.json();
       const category = await prisma.category.create({ data: { name: categoryName } });
-      return NextResponse.json({ category, message: `Product type  ${category.name} successfully added.`, status: 200 });
+      return NextResponse.json({ message: `Product type  ${category.name} successfully added.`, status: 200 });
     } catch (error) {
       console.log(error);
     }

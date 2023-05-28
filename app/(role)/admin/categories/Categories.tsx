@@ -1,5 +1,5 @@
 import { Category } from "@prisma/client";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
@@ -8,20 +8,34 @@ import { KeyedMutator } from "swr";
 export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
   const queryClient = useQueryClient();
   const [categoryName, setCategoryName] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: (name: string) => {
+      console.log(name);
+      return fetch("/admin/categories/create-category", {
+        method: "POST",
+        body: JSON.stringify({ categoryName: name }),
+      }).then((res) => res.json());
+    },
+
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      console.log(result);
+    },
+  });
+
   console.log(categoriesData);
   const addCategory = async (event) => {
     event.preventDefault();
-    const response = await fetch("/admin/categories/create-category", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ categoryName }),
-    });
-    const data = await response.json();
-    queryClient.invalidateQueries({ queryKey: ["categories"] });
+    mutation.mutate(categoryName);
+
+    // const response = await fetch("/admin/categories/create-category", {
+    //   method: "POST",
+    //   body: JSON.stringify({ categoryName }),
+    // });
+    // const data = await response.json();
     setCategoryName("");
-    data.status === 200 ? toast.success(data.message) : toast.error(data.message);
+    // data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
 
   return (
