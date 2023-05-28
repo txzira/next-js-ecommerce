@@ -5,12 +5,12 @@ import useSWR, { mutate } from "swr";
 import { useQuery } from "@tanstack/react-query";
 
 function getCategories() {
-  return fetch("/admin/categories/get-categories", { method: "GET" }).then((res) => res.json());
+  return fetch("/admin/categories/get-categories", { method: "GET", cache: "no-store" }).then((res) => res.json());
 }
 
 export default function AdminCategoryPage() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { status, error: err, data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
+  const { status, error: err, data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories, cacheTime: 0 });
   console.log(categories);
   const {
     data: categoriesData,
