@@ -9,17 +9,19 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
   console.log(categoriesData);
   const AddCategory = async (event) => {
     event.preventDefault();
-    const response = await fetch("/admin/categories/create-category", {
+    let data;
+
+    fetch("/admin/categories/create-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ categoryName }),
+    }).then(async (response) => {
+      data = await response.json();
+      categoriesMutate();
     });
-    const data = await response.json();
-    categoriesData.categories.push(data.category);
-    console.log(categoriesData);
-    categoriesMutate(categoriesData, { optimisticData: categoriesData, revalidate: true, populateCache: true });
+
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
