@@ -1,14 +1,22 @@
 import "./globals.css";
-import ClientProviders from "./ClientProivders";
+import LayoutClient from "./LayoutClient";
 import Image from "next/image";
+import NextAuthSessionProvider from "./NextAuthSessionProvider";
+import ReactQueryProvider from "./ReactQueryProvider";
+import { Toaster } from "react-hot-toast";
+import Header from "./(navigation)/Header";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head />
-      <body>
-        <ClientProviders>{children}</ClientProviders>
-      </body>
-    </html>
+    <NextAuthSessionProvider>
+      <ReactQueryProvider>
+        <html lang="en">
+          <head />
+          <LayoutClient>{children}</LayoutClient>
+          <ReactQueryDevtools />
+        </html>
+      </ReactQueryProvider>
+    </NextAuthSessionProvider>
   );
 }

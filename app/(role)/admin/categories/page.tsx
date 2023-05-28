@@ -2,9 +2,16 @@
 import React, { useEffect } from "react";
 import { CategoryList, CategoryCreateForm } from "./Categories";
 import useSWR, { mutate } from "swr";
+import { useQuery } from "@tanstack/react-query";
+
+function getCategories() {
+  return fetch("/admin/categories/get-categories", { method: "GET" }).then((res) => res.json());
+}
 
 export default function AdminCategoryPage() {
   const fetcher = (url) => fetch(url).then((res) => res.json());
+  const { status, error: err, data: categories } = useQuery({ queryKey: ["categories"], queryFn: getCategories });
+  console.log(categories);
   const {
     data: categoriesData,
     error,

@@ -1,29 +1,25 @@
 import { Category } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { KeyedMutator } from "swr";
 
 export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
+  const queryClient = useQueryClient();
   const [categoryName, setCategoryName] = useState("");
   console.log(categoriesData);
-  const AddCategory = async (event) => {
+  const addCategory = async (event) => {
     event.preventDefault();
-    let data;
-
-    fetch("/admin/categories/create-category", {
+    const response = await fetch("/admin/categories/create-category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ categoryName }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        categoriesMutate();
-        data.status === 200 ? toast.success(data.message) : toast.error(data.message);
-      });
-
+    });
+    const data = await response.json();
+    queryClient.invalidateQueries({ queryKey: ["categories"] });
     setCategoryName("");
     data.status === 200 ? toast.success(data.message) : toast.error(data.message);
   };
@@ -45,7 +41,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
             onChange={(e) => setCategoryName(e.target.value)}
           />
         </div>
-        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => AddCategory(event)}>
+        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => addCategory(event)}>
           Add
         </button>
       </div>
