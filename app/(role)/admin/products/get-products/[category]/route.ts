@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, context: { params }) {
     } else {
       products = await prisma.product.findMany({ include: { category: true }, where: { category: { name: category } } });
     }
-    return NextResponse.json({ products, status: 200 });
+    return NextResponse.json({ products }, { status: 200 });
   } else {
     return NextResponse.json({ message: "Route no valid", status: 500 });
   }
