@@ -18,9 +18,9 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
       }).then((res) => res.json());
     },
 
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      console.log(result);
+    onSuccess: async (result) => {
+      await queryClient.invalidateQueries({ queryKey: ["categories"] });
+      result.status === 200 ? toast.success(result.message) : toast.error(result.message);
     },
   });
 
