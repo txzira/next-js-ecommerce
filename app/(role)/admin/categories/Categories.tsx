@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { KeyedMutator } from "swr";
 
-export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
+export function CategoryCreateForm({ categoriesData }: { categoriesData: any }) {
   const queryClient = useQueryClient();
   const [categoryName, setCategoryName] = useState("");
 
@@ -64,7 +64,7 @@ export function CategoryCreateForm({ categoriesData, categoriesMutate }: { categ
     </form>
   );
 }
-export function CategoryList({ categoriesData, categoriesMutate }: { categoriesData: any; categoriesMutate: KeyedMutator<any> }) {
+export function CategoryList({ categoriesData }: { categoriesData: any }) {
   const [showDelete, setShowDelete] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [category, setCategory] = useState<Category>(null);
@@ -103,11 +103,9 @@ export function CategoryList({ categoriesData, categoriesMutate }: { categoriesD
       ) : (
         <div className="text-center">No Categories.</div>
       )}
-      {showUpdate && category ? (
-        <UpdateCategoryModal category={category} handleUpdate={handleUpdate} categoriesMutate={categoriesMutate} />
-      ) : null}
+      {showUpdate && category ? <UpdateCategoryModal category={category} handleUpdate={handleUpdate} categoriesMutate={null} /> : null}
       {showDelete && category ? (
-        <DeleteCategoryConfirmationModal category={category} handleDelete={handleDelete} categoriesMutate={categoriesMutate} />
+        <DeleteCategoryConfirmationModal category={category} handleDelete={handleDelete} categoriesMutate={null} />
       ) : null}
     </div>
   );
