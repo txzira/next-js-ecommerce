@@ -8,21 +8,30 @@ import { useSession, signOut } from "next-auth/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Cart, CartItem } from "@prisma/client";
 
-function NavLink({ children, href }: { children: React.ReactNode; href: string }) {
+function NavLink({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href: string;
+}) {
   let segment: any = useSelectedLayoutSegments();
   let active = false;
   if (href === "/admin" && `/${segment[1]}` === href) active = true;
   else if (href === "/" && segment.length === 0) active = true;
-  else if (segment[2] !== undefined && href.split("/")[2] !== undefined && segment[1] !== "admin")
-    active = segment[2] === href.split("/")[2];
+  else if (
+    segment[2] !== undefined &&
+    href.split("/")[2] !== undefined &&
+    segment[1] !== "admin"
+  )
+    active = segment[1] === href.split("/")[1];
   return (
     <Link
       href={href}
       className={`
-      flex items-center h-full px-1 md:px-4 hover:bg-white hover:text-black
+      flex h-full items-center px-1 hover:bg-white hover:text-black md:px-4
        ${active ? "bg-white text-black" : null}
-       `}
-    >
+       `}>
       {children}
     </Link>
   );
@@ -46,20 +55,23 @@ export default function Navbar() {
 
   return (
     <>
-      {showCart ? <CartModal cart={cart} setShow={setShowCart} mutate={mutate} /> : null}
-      <nav className="flex flex-row justify-center text-sm md:text-lg font-semibold bg-black text-white h-14">
-        {status === "authenticated" && session.user.role === "ADMIN" ? <NavLink href="/admin">Admin</NavLink> : null}
+      {showCart ? (
+        <CartModal cart={cart} setShow={setShowCart} mutate={mutate} />
+      ) : null}
+      <nav className="flex h-14 flex-row  bg-black text-sm font-semibold text-white md:text-lg">
+        <NavLink href="/products">Products</NavLink>
+        {/* {status === "authenticated" && session.user.role === "ADMIN" ? <NavLink href="/admin">Admin</NavLink> : null} */}
         {status === "authenticated" ? (
           <>
-            <NavLink href="/user/products">Products</NavLink>
             <NavLink href="/user/account">Account</NavLink>
-            <button className="flex items-center h-full px-2 md:px-4 hover:bg-white hover:text-black" onClick={() => signOut()}>
+            <button
+              className="flex h-full items-center px-2 hover:bg-white hover:text-black md:px-4"
+              onClick={() => signOut()}>
               Logout
             </button>
             <button
-              className="flex items-center h-full px-2 md:px-4 hover:bg-white hover:text-black"
-              onClick={() => setShowCart(!showCart)}
-            >
+              className="flex h-full items-center px-2 hover:bg-white hover:text-black md:px-4"
+              onClick={() => setShowCart(!showCart)}>
               <AiOutlineShoppingCart size={20} />
             </button>
           </>

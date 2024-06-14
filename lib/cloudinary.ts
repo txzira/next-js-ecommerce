@@ -14,7 +14,20 @@ export async function uploadImage(imagePath, imageName) {
 
   try {
     const result = await cloudinary.uploader.upload(imagePath, options);
-    return { public_id: result.public_id, url: result.url, asset_id: result.asset_id };
+    return {
+      public_id: result.public_id,
+      url: result.url,
+      asset_id: result.asset_id,
+    };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function destroyImage(publicId) {
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
   } catch (error) {
     console.error(error);
   }

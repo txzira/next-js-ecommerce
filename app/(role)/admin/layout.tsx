@@ -3,7 +3,10 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import React, { useState } from "react";
-import { BsArrowLeftSquareFill, BsArrowRightSquareFill, BsFillArrowLeftSquareFill } from "react-icons/bs";
+import {
+  BsArrowRightSquareFill,
+  BsFillArrowLeftSquareFill,
+} from "react-icons/bs";
 
 function NavLink({
   children,
@@ -25,7 +28,7 @@ function NavLink({
     <Link
       href={href}
       className={`
-      flex items-center h-12 w-full px-1 rounded-lg hover:bg-white hover:text-black
+      flex h-12 w-full items-center rounded-lg px-1 hover:bg-white hover:text-black
        ${active ? "bg-white text-black" : null}
        `}
       onClick={() => setShowPanel(false)}
@@ -35,20 +38,25 @@ function NavLink({
   );
 }
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [showPanel, setShowPanel] = useState(false);
   const { data: session, status } = useSession();
   return session?.user.role === "ADMIN" ? (
-    <div className="flex flex-row h-full">
+    <div className="flex h-full flex-row">
       {showPanel ? (
-        <nav className="flex flex-col grow-0 p-1 gap-1 border-r-2 w-max border-black bg-green-600 text-white shadow-[10px_0_10px_0_rgb(0,0,0,0.15)]">
-          {showPanel ? (
-            <button onClick={() => setShowPanel(false)} className="flex justify-center bg-black rounded-lg">
-              <div className="bg-white rounded-lg ">
-                <BsFillArrowLeftSquareFill size={40} color="black" />
-              </div>
-            </button>
-          ) : null}
+        <nav className="z-20 flex w-max grow-0 flex-col gap-1 border-r-2 border-black bg-green-600 p-1 text-white shadow-[10px_0_10px_0_rgb(0,0,0,0.15)]">
+          <button
+            onClick={() => setShowPanel(false)}
+            className="flex justify-center rounded-lg bg-black"
+          >
+            <div className="rounded-lg bg-white ">
+              <BsFillArrowLeftSquareFill size={40} color="black" />
+            </div>
+          </button>
           <NavLink href="/admin" setShowPanel={setShowPanel}>
             Admin
           </NavLink>
@@ -70,11 +78,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
       ) : null}
 
-      <div className="overflow-y-scroll w-full">
+      <div className="w-full overflow-y-scroll font-[Lato,sans-serif]">
         {!showPanel ? (
-          <button onClick={() => setShowPanel(true)} className="flex flex-row items-center ml-1 mt-1 px-1 bg-green-600 rounded-lg">
+          <button
+            onClick={() => setShowPanel(true)}
+            className="ml-1 mt-1 flex flex-row items-center rounded-lg bg-green-600 px-1"
+          >
             <span className="text-white">Admin Panel</span>
-            <div className="bg-white rounded-lg">
+            <div className="rounded-lg bg-white">
               <BsArrowRightSquareFill size={35} color="rgb(22 163 74)" />
             </div>
           </button>
@@ -86,3 +97,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div>Unauthorized User</div>
   );
 }
+//Lato,sans-serif;

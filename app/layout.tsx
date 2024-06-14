@@ -1,20 +1,25 @@
 import "./globals.css";
-import LayoutClient from "./LayoutClient";
 import NextAuthSessionProvider from "./NextAuthSessionProvider";
-import ReactQueryProvider from "./ReactQueryProvider";
+import Header from "./(navigation)/Header";
+import { Toaster } from "react-hot-toast";
+import Background from "./Background";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <NextAuthSessionProvider>
-      <ReactQueryProvider>
-        <html lang="en">
-          <head />
-          <LayoutClient>{children}</LayoutClient>
-          <ReactQueryDevtools />
-        </html>
-      </ReactQueryProvider>
+      <html lang="en">
+        <head />
+        <body>
+          <Toaster />
+          <Header />
+          <Background/>
+          <main className="relative h-[calc(100vh_-_3.5rem)] md:h-[calc(100vh_-_3.5rem)] ">{children}</main>
+        </body>
+      </html>
     </NextAuthSessionProvider>
   );
 }

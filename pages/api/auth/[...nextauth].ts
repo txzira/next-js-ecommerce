@@ -1,10 +1,15 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "../../../lib/hash";
+import {
+  verifyPassword,
+  validatePassword as vPassword,
+} from "../../../lib/hash";
 import prisma from "../../../lib/prisma";
 
 export const validatePassword = (password) => {
-  const passwordRegex = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.*[!@#$%^&*])(?!.*\s).{8,16}$/);
+  const passwordRegex = new RegExp(
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.*[!@#$%^&*])(?!.*\s).{8,16}$/
+  );
   if (passwordRegex.test(password)) return true;
   return false;
 };
@@ -20,7 +25,7 @@ export const authOptions: NextAuthOptions = {
   //Configure JWT
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60,
+    maxAge: 60 * 60 * 4,
   },
   providers: [
     CredentialProvider({
@@ -39,7 +44,15 @@ export const authOptions: NextAuthOptions = {
           });
           // If user exist
           if (user) {
-            const checkPassword = await verifyPassword(credentials?.password, user.password);
+            // const checkPassword = await verifyPassword(
+            //   credentials?.password,
+            //   user.password
+            // );
+            const checkPassword = vPassword(
+              credentials?.password,
+              user.password,
+              user.salt
+            );
             // If entered password matches with password in database
             if (checkPassword) {
               if (user.verifiedEmail) {

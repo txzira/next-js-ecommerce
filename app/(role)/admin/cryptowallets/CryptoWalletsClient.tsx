@@ -4,229 +4,167 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { KeyedMutator } from "swr";
 
-export function CryptoWalletTypeForm({ cryptoWalletTypesMutate }: { cryptoWalletTypesMutate: KeyedMutator<any> }) {
-  const [cryptoWalletTypeName, setCryptoWalletTypeName] = useState("");
-
-  const AddCryptoWalletType = async () => {
-    if (cryptoWalletTypeName === "") {
-      toast.error("Cannot add empty wallet type.");
-    } else {
-      toast.loading("Loading...");
-      const data = await fetch("/admin/cryptowallets/add-crypto-wallet-type", {
-        method: "POST",
-        body: JSON.stringify({ cryptoWalletTypeName }),
-      });
-      const response = await data.json();
-      cryptoWalletTypesMutate();
-      setCryptoWalletTypeName("");
-      toast.dismiss();
-      toast.success(response.message);
-    }
-  };
-
-  return (
-    <form className="flex flex-row items-end">
-      <div>
-        <label className="pl-1">Crypto Wallet Type</label>
-        <input
-          type="text"
-          className="pl-1 border-[1px] rounded-lg "
-          value={cryptoWalletTypeName}
-          placeholder="BTC"
-          onChange={(event) => setCryptoWalletTypeName(event.target.value)}
-        />
-      </div>
-      <button type="button" className="px-2 bg-green-500 text-white rounded-full" onClick={() => AddCryptoWalletType()}>
-        Add
-      </button>
-    </form>
-  );
-}
-
-export function CryptoWalletTypeList({
+export default function CryptoWallet({
+  cryptoWalletsData,
+  cryptoWalletsIsLoading,
+  cryptoWalletsMutate,
   cryptoWalletTypesData,
-  cryptoWalletIsLoading,
-  cryptoWalletTypesMutate,
+  cryptoWalletTypesIsLoading,
 }: {
-  cryptoWalletTypesData: any;
-  cryptoWalletIsLoading: boolean;
-  cryptoWalletTypesMutate: KeyedMutator<any>;
+  cryptoWalletsData: (CryptoWallet & {
+    type: CryptoWalletType;
+  })[];
+  cryptoWalletsIsLoading: boolean;
+  cryptoWalletsMutate: KeyedMutator<
+    (CryptoWallet & {
+      type: CryptoWalletType;
+    })[]
+  >;
+  cryptoWalletTypesData: CryptoWalletType[];
+  cryptoWalletTypesIsLoading: boolean;
 }) {
-  const [cryptoWalletType, setCryptoWalletType] = useState<CryptoWalletType>();
   return (
-    <div className="grid text-center border-2 border-black rounded-lg ">
-      <div className="grid grid-cols-1 border-b-2 border-black bg-black text-white text-lg p-1 font-semibold">
-        <div>Wallet Type Name</div>
-      </div>
-      {!cryptoWalletIsLoading ? (
-        cryptoWalletTypesData.cryptoWalletTypes ? (
-          cryptoWalletTypesData.cryptoWalletTypes.map((walletType: CryptoWalletType) => {
-            return (
-              <div
-                key={walletType.id}
-                className="grid grid-cols-1 h-7 items-center hover:bg-white cursor-pointer even:bg-slate-300 last:rounded-b-md"
-                onClick={() => setCryptoWalletType(walletType)}
-              >
-                {walletType.name}
-              </div>
-            );
-          })
-        ) : null
-      ) : (
-        <div className="flex justify-center">
-          <Loader />
-        </div>
-      )}
-      {cryptoWalletType ? (
-        <CryptoWalletTypeInfo
-          cryptoWalletType={cryptoWalletType}
-          setCryptoWalletType={setCryptoWalletType}
-          cryptoWalletTypesMutate={cryptoWalletTypesMutate}
-        />
-      ) : null}
+    <div className="rounded-xl border-2 border-black bg-white px-2 py-3 shadow-xl">
+      <h2 className="pb-1 text-2xl font-semibold">Create Crypto Wallet</h2>
+      <CryptoWalletForm
+        cryptoWalletTypesData={cryptoWalletTypesData}
+        cryptoWalletTypesIsLoading={cryptoWalletTypesIsLoading}
+        cryptoWalletsMutate={cryptoWalletsMutate}
+      />
+      <div className="my-5 border-b-[1px] border-gray-400"></div>
+      <CryptoWalletList
+        cryptoWalletTypesData={cryptoWalletTypesData}
+        cryptoWalletTypesIsLoading={cryptoWalletTypesIsLoading}
+        cryptoWalletsData={cryptoWalletsData}
+        cryptoWalletsIsLoading={cryptoWalletsIsLoading}
+        cryptoWalletsMutate={cryptoWalletsMutate}
+      />
     </div>
   );
 }
 
-function CryptoWalletTypeInfo({
-  cryptoWalletType,
-  setCryptoWalletType,
-  cryptoWalletTypesMutate,
-}: {
-  cryptoWalletType: CryptoWalletType;
-  setCryptoWalletType: React.Dispatch<React.SetStateAction<CryptoWalletType>>;
-  cryptoWalletTypesMutate: KeyedMutator<any>;
-}) {
-  const [cryptoWalletTypeName, setCryptoWalletTypeName] = useState(cryptoWalletType.name);
-  const EditCryptoWalletType = async () => {
-    const data = await fetch("/admin/cryptowallets/edit-crypto-wallet-type", {
-      method: "POST",
-      body: JSON.stringify({ id: cryptoWalletType.id, cryptoWalletTypeName }),
-    });
-    const response = await data.json();
-    cryptoWalletTypesMutate();
-    setCryptoWalletType(null);
-    toast.success(response.message);
-  };
-
-  useEffect(() => {
-    setCryptoWalletTypeName(cryptoWalletType.name);
-  }, [cryptoWalletType]);
-
-  return (
-    <div
-      className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:inset-0 h-full z-50 overflow-y-scroll "
-      onClick={() => setCryptoWalletType(null)}
-    >
-      <div className="relative w-2/3 rounded-lg p-2 md:h-auto m-auto bg-white" onClick={(e) => e.stopPropagation()}>
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold">Crypto Wallet Type Name</label>
-          <div className="flex flex-row">
-            <input
-              type="text"
-              className="pl-1 border-[1px] rounded-lg overflow-x-scroll"
-              value={cryptoWalletTypeName}
-              onChange={(event) => setCryptoWalletTypeName(event.target.value)}
-            />
-            <button type="button" className="bg-yellow-500 text-white rounded-full px-2 ml-5" onClick={() => EditCryptoWalletType()}>
-              Edit
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function CryptoWalletForm({
-  cryptoWalletTypes,
+function CryptoWalletForm({
+  cryptoWalletTypesData,
+  cryptoWalletTypesIsLoading,
   cryptoWalletsMutate,
 }: {
-  cryptoWalletTypes: CryptoWalletType[];
-  cryptoWalletsMutate: KeyedMutator<any>;
+  cryptoWalletTypesData: CryptoWalletType[];
+  cryptoWalletTypesIsLoading: boolean;
+  cryptoWalletsMutate: KeyedMutator<
+    (CryptoWallet & {
+      type: CryptoWalletType;
+    })[]
+  >;
 }) {
   const [cryptoWalletAddress, setCryptoWalletAddress] = useState("");
   const [cryptoWalletTypeId, setCryptoWalletTypeId] = useState<number>();
   const [cryptoWalletTypeName, setCryptoWalletTypeName] = useState<string>();
 
-  const SetCryptoWalletType = (name: string) => {
+  const handleCryptoWalletType = (name: string) => {
     setCryptoWalletTypeName(name);
-    for (let i = 0; i < cryptoWalletTypes.length; i++) {
-      if (cryptoWalletTypes[i].name === name) {
-        setCryptoWalletTypeId(cryptoWalletTypes[i].id);
+    for (let i = 0; i < cryptoWalletTypesData.length; i++) {
+      if (cryptoWalletTypesData[i].name === name) {
+        setCryptoWalletTypeId(cryptoWalletTypesData[i].id);
         return;
       }
     }
   };
 
-  const AddCryptoWallet = async () => {
+  const addCryptoWallet = async () => {
     if (cryptoWalletAddress === "") {
       toast.error("Wallet address empty. Try again.");
     } else {
-      const data = await fetch("/admin/cryptowallets/add-crypto-wallet", {
+      const response = await fetch("/admin/cryptowallets/add-crypto-wallet", {
         method: "POST",
         body: JSON.stringify({ cryptoWalletAddress, cryptoWalletTypeId }),
       });
-      const response = await data.json();
+      const message = await response.json();
       cryptoWalletsMutate();
       setCryptoWalletAddress("");
-      setCryptoWalletTypeId(cryptoWalletTypes[0].id);
-      setCryptoWalletTypeName(cryptoWalletTypes[0].name);
-      toast.success(response.message);
+      setCryptoWalletTypeId(cryptoWalletTypesData[0].id);
+      setCryptoWalletTypeName(cryptoWalletTypesData[0].name);
+      response.status === 201 ? toast.success(message) : toast.error(message);
     }
   };
   useEffect(() => {
-    if (cryptoWalletTypes) setCryptoWalletTypeId(cryptoWalletTypes[0].id);
-    setCryptoWalletTypeName(cryptoWalletTypes[0].name);
-  }, [cryptoWalletTypes]);
+    if (cryptoWalletTypesData) {
+      setCryptoWalletTypeId(cryptoWalletTypesData[0].id);
+      setCryptoWalletTypeName(cryptoWalletTypesData[0].name);
+    }
+  }, [cryptoWalletTypesData]);
 
-  return (
-    <form className="flex flex-row items-end justify-between">
-      <div className="flex flex-col">
-        <div className="flex flex-col mb-2">
-          <label className="pl-1">Crypto Wallet Address</label>
-          <input
-            type="text"
-            className="pl-1 border-[1px] rounded-lg overflow-x-scroll"
-            value={cryptoWalletAddress}
-            placeholder="1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71"
-            onChange={(event) => setCryptoWalletAddress(event.target.value)}
-          />
-        </div>
+  return !cryptoWalletTypesIsLoading ? (
+    cryptoWalletTypesData.length > 0 ? (
+      <form className="flex flex-row items-end justify-between">
         <div className="flex flex-col">
-          <label>Crypto Wallet Type</label>
-          <select
-            className="pl-1 border-[1px] rounded-lg"
-            value={cryptoWalletTypeName}
-            onChange={(event) => SetCryptoWalletType(event.target.value)}
-          >
-            {cryptoWalletTypes?.map((cryptoWalletType) => {
-              return (
-                <option key={cryptoWalletType.id} id={cryptoWalletType.id.toString()} value={cryptoWalletType.name}>
-                  {cryptoWalletType.name}
-                </option>
-              );
-            })}
-          </select>
+          <div className="mb-2 flex flex-col">
+            <label className="pl-1">Crypto Wallet Address</label>
+            <input
+              type="text"
+              className="overflow-x-scroll rounded-lg border-[1px] pl-1"
+              value={cryptoWalletAddress}
+              placeholder="1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71"
+              onChange={(event) => setCryptoWalletAddress(event.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label>Crypto Wallet Type</label>
+            <select
+              className="rounded-lg border-[1px] pl-1"
+              value={cryptoWalletTypeName}
+              onChange={(event) => handleCryptoWalletType(event.target.value)}
+            >
+              {cryptoWalletTypesData?.map((cryptoWalletType) => {
+                return (
+                  <option
+                    key={cryptoWalletType.id}
+                    id={cryptoWalletType.id.toString()}
+                    value={cryptoWalletType.name}
+                  >
+                    {cryptoWalletType.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-      </div>
-      <button type="button" className="bg-green-500 text-white rounded-full px-2" onClick={() => AddCryptoWallet()}>
-        Add
-      </button>
-    </form>
+
+        <button
+          type="button"
+          className="rounded-full bg-green-500 px-2 text-white"
+          onClick={addCryptoWallet}
+        >
+          Add
+        </button>
+      </form>
+    ) : (
+      <div>No Crypto Wallets</div>
+    )
+  ) : (
+    <div className="flex justify-center">
+      <Loader />
+    </div>
   );
 }
 
-export function CryptoWalletList({
-  cryptoWallets,
+function CryptoWalletList({
+  cryptoWalletsData,
+  cryptoWalletsIsLoading,
   cryptoWalletsMutate,
-  cryptoWalletTypes,
+  cryptoWalletTypesData,
+  cryptoWalletTypesIsLoading,
 }: {
-  cryptoWallets: (CryptoWallet & {
+  cryptoWalletsData: (CryptoWallet & {
     type: CryptoWalletType;
   })[];
-  cryptoWalletsMutate: KeyedMutator<any>;
-  cryptoWalletTypes: CryptoWalletType[];
+  cryptoWalletsIsLoading: boolean;
+  cryptoWalletsMutate: KeyedMutator<
+    (CryptoWallet & {
+      type: CryptoWalletType;
+    })[]
+  >;
+  cryptoWalletTypesData: CryptoWalletType[];
+  cryptoWalletTypesIsLoading: boolean;
 }) {
   const [cryptoWallet, setCryptoWallet] = useState<
     CryptoWallet & {
@@ -236,37 +174,54 @@ export function CryptoWalletList({
 
   return (
     <div className="flex flex-row">
-      <div className="grid text-center border-2 border-black rounded-lg w-full">
-        <div className="grid grid-cols-2 p-1 border-b-2 border-black bg-black text-white text-lg font-semibold">
+      <div className="grid w-full rounded-lg border-2 border-black text-center">
+        <div className="grid grid-cols-2 border-b-2 border-black bg-black p-1 text-lg font-semibold text-white">
           <div>Address</div>
           <div className="grid grid-cols-2">
             <div>Type</div>
             <div>Active</div>
           </div>
         </div>
-        {cryptoWallets?.map((wallet) => {
-          return (
-            <div
-              key={wallet.id}
-              className="grid grid-cols-4 cursor-pointer hover:bg-white even:bg-slate-300 h-7 w-full"
-              onClick={() => setCryptoWallet(wallet)}
-            >
-              <div className="col-span-2 pl-1 overflow-x-scroll">{wallet.address}</div>
-              <div>{wallet.type.name}</div>
-              <div className={`${wallet.active ? "bg-green-500" : "bg-red-500"} overflow-hidden `}>{wallet.active ? "Yes" : "No"}</div>
-            </div>
-          );
-        })}
+        {!cryptoWalletsIsLoading ? (
+          cryptoWalletsData.length > 0 ? (
+            cryptoWalletsData.map((cryptoWallet) => {
+              return (
+                <div
+                  key={cryptoWallet.id}
+                  className="grid h-7 w-full cursor-pointer grid-cols-4 even:bg-slate-300 hover:bg-white"
+                  onClick={() => setCryptoWallet(cryptoWallet)}
+                >
+                  <div className="col-span-2 overflow-x-scroll pl-1">
+                    {cryptoWallet.address}
+                  </div>
+                  <div>{cryptoWallet.type.name}</div>
+                  <div
+                    className={`${
+                      cryptoWallet.active ? "bg-green-500" : "bg-red-500"
+                    } overflow-hidden `}
+                  >
+                    {cryptoWallet.active ? "Yes" : "No"}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div>No Crypto Wallets</div>
+          )
+        ) : (
+          <div className="flex justify-center">
+            <Loader />
+          </div>
+        )}
       </div>
       {cryptoWallet ? (
-        <div>
-          <CryptoWalletInfo
-            cryptoWallet={cryptoWallet}
-            setCryptoWallet={setCryptoWallet}
-            cryptoWalletsMutate={cryptoWalletsMutate}
-            cryptoWalletTypes={cryptoWalletTypes}
-          />
-        </div>
+        <CryptoWalletInfo
+          cryptoWallet={cryptoWallet}
+          setCryptoWallet={setCryptoWallet}
+          cryptoWalletsMutate={cryptoWalletsMutate}
+          cryptoWalletTypesData={cryptoWalletTypesData}
+          cryptoWalletTypesIsLoading={cryptoWalletTypesIsLoading}
+        />
       ) : null}
     </div>
   );
@@ -275,7 +230,8 @@ function CryptoWalletInfo({
   cryptoWallet,
   setCryptoWallet,
   cryptoWalletsMutate,
-  cryptoWalletTypes,
+  cryptoWalletTypesData,
+  cryptoWalletTypesIsLoading,
 }: {
   cryptoWallet: CryptoWallet & {
     type: CryptoWalletType;
@@ -287,8 +243,13 @@ function CryptoWalletInfo({
       }
     >
   >;
-  cryptoWalletsMutate: KeyedMutator<any>;
-  cryptoWalletTypes: CryptoWalletType[];
+  cryptoWalletsMutate: KeyedMutator<
+    (CryptoWallet & {
+      type: CryptoWalletType;
+    })[]
+  >;
+  cryptoWalletTypesData: CryptoWalletType[];
+  cryptoWalletTypesIsLoading: boolean;
 }) {
   const [formWallet, setFormWallet] = useState<
     CryptoWallet & {
@@ -296,25 +257,31 @@ function CryptoWalletInfo({
     }
   >(cryptoWallet);
 
-  const [show, setShow] = useState(false);
-  const SetWalletType = (name: string) => {
-    for (let i = 0; i < cryptoWalletTypes.length; i++) {
-      if (cryptoWalletTypes[i].name === name) {
-        setFormWallet({ ...formWallet, typeId: cryptoWalletTypes[i].id, type: { id: Number(cryptoWalletTypes[i].id), name } });
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] =
+    useState(false);
+  const handleCryptoWalletType = (name: string) => {
+    for (let i = 0; i < cryptoWalletTypesData.length; i++) {
+      if (cryptoWalletTypesData[i].name === name) {
+        setFormWallet({
+          ...formWallet,
+          typeId: cryptoWalletTypesData[i].id,
+          type: { id: Number(cryptoWalletTypesData[i].id), name },
+        });
         return;
       }
     }
+    return;
   };
 
-  const EditWalletAddress = async () => {
-    const data = await fetch("/admin/cryptowallets/edit-crypto-wallet", {
+  const editWalletAddress = async () => {
+    const response = await fetch("/admin/cryptowallets/edit-crypto-wallet", {
       method: "POST",
       body: JSON.stringify({ formWallet }),
     });
-    const response = await data.json();
+    const message = await response.json();
     cryptoWalletsMutate();
     setCryptoWallet(null);
-    toast.success(response.message);
+    response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
   useEffect(() => {
@@ -322,53 +289,78 @@ function CryptoWalletInfo({
   }, [cryptoWallet]);
   return (
     <div
-      className="flex fixed bg-opacity-50 top-0 left-0 right-0 bg-black w-full md:inset-0 h-full z-50 overflow-y-scroll "
+      className="fixed left-0 right-0 top-0 z-50 flex h-full w-full overflow-y-scroll bg-black bg-opacity-50 md:inset-0 "
       onClick={() => setCryptoWallet(null)}
     >
-      <div className="relative w-2/3 rounded-lg p-2 md:h-auto m-auto bg-white" onClick={(e) => e.stopPropagation()}>
-        {show ? (
+      <div
+        className="relative m-auto w-2/3 rounded-lg bg-white p-2 md:h-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {showDeleteConfirmationModal ? (
           <DeleteConfirmationModal
             cryptoWalletId={formWallet.id}
             setCryptoWallet={setCryptoWallet}
-            setShow={setShow}
+            setShowDeleteConfirmationModal={setShowDeleteConfirmationModal}
             cryptoWalletMutate={cryptoWalletsMutate}
           />
         ) : null}
         <div className="">
           <div className="flex flex-col pb-1 ">
-            <label className="text-lg mr-5 font-bold">Address</label>
+            <label className="mr-5 text-lg font-bold">Address</label>
             <input
-              className="pl-1 overflow-x-scroll border-[1px] rounded-lg"
+              className="overflow-x-scroll rounded-lg border-[1px] pl-1"
               value={formWallet.address}
-              onChange={(event) => setFormWallet({ ...formWallet, address: event.target.value })}
+              onChange={(event) =>
+                setFormWallet({ ...formWallet, address: event.target.value })
+              }
             />
           </div>
           <div className="flex flex-col pb-2 ">
             <label className="text-lg font-bold">Type</label>
-            <select value={formWallet.type.name} className="pl-1 border-[1px]" onChange={(event) => SetWalletType(event.target.value)}>
-              {cryptoWalletTypes?.map((type) => {
-                return (
-                  <option key={type.id} id={type.id.toString()} value={type.name}>
-                    {type.name}
-                  </option>
-                );
-              })}
+            <select
+              value={formWallet.type.name}
+              className="border-[1px] pl-1"
+              onChange={(event) => handleCryptoWalletType(event.target.value)}
+            >
+              {!cryptoWalletTypesIsLoading
+                ? cryptoWalletTypesData.map((type) => {
+                    return (
+                      <option
+                        key={type.id}
+                        id={type.id.toString()}
+                        value={type.name}
+                      >
+                        {type.name}
+                      </option>
+                    );
+                  })
+                : null}
             </select>
           </div>
           <div className="flex flex-row pb-2">
-            <label className="text-lg font-bold mr-5">Active:</label>
+            <label className="mr-5 text-lg font-bold">Active:</label>
             <button
-              className={`${formWallet.active ? "bg-green-500" : "bg-red-500"} text-white rounded-full px-2`}
-              onClick={() => setFormWallet({ ...formWallet, active: !formWallet.active })}
+              className={`${
+                formWallet.active ? "bg-green-500" : "bg-red-500"
+              } rounded-full px-2 text-white`}
+              onClick={() =>
+                setFormWallet({ ...formWallet, active: !formWallet.active })
+              }
             >
               {formWallet.active ? "Enabled" : "Disabled"}
             </button>
           </div>
           <div className="flex w-full">
-            <button className="mx-auto w-1/4 bg-blue-700 text-white rounded-full px-2 py-1" onClick={() => EditWalletAddress()}>
+            <button
+              className="mx-auto w-1/4 rounded-full bg-blue-700 px-2 py-1 text-white"
+              onClick={editWalletAddress}
+            >
               Save
             </button>{" "}
-            <button className="mx-auto w-1/4 bg-red-700 text-white rounded-full px-2 py-1" onClick={() => setShow(true)}>
+            <button
+              className="mx-auto w-1/4 rounded-full bg-red-700 px-2 py-1 text-white"
+              onClick={() => setShowDeleteConfirmationModal(true)}
+            >
               Delete
             </button>
           </div>
@@ -378,12 +370,14 @@ function CryptoWalletInfo({
   );
 
   function DeleteConfirmationModal({
-    setShow,
+    setShowDeleteConfirmationModal,
     cryptoWalletId,
     setCryptoWallet,
     cryptoWalletMutate,
   }: {
-    setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowDeleteConfirmationModal: React.Dispatch<
+      React.SetStateAction<boolean>
+    >;
     cryptoWalletId: number;
     setCryptoWallet: React.Dispatch<
       React.SetStateAction<
@@ -392,26 +386,34 @@ function CryptoWalletInfo({
         }
       >
     >;
-    cryptoWalletMutate: KeyedMutator<any>;
+    cryptoWalletMutate: KeyedMutator<
+      (CryptoWallet & {
+        type: CryptoWalletType;
+      })[]
+    >;
   }) {
-    const DeleteCryptoWallet = async (event) => {
+    const deleteCryptoWallet = async (event) => {
       event.preventDefault();
       toast.loading("Loading...");
 
-      const data = await fetch(`/admin/cryptowallets/delete--crypto-wallet/${cryptoWalletId}`, {
-        method: "DELETE",
-      });
-      const response = await data.json();
+      const response = await fetch(
+        `/admin/cryptowallets/delete--crypto-wallet/${cryptoWalletId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const message = await response.json();
       toast.dismiss();
       cryptoWalletMutate();
       setCryptoWallet(null);
-      setShow(false);
-      toast.success(response.message);
+      setShowDeleteConfirmationModal(false);
+
+      response.status === 200 ? toast.success(message) : toast.error(message);
     };
 
     function closeOnEscKeyDown(event) {
       if ((event.charCode || event.keyCode) === 27) {
-        setShow(false);
+        setShowDeleteConfirmationModal(false);
       }
     }
     useEffect(() => {
@@ -423,24 +425,28 @@ function CryptoWalletInfo({
 
     return (
       <div
-        className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4 overflow-x-hidden overflow-y-auto bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
-        onClick={() => setShow(false)}
+        className="fixed left-0 right-0 top-0 z-50 flex h-[calc(100%-1rem)] w-full overflow-y-auto overflow-x-hidden bg-black bg-opacity-50 p-4 md:inset-0 md:h-full "
+        onClick={() => setShowDeleteConfirmationModal(false)}
       >
-        <div className="relative w-1/3 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
-          <div className=" flex flex-col items-center relative bg-white rounded-lg shadow dark:bg-gray-700 ">
-            <h1 className="text-lg p-2">
-              Are you sure you wanted to delete this crypto wallet? This action is irreversible and cannot be canceled.
+        <div
+          className="relative m-auto h-full w-1/3 max-w-2xl md:h-auto "
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className=" relative flex flex-col items-center rounded-lg bg-white shadow dark:bg-gray-700 ">
+            <h1 className="p-2 text-lg">
+              Are you sure you wanted to delete this crypto wallet? This action
+              is irreversible and cannot be canceled.
             </h1>
             <div className="flex flex-row gap-8 p-2">
               <button
-                className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
-                onClick={() => setShow(false)}
+                className=" rounded-full border-2 border-black bg-gray-400 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg "
+                onClick={() => setShowDeleteConfirmationModal(false)}
               >
                 Cancel
               </button>
               <button
-                className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
-                onClick={(event) => DeleteCryptoWallet(event)}
+                className=" rounded-full border-2 border-black bg-red-600 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg"
+                onClick={deleteCryptoWallet}
               >
                 Delete
               </button>

@@ -10,25 +10,20 @@ export function CustomerTable({
   setCustomer,
   setCursor,
   setLimit,
-  data,
-  isLoading,
+  customersData,
+  customersIsLoading,
   limit,
 }: {
   setCustomer: React.Dispatch<React.SetStateAction<User>>;
   setCursor: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
-  data: any;
-  isLoading: boolean;
+  customersData: { customers: User[]; customerCount: number };
+  customersIsLoading: boolean;
   limit: number;
 }) {
   const [pages, setPages] = useState<number>();
   const [page, setPage] = useState<number>(1);
 
-  useEffect(() => {
-    if (data?.count) {
-      setPages(Math.ceil(Number(data.count) / Math.abs(limit)));
-    }
-  }, [data, limit]);
   const changeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     setLimit(Number(event.target.value));
@@ -38,7 +33,7 @@ export function CustomerTable({
 
   const prevPage = () => {
     if (page > 1) {
-      setCursor(data.customers[0].id);
+      setCursor(customersData.customers[0].id);
       if (limit > 0) {
         setLimit(limit * -1);
       }
@@ -51,7 +46,7 @@ export function CustomerTable({
   };
   const nextPage = () => {
     if (page < pages) {
-      setCursor(data.customers[data.customers.length - 1].id);
+      setCursor(customersData.customers[customersData.customers.length - 1].id);
       if (limit < 0) {
         setLimit(limit * -1);
       }
@@ -61,6 +56,12 @@ export function CustomerTable({
       toast.error("Request page out of bounds");
     }
   };
+
+  useEffect(() => {
+    if (customersData.customerCount) {
+      setPages(Math.ceil(Number(customersData.customerCount) / Math.abs(limit)));
+    }
+  }, [customersData, limit]);
 
   return (
     <div className="flex flex-col">
@@ -83,9 +84,9 @@ export function CustomerTable({
             <div className="py-3">Verified</div>
           </div>
           <div className="h-[400px] overflow-y-scroll">
-            {!isLoading ? (
-              data ? (
-                data.customers.map((customer: User) => {
+            {!customersIsLoading ? (
+              customersData.customers.length > 0 ? (
+                customersData.customers.map((customer: User) => {
                   return (
                     <div
                       key={customer.id}
@@ -100,7 +101,9 @@ export function CustomerTable({
                     </div>
                   );
                 })
-              ) : null
+              ) : (
+                <div>No Customers.</div>
+              )
             ) : (
               <div className="flex justify-center py-5">
                 <Loader />
@@ -127,13 +130,16 @@ export function CustomerTable({
 export function CustomerDetails({
   customer,
   setCustomer,
-  mutate,
+  customersMutate,
 }: {
   customer: User;
   setCustomer: React.Dispatch<React.SetStateAction<User>>;
-  mutate: KeyedMutator<any>;
+  customersMutate: KeyedMutator<{
+    customers: User[];
+    customerCount: number;
+  }>;
 }) {
-  const [show, setShow] = useState(false);
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
 
   function CustomerField({ title, value }) {
     return (
@@ -144,14 +150,14 @@ export function CustomerDetails({
     );
   }
   const verifyCustomer = async (id, status) => {
-    const data = await fetch("/admin/customers/verify-customer", {
+    const response = await fetch("/admin/customers/verify-customer", {
       method: "POST",
       body: JSON.stringify({ id, verify: status }),
     });
-    const response = await data.json();
-    mutate();
+    const message = await response.json();
+    customersMutate();
     setCustomer(null);
-    toast.success(response.message);
+    response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
   return (
@@ -193,12 +199,16 @@ export function CustomerDetails({
                   </>
                 )}
               </button>
-              {show ? (
-                <DeleteConfirmationModal setShow={setShow} mutate={mutate} customerId={customer.id} />
+              {showDeleteConfirmationModal ? (
+                <DeleteConfirmationModal
+                  setShowDeleteConfirmationModal={setShowDeleteConfirmationModal}
+                  customersMutate={customersMutate}
+                  customerId={customer.id}
+                />
               ) : (
                 <button
                   className="flex flex-row items-center justify-center rounded-full border-[1px] p-2 bg-red-600 text-white"
-                  onClick={() => setShow(true)}
+                  onClick={() => setShowDeleteConfirmationModal(true)}
                 >
                   <BsFillTrashFill size={20} />
                   <span className="ml-2">Delete Customer</span>
@@ -222,34 +232,32 @@ export function CustomerDetails({
 }
 
 function DeleteConfirmationModal({
-  setShow,
+  setShowDeleteConfirmationModal,
   customerId,
-  mutate,
+  customersMutate,
 }: {
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowDeleteConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
   customerId: number;
-  mutate: any;
+  customersMutate: KeyedMutator<{
+    customers: User[];
+    customerCount: number;
+  }>;
 }) {
   const deleteCustomer = async () => {
     toast.loading("Loading...");
     const response = await fetch(`/admin/customers/delete-customer/${customerId}`, {
       method: "DELETE",
     });
-    const json = await response.json();
-    console.log(json);
-    mutate();
+    const message = await response.json();
     toast.dismiss();
-    if (json.status === 200) toast.success(json.message);
-    else {
-      toast.error(json.message);
-    }
-    setShow(false);
-    window.location.reload();
+    customersMutate();
+    setShowDeleteConfirmationModal(false);
+    response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
   function closeOnEscKeyDown(event) {
     if ((event.charCode || event.keyCode) === 27) {
-      setShow(false);
+      setShowDeleteConfirmationModal(false);
     }
   }
   useEffect(() => {
@@ -265,7 +273,7 @@ function DeleteConfirmationModal({
       <div className="flex flex-row justify-evenly p-2">
         <button
           className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
-          onClick={() => setShow(false)}
+          onClick={() => setShowDeleteConfirmationModal(false)}
         >
           Cancel
         </button>

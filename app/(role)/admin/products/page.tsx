@@ -1,46 +1,81 @@
 "use client";
 import React, { useState } from "react";
-import { ProductDetails, ProductForm, ProductTable } from "./Products";
+import { ProductDetails, ProductForm, ProductTable } from "./(components)/Product";
 import useSWR from "swr";
-import { Product } from "@prisma/client";
+import { Category, Product } from "@prisma/client";
+import { IoMdAdd } from "react-icons/io";
+import Link from "next/link";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function AdminProductsPage() {
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-
   const [category, setCategory] = useState("All");
-  const [product, setProduct] = useState<Product>();
+  const [product, setProduct] = useState<
+    Product & {
+      category: Category;
+    }
+  >();
   const [showProductDetails, setShowProductDetails] = useState(false);
 
-  const { data: productsData, error, isLoading, mutate: productsMutate } = useSWR(`/admin/products/get-products/${category}`, fetcher);
+  const {
+    data: productsData,
+    error: productsError,
+    isLoading: productsIsLoading,
+    mutate: productsMutate,
+  } = useSWR<
+    (Product & {
+      category: Category;
+    })[]
+  >("/admin/products/api/get-products", (url) =>
+    fetch(url).then((res) => res.json())
+  );
 
-  console.log(productsData);
   const {
     data: categoriesData,
     error: categoriesError,
     isLoading: categoriesIsLoading,
     mutate: categoriesMutate,
-  } = useSWR(`/admin/categories/get-categories`, fetcher);
+  } = useSWR<Category[]>(`/admin/categories/api/get-categories`, (url) =>
+    fetch(url).then((res) => res.json())
+  );
   return (
-    <div className="h-full w-[90%] mx-auto">
-      <h1 className="text-3xl font-bold pb-5">Products</h1>
-      <div className="px-2 py-5 border-2 border-black bg-white rounded-xl shadow-xl">
-        <ProductForm mutate={productsMutate} />
-        <div className="border-b-[1px] border-gray-400 my-5"></div>
+    <div className="mx-auto h-full w-[90%]">
+      <div className="flex flex-row items-center justify-between pb-5">
+        <h1 className="text-2xl font-bold">Products</h1>
+        <Link
+          href="/admin/products/add"
+          className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white "
+        >
+          <IoMdAdd size={14} />
+          <span>ADD</span>
+        </Link>
+      </div>
+      <div className="rounded-xl border-2 border-black bg-white px-2 py-5 shadow-xl">
+        <div className="flex h-12 flex-row items-center gap-2 rounded-lg border p-2">
+          <AiOutlineSearch />
+          <input
+            type="text"
+            className="w-full focus:outline-none"
+            placeholder="Search"
+          />
+        </div>
+        <div className="my-5 border-b-[1px] border-gray-400"></div>
 
-        <div className="flex flex-row md:gap-20 h-full">
-          <div className="w-full">
-            <ProductTable
-              data={productsData}
-              isLoading={isLoading}
-              setProduct={setProduct}
-              categoriesData={categoriesData}
-              setCategory={setCategory}
-            />
-          </div>
+        <div className="flex h-full flex-row md:gap-20">
+          <ProductTable
+            productsData={productsData}
+            productsIsLoading={productsIsLoading}
+            setProduct={setProduct}
+            categoriesData={categoriesData}
+            setCategory={setCategory}
+          />
           {product ? (
-            <ProductDetails product={product} setProduct={setProduct} mutate={productsMutate} categoriesData={categoriesData} />
+            <ProductDetails
+              product={product}
+              setProduct={setProduct}
+              productsMutate={productsMutate}
+              categoriesData={categoriesData}
+            />
           ) : null}
-          <div className="flex flex-col"></div>
         </div>
       </div>
     </div>

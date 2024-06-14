@@ -1,43 +1,30 @@
 import { Category } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "app/Loader";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { KeyedMutator } from "swr";
 
-export function CategoryCreateForm({ categoriesData }: { categoriesData: any }) {
-  const queryClient = useQueryClient();
+export function CategoryCreateForm({
+  categoriesMutate,
+}: {
+  categoriesMutate: KeyedMutator<any>;
+}) {
   const [categoryName, setCategoryName] = useState("");
 
-  const mutation = useMutation({
-    mutationFn: (name: string) => {
-      console.log(name);
-      return fetch("/admin/categories/create-category", {
-        method: "POST",
-        body: JSON.stringify({ categoryName: name }),
-      }).then((res) => res.json());
-    },
-
-    onSuccess: async (result) => {
-      console.log(result);
-      await queryClient.invalidateQueries({ queryKey: ["categories"] });
-      console.log(queryClient.getQueryCache());
-      result.status === 200 ? toast.success(result.message) : toast.error(result.message);
-    },
-  });
-
-  console.log(categoriesData);
   const addCategory = async (event) => {
     event.preventDefault();
-    mutation.mutate(categoryName);
-
-    // const response = await fetch("/admin/categories/create-category", {
-    //   method: "POST",
-    //   body: JSON.stringify({ categoryName }),
-    // });
-    // const data = await response.json();
+    toast.loading("Loading...");
+    const response = await fetch("/admin/categories/create-category", {
+      method: "POST",
+      body: JSON.stringify({ categoryName }),
+    });
+    const message = await response.json();
+    toast.dismiss();
+    categoriesMutate();
     setCategoryName("");
-    // data.status === 200 ? toast.success(data.message) : toast.error(data.message);
+    response.status === 201 ? toast.success(message) : toast.error(message);
   };
 
   return (
@@ -51,61 +38,100 @@ export function CategoryCreateForm({ categoriesData }: { categoriesData: any }) 
           <input
             type="text"
             id="name"
-            className="pl-1 border-[1px] rounded-lg"
+            className="rounded-lg border-[1px] pl-1"
             value={categoryName}
             placeholder="Bottoms"
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={(event) => setCategoryName(event.target.value)}
           />
         </div>
-        <button type="submit" className=" mx-auto px-2 bg-green-500 text-white rounded-xl" onClick={(event) => addCategory(event)}>
+        <button
+          type="submit"
+          className=" mx-auto rounded-xl bg-green-500 px-2 text-white"
+          onClick={addCategory}
+        >
           Add
         </button>
       </div>
     </form>
   );
 }
-export function CategoryList({ categoriesData }: { categoriesData: any }) {
+export function CategoryList({
+  categoriesData,
+  categoriesIsLoading,
+  categoriesMutate,
+}: {
+  categoriesData: Category[];
+  categoriesIsLoading: boolean;
+  categoriesMutate: KeyedMutator<any>;
+}) {
   const [showDelete, setShowDelete] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  const [category, setCategory] = useState<Category>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category>(null);
 
-  const handleUpdate = (cat: Category, active: boolean) => {
-    setCategory(cat);
+  const handleUpdate = (category: Category, active: boolean) => {
+    setSelectedCategory(category);
     setShowUpdate(active);
   };
-  const handleDelete = (cat: Category, active: boolean) => {
-    setCategory(cat);
+  const handleDelete = (category: Category, active: boolean) => {
+    setSelectedCategory(category);
     setShowDelete(active);
   };
 
   return (
-    <div className="border-black border-2 rounded-lg mb-5">
-      <div className="grid grid-cols-3 rounded-t-md border-black bg-black text-white p-1 text-lg font-semibold">
+    <div className="mb-5 rounded-lg border-2 border-black">
+      <div className="grid grid-cols-3 rounded-t-md border-black bg-black p-1 text-lg font-semibold text-white">
         <div className="col-span-2">Category Name</div>
         <div>Actions</div>
       </div>
-      {categoriesData && categoriesData.categories.length > 0 ? (
-        categoriesData.categories.map((cat: Category) => {
-          return (
-            <div key={cat.id} className="grid grid-cols-3 h-7 items-center even:bg-slate-300">
-              <div className="pl-1 col-span-2">{cat.name}</div>
-              <div className="flex justify-evenly items-center">
-                <button title="Edit" onClick={() => handleUpdate(cat, true)}>
-                  <MdOutlineEdit style={{ color: "black" }} size={30} />
-                </button>
-                <button title="Delete" onClick={() => handleDelete(cat, true)}>
-                  <MdDeleteOutline style={{ color: "red" }} size={30} />
-                </button>
-              </div>
-            </div>
-          );
-        })
+      {!categoriesIsLoading ? (
+        categoriesData.length > 0 ? (
+          categoriesData.map((cat: Category) => {
+            return (
+              <Link
+                href={`/admin/categories/${cat.id}`}
+                key={cat.id}
+                className="grid h-7 grid-cols-3 items-center even:bg-slate-300"
+              >
+                <div className="col-span-2 pl-1">
+                  <p>{cat.name}</p>
+                </div>
+                <div className="flex items-center justify-evenly">
+                  <button title="Edit" onClick={() => handleUpdate(cat, true)}>
+                    <MdOutlineEdit style={{ color: "black" }} size={30} />
+                  </button>
+                  <button
+                    title="Delete"
+                    onClick={() => handleDelete(cat, true)}
+                  >
+                    <MdDeleteOutline style={{ color: "red" }} size={30} />
+                  </button>
+                </div>
+              </Link>
+            );
+          })
+        ) : (
+          <div className="grid">
+            <p className="text-center">No Categories.</p>
+          </div>
+        )
       ) : (
-        <div className="text-center">No Categories.</div>
+        <div className="flex justify-center py-5">
+          <Loader />
+        </div>
       )}
-      {showUpdate && category ? <UpdateCategoryModal category={category} handleUpdate={handleUpdate} categoriesMutate={null} /> : null}
-      {showDelete && category ? (
-        <DeleteCategoryConfirmationModal category={category} handleDelete={handleDelete} categoriesMutate={null} />
+      {showUpdate && selectedCategory ? (
+        <UpdateCategoryModal
+          category={selectedCategory}
+          handleUpdate={handleUpdate}
+          categoriesMutate={categoriesMutate}
+        />
+      ) : null}
+      {showDelete && selectedCategory ? (
+        <DeleteCategoryConfirmationModal
+          category={selectedCategory}
+          handleDelete={handleDelete}
+          categoriesMutate={categoriesMutate}
+        />
       ) : null}
     </div>
   );
@@ -118,22 +144,21 @@ function UpdateCategoryModal({
 }: {
   handleUpdate: (cat: Category, active: boolean) => void;
   category: Category;
-
   categoriesMutate: KeyedMutator<any>;
 }) {
   const [newCategoryName, setNewCategoryName] = useState(category.name);
   const updateCategory = async (event) => {
     event.preventDefault();
     toast.loading("Loading...");
-    const data = await fetch("/admin/categories/update-category", {
+    const response = await fetch("/admin/categories/update-category", {
       method: "POST",
       body: JSON.stringify({ categoryId: category.id, newCategoryName }),
     });
-    const response = await data.json();
+    const message = await response.json();
     toast.dismiss();
     categoriesMutate();
     handleUpdate(null, false);
-    toast.success(response.message);
+    response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
   function closeOnEscKeyDown(event) {
@@ -150,14 +175,17 @@ function UpdateCategoryModal({
 
   return (
     <div
-      className="flex fixed w-full h-full bg-opacity-50 top-0 left-0 right-0 overflow-y-auto bg-black md:inset-0 z-50 "
+      className="fixed left-0 right-0 top-0 z-10 flex h-full w-full overflow-y-auto bg-black bg-opacity-50 md:inset-0 "
       onClick={() => handleUpdate(null, false)}
     >
-      <div className="flex flex-col items-center relative md:h-auto m-auto bg-white rounded-lg " onClick={(e) => e.stopPropagation()}>
+      <div
+        className="relative m-auto flex flex-col items-center rounded-lg bg-white md:h-auto "
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex flex-col">
           <label className="md:text-lg">Category Name</label>
           <input
-            className="border-[1px] border-black rounded-lg md:p-2"
+            className="rounded-lg border-[1px] border-black md:p-2"
             type="text"
             value={newCategoryName}
             onChange={(event) => setNewCategoryName(event.target.value)}
@@ -166,7 +194,7 @@ function UpdateCategoryModal({
         <pre>{newCategoryName}</pre>
         <div className="flex flex-row gap-8 p-2">
           <button
-            className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
+            className=" rounded-full border-2 border-black bg-red-600 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg"
             onClick={(event) => updateCategory(event)}
           >
             Update
@@ -190,14 +218,17 @@ function DeleteCategoryConfirmationModal({
     event.preventDefault();
     toast.loading("Loading...");
 
-    const data = await fetch(`/admin/categories/delete-category/${category.id}`, {
-      method: "DELETE",
-    });
-    const response = await data.json();
+    const response = await fetch(
+      `/admin/categories/delete-category/${category.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    const message = await response.json();
     toast.dismiss();
     categoriesMutate();
     handleDelete(null, false);
-    toast.success(response.message);
+    response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
   function closeOnEscKeyDown(event) {
@@ -214,23 +245,27 @@ function DeleteCategoryConfirmationModal({
 
   return (
     <div
-      className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4  overflow-y-auto bg-black w-full h-full md:inset-0  z-50 "
+      className="fixed left-0 right-0 top-0 z-50 flex h-full  w-full overflow-y-auto bg-black bg-opacity-50 p-4  md:inset-0 "
       onClick={() => handleDelete(null, false)}
     >
-      <div className="relative flex flex-col m-auto items-center bg-white rounded-lg " onClick={(e) => e.stopPropagation()}>
+      <div
+        className="relative m-auto flex flex-col items-center rounded-lg bg-white "
+        onClick={(e) => e.stopPropagation()}
+      >
         <p className="p-2">
-          Are you sure you wanted to delete this category? All relavant products will have this category removed. This action is
-          irreversible and cannot be canceled.
+          Are you sure you wanted to delete this category? All relavant products
+          will have this category removed. This action is irreversible and
+          cannot be canceled.
         </p>
         <div className="flex flex-row gap-8 p-2">
           <button
-            className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
+            className=" rounded-full border-2 border-black bg-gray-400 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg "
             onClick={() => handleDelete(null, false)}
           >
             Cancel
           </button>
           <button
-            className=" p-2 rounded-full border-2 text-lg border-black bg-red-600 text-white hover:shadow-lg hover:-translate-y-2"
+            className=" rounded-full border-2 border-black bg-red-600 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg"
             onClick={(event) => deleteCategory(event)}
           >
             Delete

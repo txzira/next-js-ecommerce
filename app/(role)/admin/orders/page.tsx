@@ -9,13 +9,26 @@ export default function AdminOrdersPage() {
   const [limit, setLimit] = useState(10);
   const [cursor, setCursor] = useState(0);
   const [sort, setSort] = useState("asc");
-  const fetcher = (url) => fetch(url, { method: "GET" }).then((res) => res.json());
-  const { data, error, isLoading, mutate } = useSWR(`/admin/orders/get-orders/${limit}/${cursor}/${sort}`, fetcher);
-  console.log(data);
+  const {
+    data: ordersData,
+    error: ordersError,
+    isLoading: ordersIsLoading,
+    mutate: ordersMutate,
+  } = useSWR<{
+    orders: OrderSummary[];
+    count: number;
+  }>(`/admin/orders/get-orders/${limit}/${cursor}/${sort}`, (url) => fetch(url, { method: "GET" }).then((res) => res.json()));
   return (
     <div className="h-full w-[90%] mx-auto">
-      <OrderTable data={data} setOrder={setOrder} isLoading={isLoading} setCursor={setCursor} limit={limit} setLimit={setLimit} />
-      {order ? <OrderDetails order={order} mutate={mutate} setOrder={setOrder} /> : null}
+      <OrderTable
+        ordersData={ordersData}
+        setOrder={setOrder}
+        ordersIsLoading={ordersIsLoading}
+        setCursor={setCursor}
+        limit={limit}
+        setLimit={setLimit}
+      />
+      {order ? <OrderDetails order={order} ordersMutate={ordersMutate} setOrder={setOrder} /> : null}
     </div>
   );
 }

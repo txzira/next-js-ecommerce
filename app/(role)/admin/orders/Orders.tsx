@@ -1,4 +1,4 @@
-import { Order, User, Image as Img, Product, CartItem } from "@prisma/client";
+import { Image as Img, CartItem } from "@prisma/client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -10,24 +10,27 @@ export function OrderTable({
   setOrder,
   setCursor,
   setLimit,
-  data,
-  isLoading,
+  ordersData,
+  ordersIsLoading,
   limit,
 }: {
   setOrder: React.Dispatch<React.SetStateAction<OrderSummary>>;
   setCursor: React.Dispatch<React.SetStateAction<number>>;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
-  data: any;
-  isLoading: boolean;
+  ordersData: {
+    orders: OrderSummary[];
+    count: number;
+  };
+  ordersIsLoading: boolean;
   limit: number;
 }) {
   const [pages, setPages] = useState<number>();
   const [page, setPage] = useState<number>(1);
   useEffect(() => {
-    if (data?.count) {
-      setPages(Math.ceil(Number(data.count) / Math.abs(limit)));
+    if (ordersData?.count) {
+      setPages(Math.ceil(Number(ordersData.count) / Math.abs(limit)));
     }
-  }, [data, limit]);
+  }, [ordersData, limit]);
 
   const changeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
@@ -38,7 +41,7 @@ export function OrderTable({
 
   const PrevPage = () => {
     if (page > 1) {
-      setCursor(data.orders[0].id);
+      setCursor(ordersData.orders[0].id);
       if (limit > 0) {
         setLimit(limit * -1);
       }
@@ -51,7 +54,7 @@ export function OrderTable({
   };
   const NextPage = () => {
     if (page < pages) {
-      setCursor(data.orders[data.orders.length - 1].id);
+      setCursor(ordersData.orders[ordersData.orders.length - 1].id);
       if (limit < 0) {
         setLimit(limit * -1);
       }
@@ -83,19 +86,26 @@ export function OrderTable({
           <div className="py-2">Approved</div>
         </div>
         <div className="h-[400px] overflow-y-scroll bg-white">
-          {!isLoading ? (
-            data.orders.map((order) => {
-              const date = new Date(order.date);
+          {!ordersIsLoading ? (
+            ordersData.orders.length > 0 ? (
+              ordersData.orders.map((order) => {
+                const date = new Date(order.date);
 
-              return (
-                <div key={order.id} className="grid grid-cols-4 items-center hover:bg-white h-12" onClick={() => setOrder(order)}>
-                  <div className="pl-1 py-2 overflow-x-scroll">{`${order.customer.firstName} ${order.customer.lastName}`}</div>
-                  <div className="py-2">{`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear().toString().substring(2, 4)}`}</div>
-                  <div className="py-2">${order.amount}</div>
-                  <div className="py-2">{order.approved ? "Yes" : "No"}</div>
-                </div>
-              );
-            })
+                return (
+                  <div key={order.id} className="grid grid-cols-4 items-center hover:bg-white h-12" onClick={() => setOrder(order)}>
+                    <div className="pl-1 py-2 overflow-x-scroll">{`${order.customer.firstName} ${order.customer.lastName}`}</div>
+                    <div className="py-2">{`${date.getMonth() + 1}/${date.getDate()}/${date
+                      .getFullYear()
+                      .toString()
+                      .substring(2, 4)}`}</div>
+                    <div className="py-2">${order.amount}</div>
+                    <div className="py-2">{order.approved ? "Yes" : "No"}</div>
+                  </div>
+                );
+              })
+            ) : (
+              <div>No Orders.</div>
+            )
           ) : (
             <div className="flex justify-center py-5">
               <Loader />
@@ -121,19 +131,23 @@ export function OrderTable({
 export function OrderDetails({
   order,
   setOrder,
-  mutate,
+  ordersMutate,
 }: {
   order: OrderSummary;
   setOrder: React.Dispatch<OrderSummary>;
-  mutate: KeyedMutator<any>;
+  ordersMutate: KeyedMutator<{
+    orders: OrderSummary[];
+    count: number;
+  }>;
 }) {
   useEffect(() => {
-    setApproved(order.approved);
+    setOrderApproved(order.approved);
     order.trackingNumber === null ? setTrackingNumber("") : setTrackingNumber(order.trackingNumber);
   }, [order]);
-  const [show, setShow] = useState(false);
+
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [approved, setApproved] = useState<boolean>(false);
+  const [orderApproved, setOrderApproved] = useState<boolean>(false);
   async function saveOrder(event) {
     event.preventDefault();
     const data = await fetch("/admin/orders/save-order", {
@@ -141,10 +155,10 @@ export function OrderDetails({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderId: order.id, approved, trackingNumber }),
+      body: JSON.stringify({ orderId: order.id, approved: orderApproved, trackingNumber }),
     });
     const response = await data.json();
-    mutate();
+    ordersMutate();
     toast.success(response.message);
   }
   return order ? (
@@ -155,7 +169,14 @@ export function OrderDetails({
       <div className="relative w-5/6 h-3/4 p-2 rounded-lg md:h-auto m-auto bg-white overflow-y-scroll" onClick={(e) => e.stopPropagation()}>
         <h1 className="text-4xl font-bold pb-5">Order Information</h1>
 
-        {show ? <DeleteConfirmationModal orderId={order.id} mutate={mutate} setShow={setShow} setOrder={setOrder} /> : null}
+        {showDeleteConfirmationModal ? (
+          <DeleteConfirmationModal
+            orderId={order.id}
+            ordersMutate={ordersMutate}
+            setShowDeleteConfirmationModal={setShowDeleteConfirmationModal}
+            setOrder={setOrder}
+          />
+        ) : null}
         <div>
           <h2 className="text-2xl font-bold underline">Customer Information</h2>
           <div>
@@ -179,16 +200,16 @@ export function OrderDetails({
           <h2 className="text-2xl font-bold underline mb-2">Shipping</h2>
           <div className="flex flex-col">
             <label className="font-semibold">Full Name</label>
-            <span>
+            <p>
               {order.shipping.firstName} {order.shipping.lastName}
-            </span>
+            </p>
           </div>
           <div className="flex flex-col">
             <label className="font-semibold">Address</label>
-            <span>
+            <p>
               {order.shipping.streetAddress} {order.shipping.streetAddress2} {order.shipping.city}, {order.shipping.state}{" "}
               {order.shipping.zipCode}
-            </span>
+            </p>
           </div>
           <div className="flex flex-col w-64">
             <label className="font-semibold">Tracking Number</label>
@@ -213,9 +234,17 @@ export function OrderDetails({
             <span>Toggle Approval:</span>
             <label
               htmlFor="approval"
-              className={`flex cursor-pointer ${approved ? "bg-green-500" : "bg-gray-300"}  w-20 h-10 rounded-full relative items-center `}
+              className={`flex cursor-pointer ${
+                orderApproved ? "bg-green-500" : "bg-gray-300"
+              }  w-20 h-10 rounded-full relative items-center `}
             >
-              <input type="checkbox" id="approval" className="sr-only peer" checked={approved} onChange={() => setApproved(!approved)} />
+              <input
+                type="checkbox"
+                id="approval"
+                className="sr-only peer"
+                checked={orderApproved}
+                onChange={() => setOrderApproved(!orderApproved)}
+              />
               <span className="w-10 h-10 absolute bg-white rounded-full  peer-checked:left-10 shadow-xl"></span>
             </label>
           </div>
@@ -229,7 +258,7 @@ export function OrderDetails({
           <button
             type="button"
             className={`bg-red-700 text-white rounded-full px-3 my-5 active:border-black active:border-2`}
-            onClick={() => setShow(true)}
+            onClick={() => setShowDeleteConfirmationModal(true)}
           >
             Delete
           </button>
@@ -269,34 +298,37 @@ export function OrderDetails({
 }
 
 function DeleteConfirmationModal({
-  setShow,
+  setShowDeleteConfirmationModal,
   orderId,
   setOrder,
-  mutate,
+  ordersMutate,
 }: {
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowDeleteConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
   orderId: number;
   setOrder: React.Dispatch<React.SetStateAction<OrderSummary>>;
-  mutate: KeyedMutator<any>;
+  ordersMutate: KeyedMutator<{
+    orders: OrderSummary[];
+    count: number;
+  }>;
 }) {
   const deleteOrder = async (event) => {
     event.preventDefault();
     toast.loading("Loading...");
 
-    const data = await fetch(`/admin/orders/delete-order/${orderId}`, {
+    const response = await fetch(`/admin/orders/delete-order/${orderId}`, {
       method: "DELETE",
     });
-    const response = await data.json();
+    const message = await response.json();
     toast.dismiss();
-    mutate();
+    ordersMutate();
     setOrder(null);
-    setShow(false);
-    toast.success(response.message);
+    setShowDeleteConfirmationModal(false);
+    response.status ? toast.success(message) : toast.error(message);
   };
 
   function closeOnEscKeyDown(event) {
     if ((event.charCode || event.keyCode) === 27) {
-      setShow(false);
+      setShowDeleteConfirmationModal(false);
     }
   }
   useEffect(() => {
@@ -309,7 +341,7 @@ function DeleteConfirmationModal({
   return (
     <div
       className="flex fixed bg-opacity-50 top-0 left-0 right-0 p-4 overflow-x-hidden overflow-y-auto bg-black w-full md:h-full md:inset-0 h-[calc(100%-1rem)] z-50 "
-      onClick={() => setShow(false)}
+      onClick={() => setShowDeleteConfirmationModal(false)}
     >
       <div className="relative w-1/3 h-full max-w-2xl md:h-auto m-auto " onClick={(e) => e.stopPropagation()}>
         <div className=" flex flex-col items-center relative bg-white rounded-lg shadow dark:bg-gray-700 ">
@@ -317,7 +349,7 @@ function DeleteConfirmationModal({
           <div className="flex flex-row gap-8 p-2">
             <button
               className=" p-2 rounded-full border-2 text-lg border-black bg-gray-400 text-white hover:shadow-lg hover:-translate-y-2 "
-              onClick={() => setShow(false)}
+              onClick={() => setShowDeleteConfirmationModal(false)}
             >
               Cancel
             </button>
