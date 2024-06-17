@@ -23,7 +23,6 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
   const [available, setAvailable] = useState(product.available);
 
   useEffect(() => {
-    console.log(product.productVariants);
     if (product.productVariants.length) {
       for (let i = 0; i < product.attributeGroups.length; i++) {
         if (
@@ -52,7 +51,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
       <div className="group absolute h-full w-full cursor-pointer bg-inherit shadow-lg hover:z-10 hover:h-max hover:min-h-[365px] hover:border hover:border-black ">
         <div
           id="image-wrapper"
-          className="relative h-[300px] w-full bg-gradient-to-b from-gray-300 to-gray-100">
+          className="relative h-[300px] w-full bg-gray-50 bg-[radial-gradient(rgb(249,250,251),rgb(209,213,219))] ">
           <Link href={`/products/${product.slug}`}>
             <Image
               fill
@@ -73,7 +72,10 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
                 <Link
                   href={{
                     pathname: `/products/${product.slug}`,
-                    query: { color: color.name },
+                    query: {
+                      attrGroupId: color.attributeGroupId,
+                      colorId: color.id,
+                    },
                   }}
                   key={color.id}
                   className="relative h-10 w-10 border-black bg-gradient-to-b from-gray-300 to-gray-100 hover:border-b"

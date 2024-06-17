@@ -27,7 +27,6 @@ export default function RootLayout({
   return (
     <NextAuthSessionProvider>
       <html lang="en">
-        <head />
         <body>
           <Toaster />
           <Header />

@@ -14,8 +14,14 @@ import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 
 import { USDollar } from "lib/utils";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const ProductDetails = ({ product }: { product: ProductProps }) => {
+  const searchParams = useSearchParams();
+  const attributeGroupIdQueryParam = searchParams.get("attrGroupId");
+  const colorIdQueryParam = searchParams.get("colorId");
+
+  console.log({ attributeGroupIdQueryParam, colorIdQueryParam });
   const [selectedOptionsMap, setSelectedOptionsMap] = useState<
     Map<number, number>
   >(new Map());
@@ -41,7 +47,6 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
   >([]);
 
   useEffect(() => {
-    console.log(product);
     setDisplayImage({
       url: product.images?.[0]?.url,
       index: 0,
@@ -50,9 +55,17 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
 
     if (product.images) setDisplayImages(product.images);
     setColorAsFirstAttributeGroup();
-    setDefaultSelectedOptions(product);
+    console.log(attributeGroups);
+    if (attributeGroupIdQueryParam && colorIdQueryParam) {
+      findFirstAvailProdVariant(
+        Number(attributeGroupIdQueryParam),
+        Number(colorIdQueryParam)
+      );
+    } else {
+      setDefaultSelectedOptions(product);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
+  }, []);
 
   return (
     <div className=" py-4">
@@ -153,7 +166,7 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
                                 id={attribute.name}
                                 type="radio"
                                 className="peer hidden"
-                                onClick={() =>
+                                onChange={() =>
                                   onSelectOption(
                                     attributeGroup.id,
                                     attribute.id,
@@ -201,7 +214,6 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
                   </button>
                 </div>
                 <button
-                  mat-raised-button
                   color="primary"
                   className="!h-10 w-[420px] max-w-[50%] !rounded-full bg-[#3f51b5] text-lg text-white shadow-lg hover:brightness-125 active:shadow-inner"
                   disabled={checkIfSoldOut()}
@@ -354,7 +366,7 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
               productVariantAttribute.attibuteGroupId === attributeGroupId &&
               productVariantAttribute.attributeId === attributeId
             ) {
-              console.log("here");
+              console.log("here3");
 
               return true;
             }
@@ -423,17 +435,20 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
   }
 
   function setColorAsFirstAttributeGroup() {
-    const tempAttributeGroups = product.attributeGroups;
+    let tempAttributeGroups = product.attributeGroups.map((attributeGroup) => {
+      return { ...attributeGroup };
+    });
     for (let i = 0; i < tempAttributeGroups.length; i++) {
       if (
         ["style", "styles", "color", "colors"].includes(
           tempAttributeGroups[i].name.toLowerCase()
         )
       ) {
-        setAttributeGroups([
+        tempAttributeGroups = [
           tempAttributeGroups.splice(i, 1)[0],
           ...tempAttributeGroups,
-        ]);
+        ];
+        setAttributeGroups(tempAttributeGroups);
         return;
       }
     }
@@ -523,6 +538,8 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
     );
 
     if (tempSelectedProductVariant) {
+      console.log("here");
+      console.log(tempSelectedProductVariant);
       if (tempSelectedProductVariant.variantImages.length) {
         setDisplayImage({
           url: tempSelectedProductVariant.variantImages[0].url,
@@ -550,8 +567,12 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
 
       return tempSelectedProductVariant;
     } else {
+      console.log(attributeGroups);
+      console.log("asfasa");
       if (attributeGroups && attributeGroups.length > 1) {
+        console.log("asfa");
         if (unavailableVariants.length) {
+          console.log("here");
           setDisplayImage({
             url: unavailableVariants[0].variantImages?.[0]?.url,
             index: 0,

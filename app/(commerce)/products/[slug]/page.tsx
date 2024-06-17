@@ -1,9 +1,9 @@
 import prisma from "lib/prisma";
 import React from "react";
 import ProductDetails from "./ProductDetails";
+import { useSearchParams } from "next/navigation";
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  console.log(params.slug);
   const product = await prisma.product.findFirst({
     where: { slug: params.slug },
     include: {

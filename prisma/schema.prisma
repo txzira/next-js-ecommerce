@@ -252,6 +252,7 @@ model ShippingMethod {
 
 enum UserRole {
   ADMIN
+  GUESTADMIN
   CUSTOMER
 }
 
