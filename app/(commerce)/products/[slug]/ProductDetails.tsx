@@ -55,7 +55,6 @@ const ProductDetails = ({ product }: { product: ProductProps }) => {
 
     if (product.images) setDisplayImages(product.images);
     setColorAsFirstAttributeGroup();
-    console.log(attributeGroups);
     if (attributeGroupIdQueryParam && colorIdQueryParam) {
       findFirstAvailProdVariant(
         Number(attributeGroupIdQueryParam),

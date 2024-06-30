@@ -23,6 +23,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
   const [available, setAvailable] = useState(product.available);
 
   useEffect(() => {
+    console.log(product);
     if (product.productVariants.length) {
       for (let i = 0; i < product.attributeGroups.length; i++) {
         if (
