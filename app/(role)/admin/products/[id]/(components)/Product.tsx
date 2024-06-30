@@ -3,7 +3,7 @@ import {
   AttributeGroup,
   Category,
   Product,
-  ProductDefaultImage,
+  ProductImage,
 } from "@prisma/client";
 import {
   FormContainer,
@@ -26,12 +26,12 @@ const ImageContainer = ({
 }: {
   product: Product & {
     categories?: Category[];
-    image?: ProductDefaultImage;
+    image?: ProductImage;
   };
   setProduct: React.Dispatch<
     React.SetStateAction<
       Product & {
-        image?: ProductDefaultImage;
+        image?: ProductImage;
         categories?: Category[];
       }
     >
@@ -91,8 +91,7 @@ const ImageContainer = ({
         />
         <label
           htmlFor="add-image-button"
-          className="cursor-pointer rounded-md bg-green-500 p-2"
-        >
+          className="cursor-pointer rounded-md bg-green-500 p-2">
           Upload Image
         </label>
       </div>
@@ -108,12 +107,12 @@ const DetailsContainer = ({
 }: {
   product: Product & {
     categories?: Category[];
-    image?: ProductDefaultImage;
+    image?: ProductImage;
   };
   setProduct: React.Dispatch<
     React.SetStateAction<
       Product & {
-        image?: ProductDefaultImage;
+        image?: ProductImage;
         categories?: Category[];
       }
     >
@@ -195,13 +194,13 @@ const PriceContainer = ({
 }: {
   product: Product & {
     categories?: Category[];
-    image?: ProductDefaultImage;
+    image?: ProductImage;
   };
   setProduct: React.Dispatch<
     React.SetStateAction<
       Product & {
         categories?: Category[];
-        image?: ProductDefaultImage;
+        image?: ProductImage;
       }
     >
   >;
@@ -290,8 +289,7 @@ const CategoriesDropdown = ({
         onClick={(e) => {
           e.stopPropagation();
           setShowCategories(!showCategories);
-        }}
-      >
+        }}>
         {selectedCategories.size ? (
           <span>
             {selectedCategories.size === 1
@@ -323,8 +321,7 @@ const CategoriesDropdown = ({
             return (
               <li
                 className="my-auto flex h-14 w-full flex-row items-center gap-3 border-b border-[#cbdcf3] px-3 hover:bg-[#cbdcf3]"
-                key={categoryData.id}
-              >
+                key={categoryData.id}>
                 <input
                   id={categoryData.id.toString()}
                   type="checkbox"
@@ -364,8 +361,7 @@ const VariantsContainer = ({
         <button
           type="button"
           className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white"
-          onClick={() => setShowVariantsModal(true)}
-        >
+          onClick={() => setShowVariantsModal(true)}>
           <IoMdAdd size={14} />
           <span>
             {!attributeGroupsIsLoading && attributeGroupsData.length
@@ -385,8 +381,7 @@ const VariantsContainer = ({
               return (
                 <div
                   className="grid grid-cols-3 items-center  p-2 [&:not(:last-child)]:border-b"
-                  key={attributeGroup.id}
-                >
+                  key={attributeGroup.id}>
                   <div>{attributeGroup.name}</div>
                   <div className="col-span-2 flex gap-2 ">
                     {attributeGroup.attributes.length
@@ -394,9 +389,8 @@ const VariantsContainer = ({
                           return (
                             <div
                               key={attribute.id}
-                              className="rounded-full  bg-blue-200 px-3 py-1 text-sm text-white  "
-                            >
-                              {attribute.option}
+                              className="rounded-full  bg-blue-200 px-3 py-1 text-sm text-white  ">
+                              {attribute.name}
                             </div>
                           );
                         })

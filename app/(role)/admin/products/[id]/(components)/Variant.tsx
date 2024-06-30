@@ -95,7 +95,7 @@ const VariantsModal = ({
               attributeIndex,
               {
                 id: attribute.id,
-                option: attribute.option,
+                option: attribute.name,
                 images: attribute.images,
               },
             ])
@@ -147,8 +147,7 @@ const VariantsModal = ({
         <button
           type="button"
           className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white"
-          onClick={() => addAttributeGroupRow()}
-        >
+          onClick={() => addAttributeGroupRow()}>
           <IoMdAdd size={14} />
           <span>ADD</span>
         </button>
@@ -180,20 +179,17 @@ const VariantsModal = ({
         <div className="flex flex-row justify-end gap-3">
           <button
             className="rounded-md px-3 py-2 font-semibold"
-            onClick={() => setShowVariantsModal(false)}
-          >
+            onClick={() => setShowVariantsModal(false)}>
             Cancel
           </button>
           <button
             className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-            onClick={saveAndGenerateVariants}
-          >
+            onClick={saveAndGenerateVariants}>
             Save and Generate Variants
           </button>
           <button
             className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-            onClick={saveChanges}
-          >
+            onClick={saveChanges}>
             Save Changes
           </button>
         </div>
@@ -316,8 +312,7 @@ const AttributeGroupRow = ({
               return (
                 <li
                   className="flex w-max flex-row items-center rounded-lg border"
-                  key={key}
-                >
+                  key={key}>
                   <span>
                     {attributeGroupsMap.get(id).attributes.get(key).option}
                   </span>
@@ -342,8 +337,7 @@ const AttributeGroupRow = ({
       <div className="relative mx-auto">
         <button
           className="rounded-md p-1 focus:border-2 focus:border-black "
-          onClick={() => setShowAttributeMenu(!showAttributeMenu)}
-        >
+          onClick={() => setShowAttributeMenu(!showAttributeMenu)}>
           <FaEllipsisH />
         </button>
         {showAttributeMenu ? (
@@ -443,15 +437,13 @@ const ActionsMenu = ({
   return (
     <ul
       className="absolute right-0 z-50 rounded-lg border bg-white shadow-lg"
-      ref={ref}
-    >
+      ref={ref}>
       <li className="border-b p-2">
         <button
           onClick={() => {
             setAttributeGroupDetails(rowsAttributeGroupDetails);
             setShow(false);
-          }}
-        >
+          }}>
           Advanced
         </button>
       </li>
@@ -558,15 +550,13 @@ const AttributeAdvancedDetails = ({
           <div className="flex h-min flex-row justify-end gap-3">
             <button
               className="rounded-md px-3 py-2 font-semibold"
-              onClick={() => setAttributeGroupDetails(null)}
-            >
+              onClick={() => setAttributeGroupDetails(null)}>
               Cancel
             </button>
 
             <button
               className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-              onClick={saveChanges}
-            >
+              onClick={saveChanges}>
               Save Changes
             </button>
           </div>
@@ -653,8 +643,7 @@ const ImagesContainer = ({
                   <button
                     type="button"
                     className=" absolute right-0 top-0 pr-2 pt-2 md:invisible md:hover:visible md:peer-hover:visible"
-                    onClick={(event) => handleDeleteFromDb(event, index)}
-                  >
+                    onClick={(event) => handleDeleteFromDb(event, index)}>
                     <FaTrash color="white" />
                   </button>
                 </div>
@@ -667,8 +656,7 @@ const ImagesContainer = ({
               return (
                 <div
                   key={image.imageName}
-                  className="relative rounded-md border p-2"
-                >
+                  className="relative rounded-md border p-2">
                   <div className="md:peer  mx-auto h-[100px] w-[100px] md:h-[200px] md:w-[200px]">
                     <Image
                       id={
@@ -684,8 +672,7 @@ const ImagesContainer = ({
                   <button
                     type="button"
                     className=" absolute right-0 top-0 pr-2 pt-2 md:invisible md:hover:visible md:peer-hover:visible"
-                    onClick={(event) => removeFromAddImages(event, index)}
-                  >
+                    onClick={(event) => removeFromAddImages(event, index)}>
                     <FaTrash color="white" />
                   </button>
                 </div>
@@ -703,8 +690,7 @@ const ImagesContainer = ({
         />
         <label
           htmlFor={`add-images-button-${attributeId}`}
-          className="cursor-pointer rounded-md bg-green-500 p-2"
-        >
+          className="cursor-pointer rounded-md bg-green-500 p-2">
           Upload Images
         </label>
       </div>
