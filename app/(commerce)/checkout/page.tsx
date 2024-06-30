@@ -1,100 +1,102 @@
-// "use client";
-// import { Cart, CartItem } from "@prisma/client";
-// import Loader from "app/Loader";
-// import Link from "next/link";
-// import React, { useEffect, useState } from "react";
-// import useSWR, { KeyedMutator } from "swr";
-// import states from "lib/state";
-// import Image from "next/image";
-// import { toast } from "react-hot-toast";
-// import { useRouter } from "next/navigation";
+"use client";
+import { Cart, CartItem } from "@prisma/client";
+import Loader from "app/Loader";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import useSWR, { KeyedMutator } from "swr";
+import states from "lib/state";
+import Image from "next/image";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-// export default function CheckoutPage() {
-//   const fetcher = (url) => fetch(url).then((res) => res.json());
-//   const initialShipping = {
-//     firstName: "",
-//     lastName: "",
-//     streetAddress: "",
-//     streetAddress2: "",
-//     city: "",
-//     state: "AL",
-//     zipCode: "",
-//   };
-//   const {
-//     data: cartData,
-//     error: cartError,
-//     isLoading: cartIsLoading,
-//     mutate: cartMutate,
-//   } = useSWR("/get-cart", fetcher);
-//   const router = useRouter();
-//   const {
-//     data: walletsData,
-//     error: walletsError,
-//     isLoading: walletsIsLoading,
-//     mutate: walletsMutate,
-//   } = useSWR("/user/checkout/get-crypto-wallets", fetcher);
+export default function CheckoutPage() {
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const initialShipping = {
+    firstName: "",
+    lastName: "",
+    streetAddress: "",
+    streetAddress2: "",
+    city: "",
+    state: "AL",
+    zipCode: "",
+  };
+  const {
+    data: cartData,
+    error: cartError,
+    isLoading: cartIsLoading,
+    mutate: cartMutate,
+  } = useSWR("/get-cart", fetcher);
+  const router = useRouter();
+  const {
+    data: walletsData,
+    error: walletsError,
+    isLoading: walletsIsLoading,
+    mutate: walletsMutate,
+  } = useSWR("/user/checkout/get-crypto-wallets", fetcher);
 
-//   const [shipping, setShipping] = useState(initialShipping);
-//   const [cart, setCart] = useState<
-//     Cart & {
-//       cartItems: CartItem[];
-//     }
-//   >(null);
-//   const [image, setImage] = useState<any>();
-//   const [imageName, setImageName] = useState("");
+  const [shipping, setShipping] = useState(initialShipping);
+  const [cart, setCart] = useState<
+    Cart & {
+      cartItems: CartItem[];
+    }
+  >(null);
+  const [image, setImage] = useState<any>();
+  const [imageName, setImageName] = useState("");
 
-//   useEffect(() => {
-//     if (cartData) {
-//       setCart(cartData.cart);
-//     }
-//   }, [cartData]);
+  useEffect(() => {
+    if (cartData) {
+      setCart(cartData.cart);
+    }
+  }, [cartData]);
 
-//   console.log(cart);
-//   const placeOrder = async () => {
-//     toast.loading("Loading...");
-//     const data = await fetch("/user/checkout/place-order", {
-//       method: "POST",
-//       body: JSON.stringify({
-//         cartId: cart.id,
-//         shipping,
-//         imagePath: image,
-//         imageName,
-//       }),
-//     });
-//     const response = await data.json();
-//     toast.dismiss();
-//     if (response.status === 200) {
-//       toast.success(response.message);
-//       router.push("/user/products");
-//     } else {
-//       toast.error(response.message);
-//       router.push("/user/products");
-//     }
-//   };
-//   return cart && cart.cartItems.length > 0 ? (
-//     <div className="mt-8 pb-10 ">
-//       <ShippingForm shipping={shipping} setShipping={setShipping} />
-//       <PaymentForm
-//         image={image}
-//         setImage={setImage}
-//         walletsData={walletsData}
-//         walletsIsLoading={walletsIsLoading}
-//         setImageName={setImageName}
-//       />
-//       <OrderReview cart={cart} mutate={cartMutate} placeOrder={placeOrder} />
-//     </div>
-//   ) : (
-//     <div className="mt-8 flex justify-center">
-//       <p className="text-lg">
-//         Cart Empty. To add items{" "}
-//         <Link href="/user/products" className="text-blue-800 underline">
-//           click here
-//         </Link>
-//         .
-//       </p>
-//     </div>
-//   );
-// }
+  console.log(cart);
+  const placeOrder = async () => {
+    toast.loading("Loading...");
+    const data = await fetch("/user/checkout/place-order", {
+      method: "POST",
+      body: JSON.stringify({
+        cartId: cart.id,
+        shipping,
+        imagePath: image,
+        imageName,
+      }),
+    });
+    const response = await data.json();
+    toast.dismiss();
+    if (response.status === 200) {
+      toast.success(response.message);
+      router.push("/user/products");
+    } else {
+      toast.error(response.message);
+      router.push("/user/products");
+    }
+  };
+  // return cart && cart.cartItems.length > 0 ? (
+  //   <div className="mt-8 pb-10 ">
+  //     <ShippingForm shipping={shipping} setShipping={setShipping} />
+  //     <PaymentForm
+  //       image={image}
+  //       setImage={setImage}
+  //       walletsData={walletsData}
+  //       walletsIsLoading={walletsIsLoading}
+  //       setImageName={setImageName}
+  //     />
+  //     <OrderReview cart={cart} mutate={cartMutate} placeOrder={placeOrder} />
+  //   </div>
+  // ) : (
+  //   <div className="mt-8 flex justify-center">
+  //     <p className="text-lg">
+  //       Cart Empty. To add items{" "}
+  //       <Link href="/user/products" className="text-blue-800 underline">
+  //         click here
+  //       </Link>
+  //       .
+  //     </p>
+  //   </div>
+  // );
+  return <div></div>;
+}
+
 // function CartItem({
 //   cartItem,
 //   mutate,
