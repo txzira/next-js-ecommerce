@@ -8,59 +8,59 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 export async function POST(request: NextRequest) {
   try {
     if (request.method === "POST") {
-      const session = await getServerSession(authOptions);
-      if (session.user.role !== USERTYPE.ADMIN) {
-        return NextResponse.json("Unauthorized Request", { status: 401 });
-      }
+      // const session = await getServerSession(authOptions);
+      // if (session.user.role !== USERTYPE.ADMIN) {
+      //   return NextResponse.json("Unauthorized Request", { status: 401 });
+      // }
 
-      const { id } = await request.json();
-      const product = await prisma.product.findUnique({
-        where: { id: Number(id) },
-        include: {
-          attributeGroup: {
-            include: { attributes: { include: { images: true } } },
-          },
-        },
-      });
-      const attributeGroups = product.attributeGroup;
+      // const { id } = await request.json();
+      // const product = await prisma.product.findUnique({
+      //   where: { id: Number(id) },
+      //   include: {
+      //     attributeGroup: {
+      //       include: { attributes: { include: { images: true } } },
+      //     },
+      //   },
+      // });
+      // const attributeGroups = product.attributeGroup;
 
-      const array: Attribute[][] = [];
+      // const array: Attribute[][] = [];
 
-      attributeGroups.map((attributeGroup) => {
-        array.push(attributeGroup.attributes);
-      });
+      // attributeGroups.map((attributeGroup) => {
+      //   array.push(attributeGroup.attributes);
+      // });
 
-      const combinations = generateVariants(array);
-      combinations.map(async (combination) => {
-        const images = [];
-        const arr = combination.map((group) => {
-          const attributeObj = {
-            attributeGroup: { connect: { id: group.attributeGroupId } },
-            attribute: { connect: { id: group.id } },
-          };
-          group.images.map((image) => {
-            images.push({
-              publicId: image.publicId,
-              url: image.url,
-              importedFromAttribute: true,
-            });
-          });
-          return attributeObj;
-        });
-        await prisma.productVariant.create({
-          data: {
-            product: { connect: { id: product.id } },
-            price: product.price,
-            quantity: 0,
-            productVariantAttributes: {
-              create: arr,
-            },
-            variantImages: {
-              create: [...images],
-            },
-          },
-        });
-      });
+      // const combinations = generateVariants(array);
+      // combinations.map(async (combination) => {
+      //   const images = [];
+      //   const arr = combination.map((group) => {
+      //     const attributeObj = {
+      //       attributeGroup: { connect: { id: group.attributeGroupId } },
+      //       attribute: { connect: { id: group.id } },
+      //     };
+      //     group.images.map((image) => {
+      //       images.push({
+      //         publicId: image.publicId,
+      //         url: image.url,
+      //         importedFromAttribute: true,
+      //       });
+      //     });
+      //     return attributeObj;
+      //   });
+      //   await prisma.productVariant.create({
+      //     data: {
+      //       product: { connect: { id: product.id } },
+      //       price: product.price,
+      //       quantity: 0,
+      //       productVariantAttributes: {
+      //         create: arr,
+      //       },
+      //       variantImages: {
+      //         create: [...images],
+      //       },
+      //     },
+      //   });
+      // });
 
       return NextResponse.json(`Success.`, { status: 201 });
     } else {

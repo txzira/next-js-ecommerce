@@ -18,8 +18,13 @@ export async function PUT(request: NextRequest) {
       }: {
         details: ProductVariant;
       } = await request.json();
-      const productVariant = await prisma.productVariant.update({ where: { id: details.id }, data: details });
-      return NextResponse.json(`Variant ${productVariant.name} updated successfully.`, { status: 200 });
+      const productVariant = await prisma.productVariant.update({
+        where: { id: details.id },
+        data: details,
+      });
+      return NextResponse.json(`Variant updated successfully.`, {
+        status: 200,
+      });
     } else {
       return NextResponse.json("Route not valid.", { status: 500 });
     }

@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       //Add Attribute images to cloudinary and attach to attribute in database
       if (imagesToAddToDb.length) {
         imagesToAddToDb.map((imagesArr) => {
-          imagesArr[1].map(async (image) => {
+          imagesArr[1].map(async (image, index) => {
             const imageObj = await uploadImage(
               image.imagePath,
               image.imageName
@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
 
             await prisma.attributeImage.create({
               data: {
+                position: index + 1,
                 attributeId: image.attributeId,
                 url: imageObj.url,
                 publicId: imageObj.public_id,
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
           await prisma.attribute.update({
             where: { id: attribute[1].id },
             data: {
-              option: attribute[1].option,
+              name: attribute[1].option,
             },
           });
         }

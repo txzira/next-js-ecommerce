@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
             attributes: {
               createMany: {
                 data: reqAttributeGroup.attributes.map((attribute) => {
-                  return { option: attribute.option };
+                  return { name: attribute.option };
                 }),
               },
             },
