@@ -31,7 +31,6 @@ const ProductsPage = async () => {
     orderBy: { createdAt: "asc" },
   });
 
-  console.log("page loaded");
   return (
     <section>
       <h1 className="text-lg font-semibold">All Products</h1>

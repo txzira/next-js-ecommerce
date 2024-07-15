@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
-
-  session ? redirect("/user/products") : null;
+  console.log(session);
+  session ? redirect("/products") : null;
   return (
-    <div className="flex md:justify-center h-full">
+    <div className="flex h-full md:justify-center">
       <LoginForm />
     </div>
   );

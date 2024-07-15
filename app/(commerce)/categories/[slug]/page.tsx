@@ -2,7 +2,7 @@ import ProductsListings from "app/(commerce)/products/ProductsListings";
 import prisma from "lib/prisma";
 import React from "react";
 
-const Page = async ({ params }: { params: { slug: string } }) => {
+const CategoriesPage = async ({ params }: { params: { slug: string } }) => {
   const products = await prisma.product.findMany({
     where: { categories: { some: { slug: params.slug } }, active: true },
     include: {
@@ -40,4 +40,4 @@ const Page = async ({ params }: { params: { slug: string } }) => {
   );
 };
 
-export default Page;
+export default CategoriesPage;

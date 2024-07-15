@@ -1,10 +1,10 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 
-const useMediaQuery = (width) => {
+const useMediaQuery = (width: number) => {
   const [targetReached, setTargetReached] = useState(false);
 
-  const updateTarget = useCallback((e) => {
+  const updateTarget = useCallback((e: any) => {
     if (e.matches) {
       setTargetReached(true);
     } else {
@@ -33,14 +33,19 @@ export default function Background() {
     <>
       {isBreakpoint ? (
         <div
-          className=" absolute h-[calc(100vh_-_3.5rem)] w-full bg-repeat opacity-20 bg-opacity-20"
-          style={{ backgroundImage: `url(${"/images/logo-bg.png"})`, backgroundSize: "130px 130px", backgroundColor: "" }}
-        ></div>
+          className=" absolute h-[calc(100vh_-_3.5rem)] w-full bg-opacity-20 bg-repeat opacity-20"
+          style={{
+            backgroundImage: `url(${"/images/logo-bg.png"})`,
+            backgroundSize: "130px 130px",
+            backgroundColor: "",
+          }}></div>
       ) : (
         <div
-          className=" absolute h-[calc(100vh_-_3.5rem)] w-full bg-repeat opacity-20 z-0 "
-          style={{ backgroundImage: `url(${"/images/logo-bg.png"})`, backgroundSize: "200px 200px" }}
-        ></div>
+          className=" absolute z-0 h-[calc(100vh_-_3.5rem)] w-full bg-repeat opacity-20 "
+          style={{
+            backgroundImage: `url(${"/images/logo-bg.png"})`,
+            backgroundSize: "200px 200px",
+          }}></div>
       )}
     </>
   );

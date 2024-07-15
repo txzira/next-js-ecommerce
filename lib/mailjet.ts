@@ -1,8 +1,16 @@
 import Mailjet from "node-mailjet";
 
-const mailjet = Mailjet.apiConnect(process.env.MJ_APIKEY_PUBLIC, process.env.MJ_APIKEY_PRIVATE);
+const mailjet = Mailjet.apiConnect(
+  process.env.MJ_APIKEY_PUBLIC!,
+  process.env.MJ_APIKEY_PRIVATE!
+);
 
-export function SendEmail(toEmail, toName, subject, htmlPart) {
+export function SendEmail(
+  toEmail: string,
+  toName: string,
+  subject: string,
+  htmlPart: string
+) {
   const request = mailjet.post("send", { version: "v3.1" }).request({
     Messages: [
       {

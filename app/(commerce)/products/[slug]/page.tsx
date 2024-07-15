@@ -11,7 +11,9 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
       images: true,
       productVariants: {
         include: {
-          productVariantAttributes: { include: { attribute: true } },
+          productVariantAttributes: {
+            include: { attribute: true, attributeGroup: true },
+          },
           variantImages: true,
         },
       },
@@ -20,7 +22,6 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
       },
     },
   });
-  console.log(product);
 
   return (
     <div>

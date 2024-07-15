@@ -4,6 +4,7 @@ import Header from "./(navigation)/Header";
 import { Toaster } from "react-hot-toast";
 import Background from "./Background";
 import { Metadata, Viewport } from "next";
+import CartProvider from "./CartProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -25,17 +26,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <NextAuthSessionProvider>
-      <html lang="en">
-        <body>
-          <Toaster />
-          <Header />
-          <Background />
-          <main className="relative h-[calc(100vh_-_3.5rem)] md:h-[calc(100vh_-_3.5rem)] ">
-            {children}
-          </main>
-        </body>
-      </html>
-    </NextAuthSessionProvider>
+    <html lang="en">
+      <body>
+        <NextAuthSessionProvider>
+          <CartProvider>
+            <Toaster />
+            <Header />
+            <Background />
+            <main className="relative h-[calc(100vh_-_3.5rem)] md:h-[calc(100vh_-_3.5rem)] ">
+              {children}
+            </main>
+          </CartProvider>
+        </NextAuthSessionProvider>
+      </body>
+    </html>
   );
 }

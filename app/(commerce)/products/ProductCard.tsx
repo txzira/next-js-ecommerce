@@ -9,6 +9,7 @@ import {
   ProductVariantAttribute,
   ProductVariantImage,
 } from "@prisma/client";
+import Loader from "app/Loader";
 import { USDollar } from "lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,30 +17,29 @@ import React, { useEffect, useState } from "react";
 import { AttributeProps, ProductProps } from "types/product";
 
 const ProductCard = ({ product }: { product: ProductProps }) => {
-  const [displayImage, setDisplayImage] = useState(product.images[0]?.url);
+  const [displayImage, setDisplayImage] = useState(product.images?.[0]?.url);
 
   const [colors, setColors] = useState<Array<AttributeProps>>([]);
-  const [price, setPrice] = useState(product.price);
+  const [price, setPrice] = useState<number | undefined>(product.price);
   const [available, setAvailable] = useState(product.available);
 
   useEffect(() => {
-    console.log(product);
     if (product.productVariants.length) {
       for (let i = 0; i < product.attributeGroups.length; i++) {
         if (
           product.attributeGroups[i].name.toLowerCase() === "colors" ||
           product.attributeGroups[i].name.toLowerCase() === "styles"
         ) {
-          setColors(product.attributeGroups[i]?.attributes);
+          setColors(product.attributeGroups?.[i]?.attributes || []);
         }
       }
       for (let i = 0; i < product.productVariants.length; i++) {
         const productVariant = product.productVariants[i];
         if (productVariant.available) {
-          productVariant.variantImages[0]?.url
+          productVariant.variantImages?.[0]?.url
             ? setDisplayImage(productVariant.variantImages[0]?.url)
-            : setDisplayImage(product.images[0]?.url);
-          setPrice(productVariant.price);
+            : setDisplayImage(product.images?.[0]?.url);
+          setPrice(productVariant?.price);
           setAvailable(true);
           break;
         }
@@ -53,20 +53,28 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         <div
           id="image-wrapper"
           className="relative h-[300px] w-full bg-gray-50 bg-[radial-gradient(rgb(249,250,251),rgb(209,213,219))] ">
-          <Link href={`/products/${product.slug}`}>
-            <Image
-              fill
-              src={displayImage}
-              alt="card image"
-              className="object-contain"
-            />
+          <Link
+            href={`/products/${product.slug}`}
+            className="absolute h-full w-full">
+            {displayImage || product ? (
+              <Image
+                fill
+                src={displayImage ? displayImage : ""}
+                alt="card image"
+                className="object-contain"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <Loader />
+              </div>
+            )}
           </Link>
           <p className="absolute bottom-0 left-1 bg-white p-1 text-xs group-hover:bottom-1">
-            {available ? USDollar.format(price) : "Sold Out"}
+            {available ? USDollar.format(price!) : "Sold Out"}
           </p>
         </div>
 
-        {colors.length > 0 && (
+        {colors && colors.length > 0 && (
           <div className="hidden h-10 flex-row py-1 group-hover:flex ">
             {colors.map((color) => {
               return (
@@ -85,7 +93,13 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
                     fill
                     className=" object-contain "
                     alt="carousel image"
-                    src={color.images[0]?.url}
+                    src={
+                      color.images &&
+                      color.images.length &&
+                      color.images[0]?.url
+                        ? color.images[0]?.url
+                        : ""
+                    }
                   />
                 </Link>
               );
@@ -96,7 +110,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
         <Link href={`/products/${product.slug}`}>
           <div className="h-full w-full flex-1 p-2">
             <p className="text-left">{product.name}</p>
-            {colors.length > 0 && (
+            {colors && colors.length > 0 && (
               <p className="text-sm text-gray-400">{colors.length} colors</p>
             )}
           </div>
@@ -106,7 +120,9 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
   );
 
   function checkAvailability(color: AttributeProps) {
-    setDisplayImage(color.images[0]?.url);
+    setDisplayImage(
+      color.images && color.images.length > 0 ? color.images[0]?.url : ""
+    );
     const available = product.productVariants.find((productVariant) => {
       const productVariantAttributes = productVariant.productVariantAttributes;
       let found = false;
@@ -116,7 +132,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
           productVariant.available
         ) {
           if (product.managedStock) {
-            if (productVariant.quantity > 0) {
+            if (productVariant.quantity! > 0) {
               found = true;
               break;
             } else {

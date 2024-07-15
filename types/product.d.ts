@@ -35,18 +35,18 @@ import {
 //   >;
 // }
 
-interface ProductProps {
-  id: number;
-  name: string;
-  price: number;
-  brand?: Brand;
-  description: string | undefined;
-  sku: string | undefined;
-  quantity: number;
-  slug: string;
-  active: boolean;
-  available: boolean;
-  managedStock: boolean;
+interface ProductProps extends Product {
+  // id: number;
+  // name: string;
+  // price: number;
+  brand: Brand | null;
+  // description: string | undefined;
+  // sku: string | undefined;
+  // quantity: number;
+  // slug: string;
+  // active: boolean;
+  // available: boolean;
+  // managedStock: boolean;
   categories?: Category[];
   images:
     | (ImageProps & {
@@ -58,15 +58,15 @@ interface ProductProps {
 }
 
 interface ProductVariantProps extends ProductVariant {
-  id: number;
-  productId: number;
-  price: number;
-  quantity: number;
-  available: boolean;
+  // id: number;
+  // productId?: number;
+  // price?: number;
+  // quantity?: number;
+  // available?: boolean;
   productVariantAttributes: Array<ProductVariantAttributeProps>;
-  variantImages: Array<{ url: string }> | Array<ProductVariantImage>;
-  sku?: string;
-  description?: string;
+  variantImages?: Array<{ url: string }> | Array<ProductVariantImage>;
+  // sku?: string;
+  // description?: string;
 }
 
 interface ProductVariantAttributeProps {
@@ -99,6 +99,22 @@ interface AttributeProps {
 interface ImageProps {
   id?: number;
   url: string;
-  publicId: string;
-  position: number;
+  publicId?: string;
+  position?: number;
+}
+
+export interface CartItemProps {
+  id: string;
+  productId: number;
+  productName: string;
+  variantName?: string;
+  quantity: number;
+  price: number;
+  image: string;
+  variant: CartItemVariantProps | undefined;
+}
+
+interface CartItemVariantProps {
+  id?: number;
+  productVariantAttributes: Array<ProductVariantAttributeProps>;
 }

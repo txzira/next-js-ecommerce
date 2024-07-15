@@ -1,0 +1,536 @@
+[
+  {
+    "name": "United States of America",
+    "code": "US",
+    "shipping": true,
+    "states": [
+      {
+        "name": "Alabama",
+        "abbreviation": "AL"
+      },
+      {
+        "name": "Alaska",
+        "abbreviation": "AK"
+      },
+      {
+        "name": "American Samoa",
+        "abbreviation": "AS"
+      },
+      {
+        "name": "Arizona",
+        "abbreviation": "AZ"
+      },
+      {
+        "name": "Arkansas",
+        "abbreviation": "AR"
+      },
+      {
+        "name": "California",
+        "abbreviation": "CA"
+      },
+      {
+        "name": "Colorado",
+        "abbreviation": "CO"
+      },
+      {
+        "name": "Connecticut",
+        "abbreviation": "CT"
+      },
+      {
+        "name": "Delaware",
+        "abbreviation": "DE"
+      },
+      {
+        "name": "District Of Columbia",
+        "abbreviation": "DC"
+      },
+      {
+        "name": "Federated States Of Micronesia",
+        "abbreviation": "FM"
+      },
+      {
+        "name": "Florida",
+        "abbreviation": "FL"
+      },
+      {
+        "name": "Georgia",
+        "abbreviation": "GA"
+      },
+      {
+        "name": "Guam",
+        "abbreviation": "GU"
+      },
+      {
+        "name": "Hawaii",
+        "abbreviation": "HI"
+      },
+      {
+        "name": "Idaho",
+        "abbreviation": "ID"
+      },
+      {
+        "name": "Illinois",
+        "abbreviation": "IL"
+      },
+      {
+        "name": "Indiana",
+        "abbreviation": "IN"
+      },
+      {
+        "name": "Iowa",
+        "abbreviation": "IA"
+      },
+      {
+        "name": "Kansas",
+        "abbreviation": "KS"
+      },
+      {
+        "name": "Kentucky",
+        "abbreviation": "KY"
+      },
+      {
+        "name": "Louisiana",
+        "abbreviation": "LA"
+      },
+      {
+        "name": "Maine",
+        "abbreviation": "ME"
+      },
+      {
+        "name": "Marshall Islands",
+        "abbreviation": "MH"
+      },
+      {
+        "name": "Maryland",
+        "abbreviation": "MD"
+      },
+      {
+        "name": "Massachusetts",
+        "abbreviation": "MA"
+      },
+      {
+        "name": "Michigan",
+        "abbreviation": "MI"
+      },
+      {
+        "name": "Minnesota",
+        "abbreviation": "MN"
+      },
+      {
+        "name": "Mississippi",
+        "abbreviation": "MS"
+      },
+      {
+        "name": "Missouri",
+        "abbreviation": "MO"
+      },
+      {
+        "name": "Montana",
+        "abbreviation": "MT"
+      },
+      {
+        "name": "Nebraska",
+        "abbreviation": "NE"
+      },
+      {
+        "name": "Nevada",
+        "abbreviation": "NV"
+      },
+      {
+        "name": "New Hampshire",
+        "abbreviation": "NH"
+      },
+      {
+        "name": "New Jersey",
+        "abbreviation": "NJ"
+      },
+      {
+        "name": "New Mexico",
+        "abbreviation": "NM"
+      },
+      {
+        "name": "New York",
+        "abbreviation": "NY"
+      },
+      {
+        "name": "North Carolina",
+        "abbreviation": "NC"
+      },
+      {
+        "name": "North Dakota",
+        "abbreviation": "ND"
+      },
+      {
+        "name": "Northern Mariana Islands",
+        "abbreviation": "MP"
+      },
+      {
+        "name": "Ohio",
+        "abbreviation": "OH"
+      },
+      {
+        "name": "Oklahoma",
+        "abbreviation": "OK"
+      },
+      {
+        "name": "Oregon",
+        "abbreviation": "OR"
+      },
+      {
+        "name": "Palau",
+        "abbreviation": "PW"
+      },
+      {
+        "name": "Pennsylvania",
+        "abbreviation": "PA"
+      },
+      {
+        "name": "Puerto Rico",
+        "abbreviation": "PR"
+      },
+      {
+        "name": "Rhode Island",
+        "abbreviation": "RI"
+      },
+      {
+        "name": "South Carolina",
+        "abbreviation": "SC"
+      },
+      {
+        "name": "South Dakota",
+        "abbreviation": "SD"
+      },
+      {
+        "name": "Tennessee",
+        "abbreviation": "TN"
+      },
+      {
+        "name": "Texas",
+        "abbreviation": "TX"
+      },
+      {
+        "name": "Utah",
+        "abbreviation": "UT"
+      },
+      {
+        "name": "Vermont",
+        "abbreviation": "VT"
+      },
+      {
+        "name": "Virgin Islands",
+        "abbreviation": "VI"
+      },
+      {
+        "name": "Virginia",
+        "abbreviation": "VA"
+      },
+      {
+        "name": "Washington",
+        "abbreviation": "WA"
+      },
+      {
+        "name": "West Virginia",
+        "abbreviation": "WV"
+      },
+      {
+        "name": "Wisconsin",
+        "abbreviation": "WI"
+      },
+      {
+        "name": "Wyoming",
+        "abbreviation": "WY"
+      }
+    ]
+  },
+  { "name": "Afghanistan", "code": "AF", "shipping": false },
+  { "name": "Aland Islands", "code": "AX", "shipping": false },
+  { "name": "Albania", "code": "AL", "shipping": false },
+  { "name": "Algeria", "code": "DZ", "shipping": false },
+  { "name": "American Samoa", "code": "AS", "shipping": false },
+  { "name": "Andorra", "code": "AD", "shipping": false },
+  { "name": "Angola", "code": "AO", "shipping": false },
+  { "name": "Anguilla", "code": "AI", "shipping": false },
+  { "name": "Antarctica", "code": "AQ", "shipping": false },
+  { "name": "Antigua and Barbuda", "code": "AG", "shipping": false },
+  { "name": "Argentina", "code": "AR", "shipping": false },
+  { "name": "Armenia", "code": "AM", "shipping": false },
+  { "name": "Aruba", "code": "AW", "shipping": false },
+  { "name": "Australia", "code": "AU", "shipping": false },
+  { "name": "Austria", "code": "AT", "shipping": false },
+  { "name": "Azerbaijan", "code": "AZ", "shipping": false },
+  { "name": "Bahamas", "code": "BS", "shipping": false },
+  { "name": "Bahrain", "code": "BH", "shipping": false },
+  { "name": "Bangladesh", "code": "BD", "shipping": false },
+  { "name": "Barbados", "code": "BB", "shipping": false },
+  { "name": "Belarus", "code": "BY", "shipping": false },
+  { "name": "Belgium", "code": "BE", "shipping": false },
+  { "name": "Belize", "code": "BZ", "shipping": false },
+  { "name": "Benin", "code": "BJ", "shipping": false },
+  { "name": "Bermuda", "code": "BM", "shipping": false },
+  { "name": "Bhutan", "code": "BT", "shipping": false },
+  { "name": "Bolivia", "code": "BO", "shipping": false },
+  {
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "code": "BQ",
+    "shipping": false
+  },
+  { "name": "Bosnia and Herzegovina", "code": "BA", "shipping": false },
+  { "name": "Botswana", "code": "BW", "shipping": false },
+  { "name": "Bouvet Island", "code": "BV", "shipping": false },
+  { "name": "Brazil", "code": "BR", "shipping": false },
+  { "name": "British Indian Ocean Territory", "code": "IO", "shipping": false },
+  { "name": "Brunei Darussalam", "code": "BN", "shipping": false },
+  { "name": "Bulgaria", "code": "BG", "shipping": false },
+  { "name": "Burkina Faso", "code": "BF", "shipping": false },
+  { "name": "Burundi", "code": "BI", "shipping": false },
+  { "name": "Cambodia", "code": "KH", "shipping": false },
+  { "name": "Cameroon", "code": "CM", "shipping": false },
+  { "name": "Canada", "code": "CA", "shipping": false },
+  { "name": "Cayman Islands", "code": "KY", "shipping": false },
+  { "name": "Central African Republic", "code": "CF", "shipping": false },
+  { "name": "Chad", "code": "TD", "shipping": false },
+  { "name": "Chile", "code": "CL", "shipping": false },
+  { "name": "China", "code": "CN", "shipping": false },
+  { "name": "Christmas Island", "code": "CX", "shipping": false },
+  { "name": "Cocos (Keeling) Islands", "code": "CC", "shipping": false },
+  { "name": "Colombia", "code": "CO", "shipping": false },
+  { "name": "Comoros", "code": "KM", "shipping": false },
+  { "name": "Congo", "code": "CG", "shipping": false },
+  {
+    "name": "Congo, Democratic Republic of the",
+    "code": "CD",
+    "shipping": false
+  },
+  { "name": "Cook Islands", "code": "CK", "shipping": false },
+  { "name": "Costa Rica", "code": "CR", "shipping": false },
+  { "name": "Croatia", "code": "HR", "shipping": false },
+  { "name": "Cuba", "code": "CU", "shipping": false },
+  { "name": "Curaçao", "code": "CW", "shipping": false },
+  { "name": "Cyprus", "code": "CY", "shipping": false },
+  { "name": "Czech Republic", "code": "CZ", "shipping": false },
+  { "name": "Côte d'Ivoire", "code": "CI", "shipping": false },
+  { "name": "Denmark", "code": "DK", "shipping": false },
+  { "name": "Djibouti", "code": "DJ", "shipping": false },
+  { "name": "Dominica", "code": "DM", "shipping": false },
+  { "name": "Dominican Republic", "code": "DO", "shipping": false },
+  { "name": "Ecuador", "code": "EC", "shipping": false },
+  { "name": "Egypt", "code": "EG", "shipping": false },
+  { "name": "El Salvador", "code": "SV", "shipping": false },
+  { "name": "Equatorial Guinea", "code": "GQ", "shipping": false },
+  { "name": "Eritrea", "code": "ER", "shipping": false },
+  { "name": "Estonia", "code": "EE", "shipping": false },
+  { "name": "Eswatini", "code": "SZ", "shipping": false },
+  { "name": "Ethiopia", "code": "ET", "shipping": false },
+  { "name": "Falkland Islands (Malvinas)", "code": "FK", "shipping": false },
+  { "name": "Faroe Islands", "code": "FO", "shipping": false },
+  { "name": "Fiji", "code": "FJ", "shipping": false },
+  { "name": "Finland", "code": "FI", "shipping": false },
+  { "name": "France", "code": "FR", "shipping": false },
+  { "name": "French Guiana", "code": "GF", "shipping": false },
+  { "name": "French Polynesia", "code": "PF", "shipping": false },
+  { "name": "French Southern Territories", "code": "TF", "shipping": false },
+  { "name": "Gabon", "code": "GA", "shipping": false },
+  { "name": "Gambia", "code": "GM", "shipping": false },
+  { "name": "Georgia", "code": "GE", "shipping": false },
+  { "name": "Germany", "code": "DE", "shipping": false },
+  { "name": "Ghana", "code": "GH", "shipping": false },
+  { "name": "Gibraltar", "code": "GI", "shipping": false },
+  { "name": "Greece", "code": "GR", "shipping": false },
+  { "name": "Greenland", "code": "GL", "shipping": false },
+  { "name": "Grenada", "code": "GD", "shipping": false },
+  { "name": "Guadeloupe", "code": "GP", "shipping": false },
+  { "name": "Guam", "code": "GU", "shipping": false },
+  { "name": "Guatemala", "code": "GT", "shipping": false },
+  { "name": "Guernsey", "code": "GG", "shipping": false },
+  { "name": "Guinea", "code": "GN", "shipping": false },
+  { "name": "Guinea-Bissau", "code": "GW", "shipping": false },
+  { "name": "Guyana", "code": "GY", "shipping": false },
+  { "name": "Haiti", "code": "HT", "shipping": false },
+  {
+    "name": "Heard Island and McDonald Islands",
+    "code": "HM",
+    "shipping": false
+  },
+  { "name": "Holy See", "code": "VA", "shipping": false },
+  { "name": "Honduras", "code": "HN", "shipping": false },
+  { "name": "Hong Kong", "code": "HK", "shipping": false },
+  { "name": "Hungary", "code": "HU", "shipping": false },
+  { "name": "Iceland", "code": "IS", "shipping": false },
+  { "name": "India", "code": "IN", "shipping": false },
+  { "name": "Indonesia", "code": "ID", "shipping": false },
+  { "name": "Iran, Islamic Republic of", "code": "IR", "shipping": false },
+  { "name": "Iraq", "code": "IQ", "shipping": false },
+  { "name": "Ireland", "code": "IE", "shipping": false },
+  { "name": "Isle of Man", "code": "IM", "shipping": false },
+  { "name": "Israel", "code": "IL", "shipping": false },
+  { "name": "Italy", "code": "IT", "shipping": false },
+  { "name": "Jamaica", "code": "JM", "shipping": false },
+  { "name": "Japan", "code": "JP", "shipping": false },
+  { "name": "Jersey", "code": "JE", "shipping": false },
+  { "name": "Jordan", "code": "JO", "shipping": false },
+  { "name": "Kazakhstan", "code": "KZ", "shipping": false },
+  { "name": "Kenya", "code": "KE", "shipping": false },
+  { "name": "Kiribati", "code": "KI", "shipping": false },
+  {
+    "name": "Korea, Democratic People's Republic of",
+    "code": "KP",
+    "shipping": false
+  },
+  { "name": "Korea, Republic of", "code": "KR", "shipping": false },
+  { "name": "Kuwait", "code": "KW", "shipping": false },
+  { "name": "Kyrgyzstan", "code": "KG", "shipping": false },
+  {
+    "name": "Lao People's Democratic Republic",
+    "code": "LA",
+    "shipping": false
+  },
+  { "name": "Latvia", "code": "LV", "shipping": false },
+  { "name": "Lebanon", "code": "LB", "shipping": false },
+  { "name": "Lesotho", "code": "LS", "shipping": false },
+  { "name": "Liberia", "code": "LR", "shipping": false },
+  { "name": "Libya", "code": "LY", "shipping": false },
+  { "name": "Liechtenstein", "code": "LI", "shipping": false },
+  { "name": "Lithuania", "code": "LT", "shipping": false },
+  { "name": "Luxembourg", "code": "LU", "shipping": false },
+  { "name": "Macao", "code": "MO", "shipping": false },
+  { "name": "Madagascar", "code": "MG", "shipping": false },
+  { "name": "Malawi", "code": "MW", "shipping": false },
+  { "name": "Malaysia", "code": "MY", "shipping": false },
+  { "name": "Maldives", "code": "MV", "shipping": false },
+  { "name": "Mali", "code": "ML", "shipping": false },
+  { "name": "Malta", "code": "MT", "shipping": false },
+  { "name": "Marshall Islands", "code": "MH", "shipping": false },
+  { "name": "Martinique", "code": "MQ", "shipping": false },
+  { "name": "Mauritania", "code": "MR", "shipping": false },
+  { "name": "Mauritius", "code": "MU", "shipping": false },
+  { "name": "Mayotte", "code": "YT", "shipping": false },
+  { "name": "Mexico", "code": "MX", "shipping": false },
+  {
+    "name": "Micronesia, Federated States of",
+    "code": "FM",
+    "shipping": false
+  },
+  { "name": "Moldova, Republic of", "code": "MD", "shipping": false },
+  { "name": "Monaco", "code": "MC", "shipping": false },
+  { "name": "Mongolia", "code": "MN", "shipping": false },
+  { "name": "Montenegro", "code": "ME", "shipping": false },
+  { "name": "Montserrat", "code": "MS", "shipping": false },
+  { "name": "Morocco", "code": "MA", "shipping": false },
+  { "name": "Mozambique", "code": "MZ", "shipping": false },
+  { "name": "Myanmar", "code": "MM", "shipping": false },
+  { "name": "Namibia", "code": "NA", "shipping": false },
+  { "name": "Nauru", "code": "NR", "shipping": false },
+  { "name": "Nepal", "code": "NP", "shipping": false },
+  { "name": "Netherlands", "code": "NL", "shipping": false },
+  { "name": "New Caledonia", "code": "NC", "shipping": false },
+  { "name": "New Zealand", "code": "NZ", "shipping": false },
+  { "name": "Nicaragua", "code": "NI", "shipping": false },
+  { "name": "Niger", "code": "NE", "shipping": false },
+  { "name": "Nigeria", "code": "NG", "shipping": false },
+  { "name": "Niue", "code": "NU", "shipping": false },
+  { "name": "Norfolk Island", "code": "NF", "shipping": false },
+  { "name": "Northern Mariana Islands", "code": "MP", "shipping": false },
+  { "name": "Norway", "code": "NO", "shipping": false },
+  { "name": "Oman", "code": "OM", "shipping": false },
+  { "name": "Pakistan", "code": "PK", "shipping": false },
+  { "name": "Palau", "code": "PW", "shipping": false },
+  { "name": "Palestine, State of", "code": "PS", "shipping": false },
+  { "name": "Panama", "code": "PA", "shipping": false },
+  { "name": "Papua New Guinea", "code": "PG", "shipping": false },
+  { "name": "Paraguay", "code": "PY", "shipping": false },
+  { "name": "Peru", "code": "PE", "shipping": false },
+  { "name": "Philippines", "code": "PH", "shipping": false },
+  { "name": "Pitcairn", "code": "PN", "shipping": false },
+  { "name": "Poland", "code": "PL", "shipping": false },
+  { "name": "Portugal", "code": "PT", "shipping": false },
+  { "name": "Puerto Rico", "code": "PR", "shipping": false },
+  { "name": "Qatar", "code": "QA", "shipping": false },
+  { "name": "Republic of North Macedonia", "code": "MK", "shipping": false },
+  { "name": "Romania", "code": "RO", "shipping": false },
+  { "name": "Russian Federation", "code": "RU", "shipping": false },
+  { "name": "Rwanda", "code": "RW", "shipping": false },
+  { "name": "Réunion", "code": "RE", "shipping": false },
+  { "name": "Saint Barthélemy", "code": "BL", "shipping": false },
+  {
+    "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "code": "SH",
+    "shipping": false
+  },
+  { "name": "Saint Kitts and Nevis", "code": "KN", "shipping": false },
+  { "name": "Saint Lucia", "code": "LC", "shipping": false },
+  { "name": "Saint Martin (French part)", "code": "MF", "shipping": false },
+  { "name": "Saint Pierre and Miquelon", "code": "PM", "shipping": false },
+  {
+    "name": "Saint Vincent and the Grenadines",
+    "code": "VC",
+    "shipping": false
+  },
+  { "name": "Samoa", "code": "WS", "shipping": false },
+  { "name": "San Marino", "code": "SM", "shipping": false },
+  { "name": "Sao Tome and Principe", "code": "ST", "shipping": false },
+  { "name": "Saudi Arabia", "code": "SA", "shipping": false },
+  { "name": "Senegal", "code": "SN", "shipping": false },
+  { "name": "Serbia", "code": "RS", "shipping": false },
+  { "name": "Seychelles", "code": "SC", "shipping": false },
+  { "name": "Sierra Leone", "code": "SL", "shipping": false },
+  { "name": "Singapore", "code": "SG", "shipping": false },
+  { "name": "Sint Maarten (Dutch part)", "code": "SX", "shipping": false },
+  { "name": "Slovakia", "code": "SK", "shipping": false },
+  { "name": "Slovenia", "code": "SI", "shipping": false },
+  { "name": "Solomon Islands", "code": "SB", "shipping": false },
+  { "name": "Somalia", "code": "SO", "shipping": false },
+  { "name": "South Africa", "code": "ZA", "shipping": false },
+  {
+    "name": "South Georgia and the South Sandwich Islands",
+    "code": "GS",
+    "shipping": false
+  },
+  { "name": "South Sudan", "code": "SS", "shipping": false },
+  { "name": "Spain", "code": "ES", "shipping": false },
+  { "name": "Sri Lanka", "code": "LK", "shipping": false },
+  { "name": "Sudan", "code": "SD", "shipping": false },
+  { "name": "Suriname", "code": "SR", "shipping": false },
+  { "name": "Svalbard and Jan Mayen", "code": "SJ", "shipping": false },
+  { "name": "Sweden", "code": "SE", "shipping": false },
+  { "name": "Switzerland", "code": "CH", "shipping": false },
+  { "name": "Syrian Arab Republic", "code": "SY", "shipping": false },
+  { "name": "Taiwan, Province of China", "code": "TW", "shipping": false },
+  { "name": "Tajikistan", "code": "TJ", "shipping": false },
+  { "name": "Tanzania, United Republic of", "code": "TZ", "shipping": false },
+  { "name": "Thailand", "code": "TH", "shipping": false },
+  { "name": "Timor-Leste", "code": "TL", "shipping": false },
+  { "name": "Togo", "code": "TG", "shipping": false },
+  { "name": "Tokelau", "code": "TK", "shipping": false },
+  { "name": "Tonga", "code": "TO", "shipping": false },
+  { "name": "Trinidad and Tobago", "code": "TT", "shipping": false },
+  { "name": "Tunisia", "code": "TN", "shipping": false },
+  { "name": "Turkey", "code": "TR", "shipping": false },
+  { "name": "Turkmenistan", "code": "TM", "shipping": false },
+  { "name": "Turks and Caicos Islands", "code": "TC", "shipping": false },
+  { "name": "Tuvalu", "code": "TV", "shipping": false },
+  { "name": "Uganda", "code": "UG", "shipping": false },
+  { "name": "Ukraine", "code": "UA", "shipping": false },
+  { "name": "United Arab Emirates", "code": "AE", "shipping": false },
+  {
+    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "code": "GB",
+    "shipping": false
+  },
+
+  { "name": "Uruguay", "code": "UY", "shipping": false },
+  { "name": "Uzbekistan", "code": "UZ", "shipping": false },
+  { "name": "Vanuatu", "code": "VU", "shipping": false },
+  {
+    "name": "Venezuela (Bolivarian Republic of)",
+    "code": "VE",
+    "shipping": false
+  },
+  { "name": "Viet Nam", "code": "VN", "shipping": false },
+  { "name": "Virgin Islands (British)", "code": "VG", "shipping": false },
+  { "name": "Virgin Islands (U.S.)", "code": "VI", "shipping": false },
+  { "name": "Wallis and Futuna", "code": "WF", "shipping": false },
+  { "name": "Western Sahara", "code": "EH", "shipping": false },
+  { "name": "Yemen", "code": "YE", "shipping": false },
+  { "name": "Zambia", "code": "ZM", "shipping": false },
+  { "name": "Zimbabwe", "code": "ZW", "shipping": false }
+]

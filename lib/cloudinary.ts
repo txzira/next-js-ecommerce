@@ -4,7 +4,7 @@ cloudinary.config({
   secure: true,
 });
 
-export async function uploadImage(imagePath, imageName) {
+export async function uploadImage(imagePath: string, imageName: string) {
   const options = {
     public_id: imageName,
     folder: "prisma-store",
@@ -24,7 +24,7 @@ export async function uploadImage(imagePath, imageName) {
   }
 }
 
-export async function destroyImage(publicId) {
+export async function destroyImage(publicId: string) {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     return result;

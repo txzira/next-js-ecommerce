@@ -1,6 +1,5 @@
 import NavLink from "app/(navigation)/NavLink";
 import prisma from "lib/prisma";
-import Link from "next/link";
 import React from "react";
 
 const CategoryNavLinks = async () => {
@@ -12,9 +11,11 @@ const CategoryNavLinks = async () => {
     <>
       {categories.map((category) => {
         return (
-          <NavLink key={category.id} href={`/categories/${category.slug}`}>
-            {category.name}
-          </NavLink>
+          <li key={category.id} className="">
+            <NavLink href={`/categories/${category.slug}`}>
+              {category.name}
+            </NavLink>
+          </li>
         );
       })}
     </>

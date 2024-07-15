@@ -12,24 +12,30 @@ import { validateEmail, validatePassword } from "pages/api/auth/[...nextauth]";
 
 function FormContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative mt-10 w-full md:w-1/2 before:bg-opacity-10 before:rounded-md before:transform before:-rotate-6  before:absolute before:bg-white before:inset-0">
-      <div className="relative w-4/5 mx-auto p-5 text-black bg-white border shadow-lg rounded-md ">{children}</div>
+    <div className="relative mt-10 w-full before:absolute before:inset-0 before:-rotate-6 before:transform before:rounded-md  before:bg-white before:bg-opacity-10 md:w-1/2">
+      <div className="relative mx-auto w-4/5 rounded-md border bg-white p-5 text-black shadow-lg ">
+        {children}
+      </div>
     </div>
   );
 }
 
 function FormIcon({ children }: { children: React.ReactNode }) {
-  return <span className="absolute opacity-40 top-3.5 left-4 text-lg">{children}</span>;
+  return (
+    <span className="absolute left-4 top-3.5 text-lg opacity-40">
+      {children}
+    </span>
+  );
 }
 
 function FormItem({ children }: { children: React.ReactNode }) {
-  return <div className="relative w-full md:w-1/2 m-auto mb-3">{children}</div>;
+  return <div className="relative m-auto mb-3 w-full md:w-1/2">{children}</div>;
 }
 
 function FormButton({ children }: { children: React.ReactNode }) {
   return (
     <FormItem>
-      <button className="w-full text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-3 px-6 rounded-full  bg-black ">
+      <button className="w-full rounded-full border-4 border-black bg-black px-6 py-3 text-lg font-semibold text-white active:bg-red-700  active:text-black ">
         {children}
       </button>
     </FormItem>
@@ -52,7 +58,7 @@ function FormInput({
   return (
     <input
       required
-      className="text-black border w-full rounded-3xl py-2 px-4 pl-10 bg-white focus:bg-slate-300 focus:outline-none placeholder:text-black"
+      className="w-full rounded-3xl border bg-white px-4 py-2 pl-10 text-black placeholder:text-black focus:bg-slate-300 focus:outline-none"
       id={id}
       type={type}
       placeholder={placeholder}
@@ -66,7 +72,10 @@ const initalErrors = {
     error: "Must include at least 1 uppercase letter",
     status: false,
   },
-  lowercaseError: { error: "Must include at least 1 lowercase letter.", status: false },
+  lowercaseError: {
+    error: "Must include at least 1 lowercase letter.",
+    status: false,
+  },
   numberError: {
     error: "Must include at least 1 number.",
     status: false,
@@ -94,33 +103,56 @@ export const LoginForm = () => {
       email: email,
       password: password,
     });
-    if (signInReply.ok) {
+    if (signInReply?.ok) {
       toast.dismiss();
       router.replace("/");
     } else {
       toast.dismiss();
-      toast.error(signInReply.error);
+      toast.error(signInReply?.error!);
     }
   };
 
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
-        <h1 className="text-black font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Login</h1>
+        <Image
+          src="/images/logo.png"
+          priority={true}
+          width={180}
+          height={80}
+          alt="logo"
+          className="m-auto"
+        />
+        <h1 className="font-cycle m-auto text-2xl font-semibold tracking-wider text-black md:p-2">
+          Login
+        </h1>
         <FormItem>
           <FormIcon>
             <AiFillMail />
           </FormIcon>
-          <FormInput id="email" type="email" placeholder="Email" value={email} onChange={setEmail} />
+          <FormInput
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={setEmail}
+          />
         </FormItem>
         <FormItem>
           <FormIcon>
             <AiFillLock />
           </FormIcon>
-          <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+          <FormInput
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={setPassword}
+          />
           <div className="flex justify-end">
-            <Link href="/auth/forgot-password" className="text-blue-800 underline text-right">
+            <Link
+              href="/auth/forgot-password"
+              className="text-right text-blue-800 underline">
               Forgot your password?
             </Link>
           </div>
@@ -154,15 +186,25 @@ export const SignupForm = () => {
     setAttemptSubmit(true);
     const errors = initalErrors;
     //uppercase validation
-    password.match(/(?=.*[A-Z])/) ? (errors.uppercaseError.status = true) : (errors.uppercaseError.status = false);
+    password.match(/(?=.*[A-Z])/)
+      ? (errors.uppercaseError.status = true)
+      : (errors.uppercaseError.status = false);
     //lowercase validation
-    password.match(/(?=.*[a-z])/) ? (errors.lowercaseError.status = true) : (errors.lowercaseError.status = false);
+    password.match(/(?=.*[a-z])/)
+      ? (errors.lowercaseError.status = true)
+      : (errors.lowercaseError.status = false);
     //number validation
-    password.match(/(?=.*\d)/) ? (errors.numberError.status = true) : (errors.numberError.status = false);
+    password.match(/(?=.*\d)/)
+      ? (errors.numberError.status = true)
+      : (errors.numberError.status = false);
     //special character validation
-    password.match(/(?=.*[!@#$%^&*])/) ? (errors.specialCharError.status = true) : (errors.specialCharError.status = false);
+    password.match(/(?=.*[!@#$%^&*])/)
+      ? (errors.specialCharError.status = true)
+      : (errors.specialCharError.status = false);
     //length validation
-    password.match(/^.{8,16}$/) ? (errors.lengthError.status = true) : (errors.lengthError.status = false);
+    password.match(/^.{8,16}$/)
+      ? (errors.lengthError.status = true)
+      : (errors.lengthError.status = false);
 
     setFormErrors(errors);
     if (validateEmail(email)) {
@@ -202,38 +244,94 @@ export const SignupForm = () => {
   return (
     <FormContainer>
       <form className="w-full text-center" onSubmit={submitHandler}>
-        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
-        <h1 className="text-black font-semibold text-2xl m-auto md:p-2 font-cycle tracking-wider">Registration</h1>
+        <Image
+          src="/images/logo.png"
+          priority={true}
+          width={180}
+          height={80}
+          alt="logo"
+          className="m-auto"
+        />
+        <h1 className="font-cycle m-auto text-2xl font-semibold tracking-wider text-black md:p-2">
+          Registration
+        </h1>
         <FormItem>
           <FormIcon>
             <AiFillMail />
           </FormIcon>
-          <FormInput placeholder="Email" id="email" type="email" value={email} onChange={setEmail} />
+          <FormInput
+            placeholder="Email"
+            id="email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+          />
         </FormItem>
         <FormItem>
           <FormIcon>
             <BsFillPersonFill />
           </FormIcon>
-          <FormInput type="text" id="name" placeholder="John Doe" value={name} onChange={setName} />
+          <FormInput
+            type="text"
+            id="name"
+            placeholder="John Doe"
+            value={name}
+            onChange={setName}
+          />
         </FormItem>
         <FormItem>
           <FormIcon>
             <AiFillLock />
           </FormIcon>
-          <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+          <FormInput
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={setPassword}
+          />
           {attemptSubmit ? (
-            <ul className="list-disc list-inside text-xs text-left ml-5">
-              <li className={`${formErrors.uppercaseError.status ? "text-green-600" : "text-red-600"}`}>
+            <ul className="ml-5 list-inside list-disc text-left text-xs">
+              <li
+                className={`${
+                  formErrors.uppercaseError.status
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}>
                 {formErrors.uppercaseError.error}
               </li>
-              <li className={`${formErrors.lowercaseError.status ? "text-green-600" : "text-red-600"}`}>
+              <li
+                className={`${
+                  formErrors.lowercaseError.status
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}>
                 {formErrors.lowercaseError.error}
               </li>
-              <li className={`${formErrors.numberError.status ? "text-green-600" : "text-red-600"}`}>{formErrors.numberError.error}</li>
-              <li className={`${formErrors.specialCharError.status ? "text-green-600" : "text-red-600"}`}>
+              <li
+                className={`${
+                  formErrors.numberError.status
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}>
+                {formErrors.numberError.error}
+              </li>
+              <li
+                className={`${
+                  formErrors.specialCharError.status
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}>
                 {formErrors.specialCharError.error}
               </li>
-              <li className={`${formErrors.lengthError.status ? "text-green-600" : "text-red-600"}`}>{formErrors.lengthError.error}</li>
+              <li
+                className={`${
+                  formErrors.lengthError.status
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}>
+                {formErrors.lengthError.error}
+              </li>
             </ul>
           ) : null}
         </FormItem>
@@ -264,7 +362,9 @@ export const SignupForm = () => {
 
 export const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
-  const requestPasswordLink = async (event: React.FormEvent<HTMLFormElement>) => {
+  const requestPasswordLink = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
 
@@ -278,18 +378,37 @@ export const ForgotPasswordForm = () => {
   };
   return (
     <FormContainer>
-      <form className="w-full text-center" onSubmit={(event) => requestPasswordLink(event)}>
-        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
-        <h1 className="text-black font-bold text-2xl  my-2 md:p-2 ">Forgot Password</h1>
-        <p className="text-sm text-gray-500  my-2">Enter your email and we&apos;ll send you a link to reset your password</p>
+      <form
+        className="w-full text-center"
+        onSubmit={(event) => requestPasswordLink(event)}>
+        <Image
+          src="/images/logo.png"
+          priority={true}
+          width={180}
+          height={80}
+          alt="logo"
+          className="m-auto"
+        />
+        <h1 className="my-2 text-2xl font-bold  text-black md:p-2 ">
+          Forgot Password
+        </h1>
+        <p className="my-2 text-sm  text-gray-500">
+          Enter your email and we&apos;ll send you a link to reset your password
+        </p>
         <FormItem>
           <FormIcon>
             <AiFillMail />
           </FormIcon>
-          <FormInput id="email" type="email" placeholder="Email" value={email} onChange={setEmail} />
+          <FormInput
+            id="email"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={setEmail}
+          />
         </FormItem>
         <FormItem>
-          <button className="w-2/3 text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-2 px-6 rounded-full  bg-black ">
+          <button className="w-2/3 rounded-full border-4 border-black bg-black px-6 py-2 text-lg font-semibold text-white active:bg-red-700  active:text-black ">
             Submit
           </button>
         </FormItem>
@@ -313,7 +432,7 @@ export const ForgotPasswordForm = () => {
 };
 
 export const ResetPasswordForm = () => {
-  const { token } = useParams();
+  const token = useParams()?.token;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
@@ -321,11 +440,20 @@ export const ResetPasswordForm = () => {
     event.preventDefault();
     toast.loading("Loading...");
 
+    if (!token) {
+      toast.dismiss();
+      toast.error("Invalid Token");
+      return;
+    }
+
     if (password === confirmPassword) {
-      const data = await fetch(`/auth/forgot-password/reset-password/${token}`, {
-        method: "PATCH",
-        body: JSON.stringify({ password, confirmPassword }),
-      });
+      const data = await fetch(
+        `/auth/forgot-password/reset-password/${token}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ password, confirmPassword }),
+        }
+      );
       const response = await data.json();
       toast.dismiss();
       if (response.status === 200) {
@@ -340,14 +468,31 @@ export const ResetPasswordForm = () => {
   };
   return (
     <FormContainer>
-      <form className="w-full text-center" onSubmit={(event) => resetPassword(event)}>
-        <Image src="/images/logo.png" priority={true} width={180} height={80} alt="logo" className="m-auto" />
-        <h1 className="text-black font-bold text-2xl  my-2 md:p-2 ">Forgot Password</h1>
+      <form
+        className="w-full text-center"
+        onSubmit={(event) => resetPassword(event)}>
+        <Image
+          src="/images/logo.png"
+          priority={true}
+          width={180}
+          height={80}
+          alt="logo"
+          className="m-auto"
+        />
+        <h1 className="my-2 text-2xl font-bold  text-black md:p-2 ">
+          Forgot Password
+        </h1>
         <FormItem>
           <FormIcon>
             <AiFillLock />
           </FormIcon>
-          <FormInput id="password" type="password" placeholder="Password" value={password} onChange={setPassword} />
+          <FormInput
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={setPassword}
+          />
         </FormItem>
         <FormItem>
           <FormIcon>
@@ -362,7 +507,7 @@ export const ResetPasswordForm = () => {
           />
         </FormItem>
         <FormItem>
-          <button className="w-2/3 text-lg font-semibold text-white border-black border-4 active:bg-red-700 active:text-black py-2 px-6 rounded-full  bg-black ">
+          <button className="w-2/3 rounded-full border-4 border-black bg-black px-6 py-2 text-lg font-semibold text-white active:bg-red-700  active:text-black ">
             Submit
           </button>
         </FormItem>

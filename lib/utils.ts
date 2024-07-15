@@ -13,3 +13,7 @@ export const USDollar = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+export const capitalizeFirstLetter = (word: string) => {
+  return word[0].toUpperCase() + word.substring(1);
+};

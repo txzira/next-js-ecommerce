@@ -7,5 +7,5 @@ import { redirect } from "next/navigation";
 
 export default async function ForgotPasswordPage() {
   const session = await getServerSession(authOptions);
-  return session ? redirect("/user/products") : <ResetPasswordForm />;
+  return session ? redirect("/products") : <ResetPasswordForm />;
 }
