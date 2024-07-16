@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { CartItemProps } from "types/product";
 import { useCartState } from "app/CartProvider";
 import CartModalItem from "./CartModalItem";
+import { USDollar } from "lib/utils";
 
 export default function CartModal({
   cart,
@@ -39,28 +40,33 @@ export default function CartModal({
           <AiOutlineClose size={30} />
         </button>
         <div className="mx-auto w-[95%]">
-          <h1>Your Cart ({getTotalItems()})</h1>
+          <h1 className="mb-2 text-2xl font-medium">
+            Your Cart ({getTotalItems()})
+          </h1>
           {cart && cart?.length > 0 ? (
             <>
               {cart.map((cartItem: CartItemProps) => {
                 return <CartModalItem key={cartItem.id} cartItem={cartItem} />;
               })}
               <div className="border-b-2 border-black"></div>
-              <div className="">
-                <h1>Summary</h1>
-                <div className="col-span-2">Total</div>
-                <div className="col-span-2"></div>
-                <div></div>
-                <div className="col-span-2"></div>
-                <div>${cartTotal}</div>
+              <div className="mt-2">
+                <h1 className="text-2xl font-medium">Summary</h1>
+                <p className="mb-2">
+                  Shipping and taxes calculated at checkout.
+                </p>
+
+                <div className="flex flex-row justify-between font-medium">
+                  <span>Total</span>
+                  <span>{USDollar.format(cartTotal)}</span>
+                </div>
               </div>
             </>
           ) : (
             <div>Cart is empty.</div>
           )}
-          <div className="mx-auto w-2/5">
+          <div className="">
             <Link
-              className=" w-[420px] max-w-[50%] rounded-full bg-[#3f51b5] px-2 py-1 text-white "
+              className="mx-auto flex w-full justify-center  rounded-full bg-[#3f51b5] px-2 py-1 text-lg font-medium text-white sm:w-[420px] "
               href="/checkout"
               onClick={() => onClose()}>
               Checkout
