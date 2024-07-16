@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     } else {
       return NextResponse.json({ message: "Route no valid", status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(error.message, { status: 400 });
   }
 }

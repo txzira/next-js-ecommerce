@@ -48,16 +48,17 @@ const ImageContainer = ({
   function handleImage(event: React.ChangeEvent<HTMLInputElement>) {
     event.preventDefault();
     const files = event.target.files;
-    Array.from(files).map((file, i) => {
-      setFileToBase(file);
-    });
-    function setFileToBase(file) {
+    if (files)
+      Array.from(files).map((file, i) => {
+        setFileToBase(file);
+      });
+    function setFileToBase(file: File) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = (event) => {
         setDefaultImage({
           imageName: file.name,
-          imagePath: event.target.result,
+          imagePath: event.target?.result,
           ...(product.image
             ? { oldImagePubId: product.image.publicId }
             : { oldImagePubId: "" }),
@@ -154,7 +155,7 @@ const DetailsContainer = ({
             name="SKU"
             text="SKU"
             placeholder="SKU"
-            value={product?.sku}
+            value={product?.sku || ""}
             onChange={(event) =>
               setProduct({ ...product, sku: event.target.value })
             }
@@ -165,7 +166,7 @@ const DetailsContainer = ({
             text="Inventory Available"
             placeholder="Inventory Available"
             number={true}
-            value={product?.quantity}
+            value={product?.quantity || 0}
             onChange={(event) =>
               setProduct({ ...product, quantity: Number(event.target.value) })
             }
@@ -179,7 +180,7 @@ const DetailsContainer = ({
         text="Description"
         rows={8}
         placeholder="Inventory Available"
-        value={product?.description}
+        value={product?.description || ""}
         onChange={(event) =>
           setProduct({ ...product, description: event.target.value })
         }
@@ -266,7 +267,10 @@ const CategoriesDropdown = ({
     React.SetStateAction<Map<number, Category>>
   >;
 }) => {
-  const handleCheckedCategory = (event, category: Category) => {
+  const handleCheckedCategory = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    category: Category
+  ) => {
     if (event.target.checked) {
       setSelectedCategories(
         new Map(selectedCategories.set(Number(event.target.value), category))
@@ -277,8 +281,7 @@ const CategoriesDropdown = ({
     }
   };
 
-  const checkCategory = (map, categoryId) => {
-    console.log(categoryId);
+  const checkCategory = (map: Map<number, Category>, categoryId: number) => {
     return map.has(categoryId) ? true : false;
   };
 

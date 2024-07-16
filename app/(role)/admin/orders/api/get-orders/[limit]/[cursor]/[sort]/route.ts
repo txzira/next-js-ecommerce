@@ -2,7 +2,7 @@
 import prisma from "lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, context: { params }) {
+export async function GET(request: NextRequest, context: { params: any }) {
   //   try {
   //     if (request.method === "GET") {
   //       const limit = Number(context.params.limit);

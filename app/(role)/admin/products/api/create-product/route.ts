@@ -21,13 +21,15 @@ export async function POST(request: NextRequest) {
       } = await request.json();
 
       let categories = [];
-      let defaultImageCloudinary: {
-        public_id: string;
-        url: string;
-        asset_id: any;
-      };
+      let defaultImageCloudinary:
+        | {
+            public_id: string;
+            url: string;
+            asset_id: any;
+          }
+        | undefined;
       for (const key of Object.keys(selectedCategories)) {
-        categories.push({ id: selectedCategories[key].id });
+        categories.push({ id: selectedCategories.get(key)!.id });
       }
       if (Object.keys(defaultImage).length !== 0) {
         defaultImageCloudinary = await uploadImage(
@@ -42,14 +44,15 @@ export async function POST(request: NextRequest) {
           quantity: Number(product.quantity),
           description: product.description,
           slug: product.slug,
-          ...(Object.keys(defaultImageCloudinary).length && {
-            image: {
-              create: {
-                publicId: defaultImageCloudinary.public_id,
-                url: defaultImageCloudinary.url,
+          ...(defaultImageCloudinary &&
+            Object.keys(defaultImageCloudinary).length && {
+              image: {
+                create: {
+                  publicId: defaultImageCloudinary.public_id,
+                  url: defaultImageCloudinary.url,
+                },
               },
-            },
-          }),
+            }),
           price: Number(product.price),
           categories: { connect: categories },
         },
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json("Route not valid.", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error.code === "P2002") {
       return NextResponse.json(" Product already exist", { status: 400 });

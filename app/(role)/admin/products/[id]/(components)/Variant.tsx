@@ -19,11 +19,12 @@ type TAttributeGroupObj = {
   };
   attributes: Map<
     number,
-    {
-      id: number;
-      option: string;
-      images: AttributeImage[];
-    }
+    | {
+        id: number;
+        option: string;
+        images: AttributeImage[];
+      }
+    | undefined
   >;
 };
 type TAttributeGroupsMap = Map<number, TAttributeGroupObj>;
@@ -46,7 +47,7 @@ const VariantsModal = ({
 }: {
   setShowVariantsModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { id } = useParams();
+  const id = useParams()?.id;
 
   const {
     data: attributeGroupsData,
@@ -59,14 +60,15 @@ const VariantsModal = ({
         images: AttributeImage[];
       })[];
     })[]
-  >(`/admin/products/api/get-attribute-groups/${id}`, (url) =>
+  >(`/admin/products/api/get-attribute-groups/${id}`, (url: string) =>
     fetch(url).then((res) => res.json())
   );
 
-  const [attributeGroupDetails, setAttributeGroupDetails] =
-    useState<TAttributeGroupObj>(null);
+  const [attributeGroupDetails, setAttributeGroupDetails] = useState<
+    TAttributeGroupObj | undefined
+  >(undefined);
   const [attributeGroupsMap, setAttributeGroupsMap] =
-    useState<TAttributeGroupsMap>(new Map());
+    useState<TAttributeGroupsMap>(new Map() as Map<number, TAttributeGroupObj>);
 
   const [attributeGroupIndex, setAttributeGroupIndex] = useState(0);
 
@@ -81,7 +83,11 @@ const VariantsModal = ({
   >(new Map());
 
   useEffect(() => {
-    if (!attributeGroupsIsLoading && attributeGroupsData.length) {
+    if (
+      !attributeGroupsIsLoading &&
+      attributeGroupsData &&
+      attributeGroupsData.length
+    ) {
       const map: TAttributeGroupsMap = new Map();
       setAttributeGroupIndex(
         attributeGroupsData[attributeGroupsData.length - 1].id
@@ -109,8 +115,8 @@ const VariantsModal = ({
           [
             0,
             {
-              id: null,
-              attributeGroup: { id: null, name: "" },
+              id: 0,
+              attributeGroup: { id: 0, name: "" },
               attributes: new Map<
                 number,
                 { id: number; option: string; images: AttributeImage[] }
@@ -184,12 +190,12 @@ const VariantsModal = ({
           </button>
           <button
             className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-            onClick={saveAndGenerateVariants}>
+            onClick={(event) => saveAndGenerateVariants(event)}>
             Save and Generate Variants
           </button>
           <button
             className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-            onClick={saveChanges}>
+            onClick={(event) => saveChanges(event)}>
             Save Changes
           </button>
         </div>
@@ -201,8 +207,8 @@ const VariantsModal = ({
     setAttributeGroupsMap(
       new Map(
         attributeGroupsMap.set(attributeGroupIndex, {
-          id: null,
-          attributeGroup: { id: null, name: "" },
+          id: 0,
+          attributeGroup: { id: 0, name: "" },
           attributes: new Map<
             number,
             { id: number; option: string; images: AttributeImage[] }
@@ -213,7 +219,9 @@ const VariantsModal = ({
     setAttributeGroupIndex(attributeGroupIndex + 1);
   }
 
-  async function saveChanges(event) {
+  async function saveChanges(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     event.preventDefault();
     toast.loading("Loading...");
     const attributeGroups = Array.from(
@@ -246,7 +254,9 @@ const VariantsModal = ({
     response.status === 200 ? toast.success(message) : toast.error(message);
   }
 
-  async function saveAndGenerateVariants(event) {
+  async function saveAndGenerateVariants(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     event.preventDefault();
     toast.loading("Loading...");
     await fetch("/admin/products/api/generate-product-variants", {
@@ -274,7 +284,7 @@ const AttributeGroupRow = ({
   attributesToDelete: TAttributesMap;
   setAttributesToDelete: React.Dispatch<React.SetStateAction<TAttributesMap>>;
   setAttributeGroupDetails: React.Dispatch<
-    React.SetStateAction<TAttributeGroupObj>
+    React.SetStateAction<TAttributeGroupObj | undefined>
   >;
   id: number;
 }) => {
@@ -288,17 +298,17 @@ const AttributeGroupRow = ({
           className="mr-1 w-full"
           type="text"
           placeholder="Name"
-          value={attributeGroupsMap.get(id).attributeGroup.name}
+          value={attributeGroupsMap.get(id)!.attributeGroup.name}
           onChange={(event) =>
             setAttributeGroupsMap(
               new Map(
                 attributeGroupsMap.set(id, {
-                  id: attributeGroupsMap.get(id).id,
+                  id: attributeGroupsMap.get(id)!.id,
                   attributeGroup: {
-                    id: attributeGroupsMap.get(id).attributeGroup.id,
+                    id: attributeGroupsMap.get(id)!.attributeGroup.id,
                     name: event.target.value,
                   },
-                  attributes: attributeGroupsMap.get(id).attributes,
+                  attributes: attributeGroupsMap.get(id)!.attributes,
                 })
               )
             )
@@ -307,22 +317,23 @@ const AttributeGroupRow = ({
       </div>
       <div className="col-span-2">
         <ul className="flex flex-row flex-wrap">
-          {Array.from(attributeGroupsMap.get(id).attributes.keys()).map(
-            (key) => {
-              return (
-                <li
-                  className="flex w-max flex-row items-center rounded-lg border"
-                  key={key}>
-                  <span>
-                    {attributeGroupsMap.get(id).attributes.get(key).option}
-                  </span>
-                  <button onClick={() => deleteAttribute(key)}>
-                    <AiFillCloseCircle />
-                  </button>
-                </li>
-              );
-            }
-          )}
+          {attributeGroupsMap.has(id) &&
+            Array.from(attributeGroupsMap.get(id)!.attributes.keys()).map(
+              (key) => {
+                return (
+                  <li
+                    className="flex w-max flex-row items-center rounded-lg border"
+                    key={key}>
+                    <span>
+                      {attributeGroupsMap.get(id)?.attributes.get(key)?.option}
+                    </span>
+                    <button onClick={() => deleteAttribute(key)}>
+                      <AiFillCloseCircle />
+                    </button>
+                  </li>
+                );
+              }
+            )}
         </ul>
         <input
           className="w-full"
@@ -330,7 +341,7 @@ const AttributeGroupRow = ({
           placeholder="Options (example: Red, Green, Blue, etc.)"
           value={attribute}
           onChange={(event) => setAttribute(event.target.value)}
-          onKeyDown={pressedEnter}
+          onKeyDown={(event) => pressedEnter(event)}
           onBlur={addAttribute}
         />
       </div>
@@ -357,22 +368,25 @@ const AttributeGroupRow = ({
 
   function addAttribute() {
     if (attribute !== "" || !(attribute.trim().length === 0)) {
-      const attributes = attributeGroupsMap.get(id).attributes;
-      let attributeIndex = attributes.size;
-      while (attributes.has(attributeIndex)) {
+      const attributes = attributeGroupsMap.get(id)?.attributes;
+      let attributeIndex = attributes?.size || 0;
+      while (attributes?.has(attributeIndex)) {
         attributeIndex++;
       }
-      attributes.set(attributeIndex, {
-        id: null,
+      attributes?.set(attributeIndex, {
+        id: 0,
         option: attribute,
         images: [],
       });
       setAttributeGroupsMap(
         new Map(
           attributeGroupsMap.set(id, {
-            id: attributeGroupsMap.get(id).id,
-            attributeGroup: attributeGroupsMap.get(id).attributeGroup,
-            attributes,
+            id: attributeGroupsMap.get(id)?.id || 0,
+            attributeGroup: attributeGroupsMap.get(id)?.attributeGroup || {
+              id: 0,
+              name: "",
+            },
+            attributes: attributes!,
           })
         )
       );
@@ -380,31 +394,31 @@ const AttributeGroupRow = ({
     }
   }
 
-  function deleteAttribute(key) {
+  function deleteAttribute(key: number) {
     let attributes;
-    const attribute = attributeGroupsMap.get(id).attributes.get(key);
+    const attribute = attributeGroupsMap.get(id)!.attributes.get(key);
 
-    attributes = attributesToDelete.has(attributeGroupsMap.get(id).id)
+    attributes = attributesToDelete.has(attributeGroupsMap.get(id)!.id)
       ? [
-          ...attributesToDelete.get(attributeGroupsMap.get(id).id).attributes,
-          attribute.id,
+          ...attributesToDelete.get(attributeGroupsMap.get(id)!.id)!.attributes,
+          attribute!.id,
         ]
-      : [attribute.id];
+      : [attribute!.id];
 
     console.log(attribute);
     setAttributesToDelete(
       new Map(
-        attributesToDelete.set(attributeGroupsMap.get(id).id, {
-          attributeGroupId: attributeGroupsMap.get(id).id,
+        attributesToDelete.set(attributeGroupsMap.get(id)!.id, {
+          attributeGroupId: attributeGroupsMap.get(id)!.id,
           attributes,
         })
       )
     );
-    if (attributeGroupsMap.get(id).attributes.delete(key))
+    if (attributeGroupsMap.get(id)?.attributes.delete(key))
       setAttributeGroupsMap(new Map(attributeGroupsMap));
   }
 
-  function pressedEnter(event) {
+  function pressedEnter(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       addAttribute();
     }
@@ -417,16 +431,29 @@ const ActionsMenu = ({
   setAttributeGroupDetails,
   show,
   setShow,
+}: {
+  onClickOutside: (value: React.SetStateAction<boolean>) => void;
+  rowsAttributeGroupDetails: TAttributeGroupObj | undefined;
+  setAttributeGroupDetails: React.Dispatch<
+    React.SetStateAction<TAttributeGroupObj | undefined>
+  >;
+  show: boolean;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const ref = useRef(null);
+  const ref: React.LegacyRef<HTMLUListElement | undefined> | undefined =
+    useRef();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onClickOutside && onClickOutside();
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as any)) {
+        onClickOutside;
       }
     };
-    document.addEventListener("click", handleClickOutside, true);
+    document.addEventListener(
+      "click",
+      (event) => handleClickOutside(event),
+      true
+    );
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
@@ -437,7 +464,7 @@ const ActionsMenu = ({
   return (
     <ul
       className="absolute right-0 z-50 rounded-lg border bg-white shadow-lg"
-      ref={ref}>
+      ref={ref as React.LegacyRef<HTMLUListElement>}>
       <li className="border-b p-2">
         <button
           onClick={() => {
@@ -459,9 +486,9 @@ const AttributeAdvancedDetails = ({
   setAttributeGroupDetails,
   attributeGroupsMutate,
 }: {
-  attributeGroupDetails: TAttributeGroupObj;
+  attributeGroupDetails: TAttributeGroupObj | undefined;
   setAttributeGroupDetails: React.Dispatch<
-    React.SetStateAction<TAttributeGroupObj>
+    React.SetStateAction<TAttributeGroupObj | undefined>
   >;
   attributeGroupsMutate: KeyedMutator<
     (AttributeGroup & {
@@ -481,7 +508,19 @@ const AttributeAdvancedDetails = ({
         updated: boolean;
       }
     ][]
-  >(JSON.parse(JSON.stringify(Array.from(attributeGroupDetails.attributes))));
+  >(
+    JSON.parse(
+      JSON.stringify(Array.from(attributeGroupDetails?.attributes || []))
+    ) as [
+      number,
+      {
+        id: number;
+        option: string;
+        images: AttributeImage[];
+        updated: boolean;
+      }
+    ][]
+  );
 
   const [imagesToAddToDb, setImagesToAddToDb] = useState(
     new Map<number, TImageToSend[]>()
@@ -490,13 +529,18 @@ const AttributeAdvancedDetails = ({
     new Map<number, AttributeImage[]>()
   );
 
-  function handleInput(event, index) {
+  function handleInput(
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) {
     event.preventDefault();
     attributes[index][1].option = event.target.value;
     attributes[index][1].updated = true;
     setAttributes([...attributes]);
   }
-  async function saveChanges(event) {
+  async function saveChanges(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     event.preventDefault();
     toast.loading("Loading...");
     const request = await fetch(
@@ -521,9 +565,11 @@ const AttributeAdvancedDetails = ({
   }
   console.log(imagesToAddToDb);
   return (
-    <ModalRightSide onClick={() => setAttributeGroupDetails(null)}>
+    <ModalRightSide onClick={() => setAttributeGroupDetails(undefined)}>
       <form className="flex h-full flex-col">
-        <h1>Variant Group: {attributeGroupDetails.attributeGroup.name}</h1>
+        <h1>
+          Variant Group: {attributeGroupDetails?.attributeGroup.name || ""}
+        </h1>
         <div className="h-full overflow-y-scroll">
           {attributes.map((attribute, index) => {
             return (
@@ -550,13 +596,13 @@ const AttributeAdvancedDetails = ({
           <div className="flex h-min flex-row justify-end gap-3">
             <button
               className="rounded-md px-3 py-2 font-semibold"
-              onClick={() => setAttributeGroupDetails(null)}>
+              onClick={() => setAttributeGroupDetails(undefined)}>
               Cancel
             </button>
 
             <button
               className="rounded-md bg-green-600 px-3 py-2 font-semibold text-white"
-              onClick={saveChanges}>
+              onClick={(event) => saveChanges(event)}>
               Save Changes
             </button>
           </div>
@@ -595,17 +641,18 @@ const ImagesContainer = ({
     console.log(attributeId);
     const files = event.target.files;
     const tempImagesToAddArr: TImageToSend[] = [];
-    Array.from(files).map((file, i) => {
-      setFileToBase(file, tempImagesToAddArr);
-    });
-    function setFileToBase(file, imageArr: TImageToSend[]) {
+    if (files)
+      Array.from(files).map((file, i) => {
+        setFileToBase(file, tempImagesToAddArr);
+      });
+    function setFileToBase(file: File, imageArr: TImageToSend[]) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = (event) => {
         imageArr.push({
           attributeId: attributeId,
           imageName: file.name,
-          imagePath: event.target.result,
+          imagePath: event.target?.result || "",
         });
         imagesToAddToDb.set(attributeId, imageArr);
         setImagesToAddToDb(new Map(imagesToAddToDb));
@@ -613,7 +660,10 @@ const ImagesContainer = ({
     }
   }
 
-  function handleDeleteFromDb(event, index) {
+  function handleDeleteFromDb(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number
+  ) {
     event.preventDefault();
     const image = imagesInDb.splice(index, 1)[0];
     imagesToDelete.push(image);
@@ -623,9 +673,12 @@ const ImagesContainer = ({
     setImagesInDb([...imagesInDb]);
   }
 
-  function removeFromAddImages(event, index) {
+  function removeFromAddImages(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    index: number
+  ) {
     event.preventDefault();
-    imagesToAddToDb.get(attributeId).splice(index, 1);
+    imagesToAddToDb.get(attributeId)?.splice(index, 1);
     setImagesToAddToDb(new Map(imagesToAddToDb));
   }
 
@@ -651,8 +704,8 @@ const ImagesContainer = ({
             })
           : null}
         {imagesToAddToDb.has(attributeId) &&
-        imagesToAddToDb.get(attributeId).length
-          ? imagesToAddToDb.get(attributeId).map((image, index) => {
+        imagesToAddToDb.get(attributeId)?.length
+          ? imagesToAddToDb.get(attributeId)?.map((image, index) => {
               return (
                 <div
                   key={image.imageName}

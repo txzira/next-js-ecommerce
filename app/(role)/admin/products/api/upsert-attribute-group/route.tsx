@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
               ) && {
                 delete: attributesToDeleteMap
                   .get(reqAttributeGroup.attributeGroup.id)
-                  .map((attributeId) => {
+                  .map((attributeId: any) => {
                     return { id: Number(attributeId) };
                   }),
               }),
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json("Route no valid", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
     return NextResponse.json(error.message, { status: 400 });
   }

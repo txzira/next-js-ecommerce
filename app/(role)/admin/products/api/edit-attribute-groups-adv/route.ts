@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     if (request.method === "POST") {
       const session = await getServerSession(authOptions);
-      if (session.user.role !== USERTYPE.ADMIN) {
+      if (session?.user.role !== USERTYPE.ADMIN) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
 
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
               data: {
                 position: index + 1,
                 attributeId: image.attributeId,
-                url: imageObj.url,
-                publicId: imageObj.public_id,
+                url: imageObj!.url,
+                publicId: imageObj!.public_id,
               },
             });
           });

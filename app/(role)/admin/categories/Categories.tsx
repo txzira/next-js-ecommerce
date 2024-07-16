@@ -13,7 +13,9 @@ export function CategoryCreateForm({
 }) {
   const [categoryName, setCategoryName] = useState("");
 
-  const addCategory = async (event) => {
+  const addCategory = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/categories/create-category", {
@@ -47,8 +49,7 @@ export function CategoryCreateForm({
         <button
           type="submit"
           className=" mx-auto rounded-xl bg-green-500 px-2 text-white"
-          onClick={addCategory}
-        >
+          onClick={(event) => addCategory(event)}>
           Add
         </button>
       </div>
@@ -60,19 +61,22 @@ export function CategoryList({
   categoriesIsLoading,
   categoriesMutate,
 }: {
-  categoriesData: Category[];
+  categoriesData: Category[] | undefined;
   categoriesIsLoading: boolean;
   categoriesMutate: KeyedMutator<any>;
 }) {
   const [showDelete, setShowDelete] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
 
-  const handleUpdate = (category: Category, active: boolean) => {
+  const handleUpdate = (category: Category | null, active: boolean) => {
     setSelectedCategory(category);
     setShowUpdate(active);
   };
-  const handleDelete = (category: Category, active: boolean) => {
+
+  const handleDelete = (category: Category | null, active: boolean) => {
     setSelectedCategory(category);
     setShowDelete(active);
   };
@@ -84,14 +88,13 @@ export function CategoryList({
         <div>Actions</div>
       </div>
       {!categoriesIsLoading ? (
-        categoriesData.length > 0 ? (
+        categoriesData && categoriesData.length > 0 ? (
           categoriesData.map((cat: Category) => {
             return (
               <Link
                 href={`/admin/categories/${cat.id}`}
                 key={cat.id}
-                className="grid h-7 grid-cols-3 items-center even:bg-slate-300"
-              >
+                className="grid h-7 grid-cols-3 items-center even:bg-slate-300">
                 <div className="col-span-2 pl-1">
                   <p>{cat.name}</p>
                 </div>
@@ -101,8 +104,7 @@ export function CategoryList({
                   </button>
                   <button
                     title="Delete"
-                    onClick={() => handleDelete(cat, true)}
-                  >
+                    onClick={() => handleDelete(cat, true)}>
                     <MdDeleteOutline style={{ color: "red" }} size={30} />
                   </button>
                 </div>
@@ -142,12 +144,14 @@ function UpdateCategoryModal({
   category,
   categoriesMutate,
 }: {
-  handleUpdate: (cat: Category, active: boolean) => void;
+  handleUpdate: (cat: Category | null, active: boolean) => void;
   category: Category;
   categoriesMutate: KeyedMutator<any>;
 }) {
   const [newCategoryName, setNewCategoryName] = useState(category.name);
-  const updateCategory = async (event) => {
+  const updateCategory = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/categories/update-category", {
@@ -161,27 +165,29 @@ function UpdateCategoryModal({
     response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
-  function closeOnEscKeyDown(event) {
-    if ((event.charCode || event.keyCode) === 27) {
+  function closeOnEscKeyDown(event: KeyboardEvent) {
+    if (event.key === "Escape") {
       handleUpdate(null, false);
     }
   }
   useEffect(() => {
-    document.body.addEventListener("keydown", closeOnEscKeyDown);
+    document.body.addEventListener("keydown", (event) =>
+      closeOnEscKeyDown(event)
+    );
     return function cleanup() {
-      document.body.removeEventListener("keydown", closeOnEscKeyDown);
+      document.body.removeEventListener("keydown", (event) =>
+        closeOnEscKeyDown(event)
+      );
     };
   });
 
   return (
     <div
       className="fixed left-0 right-0 top-0 z-10 flex h-full w-full overflow-y-auto bg-black bg-opacity-50 md:inset-0 "
-      onClick={() => handleUpdate(null, false)}
-    >
+      onClick={() => handleUpdate(null, false)}>
       <div
         className="relative m-auto flex flex-col items-center rounded-lg bg-white md:h-auto "
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex flex-col">
           <label className="md:text-lg">Category Name</label>
           <input
@@ -195,8 +201,7 @@ function UpdateCategoryModal({
         <div className="flex flex-row gap-8 p-2">
           <button
             className=" rounded-full border-2 border-black bg-red-600 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg"
-            onClick={(event) => updateCategory(event)}
-          >
+            onClick={(event) => updateCategory(event)}>
             Update
           </button>
         </div>
@@ -211,10 +216,12 @@ function DeleteCategoryConfirmationModal({
   categoriesMutate,
 }: {
   category: Category;
-  handleDelete: (cat: Category, active: boolean) => void;
+  handleDelete: (cat: Category | null, active: boolean) => void;
   categoriesMutate: KeyedMutator<any>;
 }) {
-  const deleteCategory = async (event) => {
+  const deleteCategory = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
 
@@ -231,27 +238,29 @@ function DeleteCategoryConfirmationModal({
     response.status === 200 ? toast.success(message) : toast.error(message);
   };
 
-  function closeOnEscKeyDown(event) {
-    if ((event.charCode || event.keyCode) === 27) {
+  function closeOnEscKeyDown(event: KeyboardEvent) {
+    if (event.key === "Escape") {
       handleDelete(null, false);
     }
   }
   useEffect(() => {
-    document.body.addEventListener("keydown", closeOnEscKeyDown);
+    document.body.addEventListener("keydown", (event) =>
+      closeOnEscKeyDown(event)
+    );
     return function cleanup() {
-      document.body.removeEventListener("keydown", closeOnEscKeyDown);
+      document.body.removeEventListener("keydown", (event) =>
+        closeOnEscKeyDown(event)
+      );
     };
   });
 
   return (
     <div
       className="fixed left-0 right-0 top-0 z-50 flex h-full  w-full overflow-y-auto bg-black bg-opacity-50 p-4  md:inset-0 "
-      onClick={() => handleDelete(null, false)}
-    >
+      onClick={() => handleDelete(null, false)}>
       <div
         className="relative m-auto flex flex-col items-center rounded-lg bg-white "
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <p className="p-2">
           Are you sure you wanted to delete this category? All relavant products
           will have this category removed. This action is irreversible and
@@ -260,14 +269,12 @@ function DeleteCategoryConfirmationModal({
         <div className="flex flex-row gap-8 p-2">
           <button
             className=" rounded-full border-2 border-black bg-gray-400 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg "
-            onClick={() => handleDelete(null, false)}
-          >
+            onClick={() => handleDelete(null, false)}>
             Cancel
           </button>
           <button
             className=" rounded-full border-2 border-black bg-red-600 p-2 text-lg text-white hover:-translate-y-2 hover:shadow-lg"
-            onClick={(event) => deleteCategory(event)}
-          >
+            onClick={(event) => deleteCategory(event)}>
             Delete
           </button>
         </div>

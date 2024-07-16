@@ -4,20 +4,22 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import { USERTYPE } from "middleware";
 import prisma from "lib/prisma";
 
-export async function DELETE(request: NextRequest, context: { params }) {
+export async function DELETE(request: NextRequest, context: { params: any }) {
   try {
     if (request.method === "DELETE") {
       const session = await getServerSession(authOptions);
-      if (session.user.role !== USERTYPE.ADMIN) {
+      if (session?.user.role !== USERTYPE.ADMIN) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
       const { id } = context.params;
       await prisma.order.delete({ where: { id: Number(id) } });
-      return NextResponse.json("Order was deleted successfully.", { status: 200 });
+      return NextResponse.json("Order was deleted successfully.", {
+        status: 200,
+      });
     } else {
       return NextResponse.json("Route not valid.", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(error.message, { status: 400 });
   }
 }

@@ -9,7 +9,7 @@ export async function PUT(request: NextRequest) {
   try {
     if (request.method === "PUT") {
       const session = await getServerSession(authOptions);
-      if (session.user.role !== USERTYPE.ADMIN) {
+      if (session?.user.role !== USERTYPE.ADMIN) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
 
@@ -28,7 +28,7 @@ export async function PUT(request: NextRequest) {
     } else {
       return NextResponse.json("Route not valid.", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(error.message, { status: 400 });
   }
 }

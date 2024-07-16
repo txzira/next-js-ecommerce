@@ -18,19 +18,19 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import useSWR, { KeyedMutator } from "swr";
 
 type CategoryPC = Category & {
-  parent: Category;
+  parent: Category | null;
   children: Category[];
 };
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function EditCategoryPage() {
-  const { id } = useParams();
+  const id = useParams()?.id || "";
   const [nameChangesSlug, setNameChangesSlug] = useState(true);
   const [showSubCategory, setShowSubCategory] = useState(false);
   const [showParentCategory, setShowParentCategory] = useState(false);
 
-  const [category, setCategory] = useState<CategoryPC>(null);
+  const [category, setCategory] = useState<CategoryPC | undefined>(undefined);
 
   const {
     data: categoriesData,
@@ -49,24 +49,30 @@ export default function EditCategoryPage() {
     if (!categoryIsLoading) setCategory(categoryData);
   }, [categoryData, categoryIsLoading]);
 
-  const handleCategoryName = (event) => {
+  const handleCategoryName = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (nameChangesSlug) {
       const slug = event.target.value.replace(" ", "-");
-      setCategory({ ...category, name: event.target.value, slug });
+      setCategory({
+        ...category,
+        name: event.target.value,
+        slug,
+      } as CategoryPC);
     } else {
-      setCategory({ ...category, name: event.target.value });
+      setCategory({ ...category, name: event.target.value } as CategoryPC);
     }
   };
 
-  const handleCategorySlug = (event) => {
+  const handleCategorySlug = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const slug = event.target.value.replace(" ", "-");
     setNameChangesSlug(false);
-    setCategory({ ...category, slug });
+    setCategory({ ...category, slug } as CategoryPC);
   };
 
-  const editCategory = async (event) => {
+  const editCategory = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/categories/api/update-category", {
@@ -83,8 +89,7 @@ export default function EditCategoryPage() {
   return category ? (
     <div
       className="mx-auto h-full w-[90%]"
-      onClick={() => setShowParentCategory(false)}
-    >
+      onClick={() => setShowParentCategory(false)}>
       {showSubCategory ? (
         <SubCategoryModal
           categoryData={categoryData}
@@ -107,7 +112,7 @@ export default function EditCategoryPage() {
               name="name"
               placeholder="Name"
               value={category.name}
-              onChange={handleCategoryName}
+              onChange={(event) => handleCategoryName(event)}
               text="Name"
             />
             <FormInput
@@ -115,7 +120,7 @@ export default function EditCategoryPage() {
               name="slug"
               value={category.slug}
               placeholder="permalink"
-              onChange={handleCategorySlug}
+              onChange={(event) => handleCategorySlug(event)}
               text="Permalink"
             />
           </div>
@@ -124,7 +129,7 @@ export default function EditCategoryPage() {
             name="Inventory"
             rows={8}
             placeholder="Inventory Available"
-            value={category.description}
+            value={category.description || ""}
             onChange={(event) =>
               setCategory({ ...category, description: event.target.value })
             }
@@ -147,8 +152,7 @@ export default function EditCategoryPage() {
             <button
               type="button"
               className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white"
-              onClick={() => setShowSubCategory(true)}
-            >
+              onClick={() => setShowSubCategory(true)}>
               <IoMdAdd size={14} />
               <span>ADD</span>
             </button>
@@ -172,8 +176,7 @@ export default function EditCategoryPage() {
         <button
           type="submit"
           className="w-full rounded-lg bg-green-600 py-3 text-white"
-          onClick={(event) => editCategory(event)}
-        >
+          onClick={(event) => editCategory(event)}>
           Save
         </button>
       </form>
@@ -189,8 +192,8 @@ const ParentCategoryDropdown = ({
   setShowParentCategory,
 }: {
   category: CategoryPC;
-  setCategory: React.Dispatch<React.SetStateAction<CategoryPC>>;
-  categoriesData: Category[];
+  setCategory: React.Dispatch<React.SetStateAction<CategoryPC | undefined>>;
+  categoriesData: Category[] | undefined;
   showParentCategory: boolean;
   setShowParentCategory: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -201,10 +204,9 @@ const ParentCategoryDropdown = ({
         onClick={(e) => {
           e.stopPropagation();
           setShowParentCategory(!showParentCategory);
-        }}
-      >
+        }}>
         {category.parentId ? (
-          <span>{category.parent.name}</span>
+          <span>{category.parent?.name}</span>
         ) : (
           <span>Choose parent category</span>
         )}
@@ -225,39 +227,32 @@ const ParentCategoryDropdown = ({
             onClick={() =>
               setCategory({
                 ...category,
-                parent: {
-                  id: null,
-                  name: "",
-                  description: null,
-                  slug: null,
-                  parentId: null,
-                },
+                parent: null,
               })
-            }
-          ></li>
-          {categoriesData.map((categoryData) => {
-            if (categoryData.id === category.id) return;
-            return (
-              <li
-                key={categoryData.id}
-                className="my-auto flex h-14 w-full items-center border-b border-[#cbdcf3] px-3 hover:bg-[#cbdcf3]"
-                onClick={() =>
-                  setCategory({
-                    ...category,
-                    parent: {
-                      id: Number(categoryData.id),
-                      name: categoryData.name,
-                      description: null,
-                      slug: null,
-                      parentId: null,
-                    },
-                  })
-                }
-              >
-                {categoryData.name}
-              </li>
-            );
-          })}
+            }></li>
+          {categoriesData &&
+            categoriesData.map((categoryData) => {
+              if (categoryData.id === category.id) return;
+              return (
+                <li
+                  key={categoryData.id}
+                  className="my-auto flex h-14 w-full items-center border-b border-[#cbdcf3] px-3 hover:bg-[#cbdcf3]"
+                  onClick={() =>
+                    setCategory({
+                      ...category,
+                      parent: {
+                        id: Number(categoryData.id),
+                        name: categoryData.name,
+                        description: null,
+                        slug: "",
+                        parentId: null,
+                      },
+                    })
+                  }>
+                  {categoryData.name}
+                </li>
+              );
+            })}
         </ul>
       ) : null}
     </div>
@@ -269,27 +264,19 @@ const SubCategoryModal = ({
   setShowSubCategory,
   categoryMutate,
 }: {
-  categoryData: Category & {
-    children: Category[];
-    parent: Category;
-  };
+  categoryData: CategoryPC | undefined;
   setShowSubCategory: React.Dispatch<React.SetStateAction<boolean>>;
-  categoryMutate: KeyedMutator<
-    Category & {
-      children: Category[];
-      parent: Category;
-    }
-  >;
+  categoryMutate: KeyedMutator<CategoryPC>;
 }) => {
   const [category, setCategory] = useState({
     name: "",
     slug: "",
     description: "",
-    parent: { id: categoryData.id, name: categoryData.name },
+    parent: { id: categoryData?.id, name: categoryData?.name },
   });
   const [nameChangesSlug, setNameChangesSlug] = useState(true);
 
-  const handleCategoryName = (event) => {
+  const handleCategoryName = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (nameChangesSlug) {
       const slug = event.target.value.replace(" ", "-");
@@ -298,13 +285,15 @@ const SubCategoryModal = ({
       setCategory({ ...category, name: event.target.value });
     }
   };
-  const handleCategorySlug = (event) => {
+  const handleCategorySlug = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const slug = event.target.value.replace(" ", "-");
     setNameChangesSlug(false);
     setCategory({ ...category, slug });
   };
-  const addSubCategory = async (event) => {
+  const addSubCategory = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/categories/create-category", {
@@ -318,19 +307,17 @@ const SubCategoryModal = ({
       name: "",
       slug: "",
       description: "",
-      parent: { id: categoryData.id, name: categoryData.name },
+      parent: { id: categoryData?.id, name: categoryData?.name },
     });
     response.status === 201 ? toast.success(message) : toast.error(message);
   };
   return (
     <div
       className="fixed left-0 right-0 top-0 z-50 flex h-full w-full overflow-y-scroll bg-black bg-opacity-50 md:inset-0 "
-      onClick={() => setShowSubCategory(false)}
-    >
+      onClick={() => setShowSubCategory(false)}>
       <div
         className="relative ml-auto w-4/5 rounded-l-lg bg-white p-2 md:h-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <button onClick={() => setShowSubCategory(false)}>
           <AiOutlineClose size={30} />
         </button>
@@ -345,7 +332,7 @@ const SubCategoryModal = ({
                 text="Name"
                 placeholder="Name"
                 value={category.name}
-                onChange={handleCategoryName}
+                onChange={(event) => handleCategoryName(event)}
               />
               <FormInput
                 id="slug"
@@ -353,7 +340,7 @@ const SubCategoryModal = ({
                 text="Permalink"
                 value={category.slug}
                 placeholder="permalink"
-                onChange={handleCategorySlug}
+                onChange={(event) => handleCategorySlug(event)}
               />
             </div>
             <FormTextArea
@@ -372,8 +359,7 @@ const SubCategoryModal = ({
           <button
             type="submit"
             className="w-full rounded-lg bg-green-600 py-3 text-white"
-            onClick={(event) => addSubCategory(event)}
-          >
+            onClick={(event) => addSubCategory(event)}>
             Save
           </button>
         </form>

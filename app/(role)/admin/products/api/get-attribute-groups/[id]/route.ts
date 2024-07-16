@@ -1,7 +1,7 @@
 import prisma from "lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request: NextRequest, context: { params }) {
+export async function GET(request: NextRequest, context: { params: any }) {
   try {
     if (request.method === "GET") {
       const { id } = context.params;
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, context: { params }) {
     } else {
       return NextResponse.json("Route no valid", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(error.message, { status: 500 });
   }
 }

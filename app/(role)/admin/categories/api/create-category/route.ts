@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     if (request.method === "POST") {
       const session = await getServerSession(authOptions);
-      if (session.user.role !== USERTYPE.ADMIN) {
+      if (session?.user.role !== USERTYPE.ADMIN) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
       const {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json("Route no valid", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === "P2002")
       return NextResponse.json(`Product category already exist.`, {
         status: 400,

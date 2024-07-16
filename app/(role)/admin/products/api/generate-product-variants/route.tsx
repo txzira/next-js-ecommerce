@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json("Route no valid", { status: 500 });
     }
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(error.message, { status: 500 });
   }
 }
@@ -84,7 +84,7 @@ function generateVariants(attributeGroupsArray: Attribute[][]) {
     return combinations;
   }
 
-  function makeCombinations(arr) {
+  function makeCombinations(arr: any[]) {
     const startArray = arr;
     const combinations = [];
 

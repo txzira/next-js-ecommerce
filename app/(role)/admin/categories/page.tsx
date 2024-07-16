@@ -13,8 +13,9 @@ export default function AdminCategoryPage() {
     error: categoriesError,
     isLoading: categoriesIsLoading,
     mutate: categoriesMutate,
-  } = useSWR<Category[]>("/admin/categories/api/get-categories", (url) =>
-    fetch(url).then((res) => res.json())
+  } = useSWR<Category[]>(
+    "/admin/categories/api/get-categories",
+    (url: string) => fetch(url).then((res) => res.json())
   );
   return (
     <div className="mx-auto h-full w-[90%]">
@@ -22,8 +23,7 @@ export default function AdminCategoryPage() {
         <h1 className="text-2xl font-bold">Categories</h1>
         <Link
           href="/admin/categories/add"
-          className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white "
-        >
+          className="flex flex-row items-center rounded-full bg-green-500 px-3 py-1.5 text-[10px] tracking-widest text-white ">
           <IoMdAdd size={14} />
           <span>ADD</span>
         </Link>

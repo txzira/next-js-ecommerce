@@ -25,8 +25,6 @@ type CategoryState = {
   };
 };
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
 export default function AddCategoryPage() {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -43,11 +41,12 @@ export default function AddCategoryPage() {
     error: categoriesError,
     isLoading: categoriesIsLoading,
     mutate: categoriesMutate,
-  } = useSWR<Category[]>("/admin/categories/api/get-categories", (url) =>
-    fetch(url).then((res) => res.json())
+  } = useSWR<Category[]>(
+    "/admin/categories/api/get-categories",
+    (url: string) => fetch(url).then((res) => res.json())
   );
 
-  const handleCategoryName = (event) => {
+  const handleCategoryName = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (nameChangesSlug) {
       const slug = event.target.value.replace(" ", "-").toLowerCase();
@@ -57,14 +56,14 @@ export default function AddCategoryPage() {
     }
   };
 
-  const handleCategorySlug = (event) => {
+  const handleCategorySlug = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const slug = event.target.value.replace(" ", "-").toLowerCase();
     setNameChangesSlug(false);
     setCategory({ ...category, slug });
   };
 
-  const addCategory = async (event) => {
+  const addCategory = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     toast.loading("Loading...");
     const response = await fetch("/admin/categories/api/create-category", {
@@ -89,7 +88,7 @@ export default function AddCategoryPage() {
 
   return (
     <div className="mx-auto h-full w-[90%]" onClick={() => setShow(false)}>
-      <form onSubmit={addCategory}>
+      <form onSubmit={(event) => addCategory(event)}>
         <FormTitle className="flex flex-row items-center gap-3">
           <Link href="/admin/categories">
             <BsArrowLeft />
@@ -105,7 +104,7 @@ export default function AddCategoryPage() {
               text="Name"
               placeholder="Name"
               value={category.name}
-              onChange={handleCategoryName}
+              onChange={(event) => handleCategoryName(event)}
             />
             <FormInput
               id="slug"
@@ -155,7 +154,7 @@ const ParentCategoryDropdown = ({
 }: {
   category: CategoryState;
   setCategory: React.Dispatch<React.SetStateAction<CategoryState>>;
-  categoriesData: Category[];
+  categoriesData: Category[] | undefined;
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -166,8 +165,7 @@ const ParentCategoryDropdown = ({
         onClick={(e) => {
           e.stopPropagation();
           setShow(!show);
-        }}
-      >
+        }}>
         {category.parent.id ? (
           <span>{category.parent.name}</span>
         ) : (
@@ -195,27 +193,26 @@ const ParentCategoryDropdown = ({
                   name: "",
                 },
               })
-            }
-          ></li>
-          {categoriesData.map((categoryData) => {
-            return (
-              <li
-                key={categoryData.id}
-                className="my-auto flex h-14 w-full items-center border-b border-[#cbdcf3] px-3 hover:bg-[#cbdcf3]"
-                onClick={() =>
-                  setCategory({
-                    ...category,
-                    parent: {
-                      id: Number(categoryData.id),
-                      name: categoryData.name,
-                    },
-                  })
-                }
-              >
-                {categoryData.name}
-              </li>
-            );
-          })}
+            }></li>
+          {categoriesData &&
+            categoriesData.map((categoryData) => {
+              return (
+                <li
+                  key={categoryData.id}
+                  className="my-auto flex h-14 w-full items-center border-b border-[#cbdcf3] px-3 hover:bg-[#cbdcf3]"
+                  onClick={() =>
+                    setCategory({
+                      ...category,
+                      parent: {
+                        id: Number(categoryData.id),
+                        name: categoryData.name,
+                      },
+                    })
+                  }>
+                  {categoryData.name}
+                </li>
+              );
+            })}
         </ul>
       ) : null}
     </div>
