@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export async function GET(request: NextRequest, context: { params: any }) {
+  const limit = Number(request.nextUrl.searchParams.get("limit"));
   try {
     if (request.method === "GET") {
-      const limit = Number(request.nextUrl.searchParams.get("limit"));
       const session = await getServerSession(authOptions);
       const orders = await prisma.$transaction([
         prisma.order.count({ where: { customerId: session?.user.id } }),

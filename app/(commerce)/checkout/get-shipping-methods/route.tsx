@@ -2,9 +2,9 @@ import prisma from "lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const country = await request.nextUrl.searchParams.get("country");
   try {
     if (request.method === "GET") {
-      const country = request.nextUrl.searchParams.get("country");
       if (country) {
         const shippingMethods = await prisma.shippingMethod.findMany({
           where: { active: true, countries: { has: country } },
