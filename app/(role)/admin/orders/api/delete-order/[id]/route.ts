@@ -12,7 +12,7 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
       const { id } = context.params;
-      await prisma.order.delete({ where: { id: Number(id) } });
+      await prisma!.order.delete({ where: { id: Number(id) } });
       return NextResponse.json("Order was deleted successfully.", {
         status: 200,
       });

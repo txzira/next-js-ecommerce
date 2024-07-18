@@ -48,22 +48,24 @@ export default function CartModal({
               {cart.map((cartItem: CartItemProps) => {
                 return <CartModalItem key={cartItem.id} cartItem={cartItem} />;
               })}
-              <div className="border-b-2 border-black"></div>
-              <div className="mt-2">
+              <div className="my-4 border-b-2 border-black" />
+              <div className="">
                 <h1 className="text-2xl font-medium">Summary</h1>
                 <p className="mb-2">
                   Shipping and taxes calculated at checkout.
                 </p>
 
-                <div className="flex flex-row justify-between font-medium">
+                <div className="flex flex-row justify-between text-lg font-medium">
                   <span>Total</span>
                   <span>{USDollar.format(cartTotal)}</span>
                 </div>
               </div>
+              <div className="my-4 border-b-2 border-black" />
             </>
           ) : (
             <div>Cart is empty.</div>
           )}
+
           <div className="">
             <Link
               className="mx-auto flex w-full justify-center  rounded-full bg-[#3f51b5] px-2 py-1 text-lg font-medium text-white sm:w-[420px] "

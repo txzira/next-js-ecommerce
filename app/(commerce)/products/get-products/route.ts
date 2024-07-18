@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     if (request.method === "GET") {
       console.log(request.url);
-      const products = await prisma.product.findMany({
+      const products = await prisma!.product.findMany({
         where: { active: true },
         include: { categories: true, productVariants: true },
       });

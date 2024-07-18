@@ -3,7 +3,7 @@ import prisma from "lib/prisma";
 import React from "react";
 
 const CategoriesPage = async ({ params }: { params: { slug: string } }) => {
-  const products = await prisma.product.findMany({
+  const products = await prisma!.product.findMany({
     where: { categories: { some: { slug: params.slug } }, active: true },
     include: {
       brand: true,

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
       const { id } = context.params;
       console.log(request.url);
 
-      const attributeGroups = await prisma.attributeGroup.findMany({
+      const attributeGroups = await prisma!.attributeGroup.findMany({
         where: { productId: Number(id) },
         include: { attributes: { include: { images: true } } },
       });

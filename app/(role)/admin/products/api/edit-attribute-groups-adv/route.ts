@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
               image.imageName
             );
 
-            await prisma.attributeImage.create({
+            await prisma!.attributeImage.create({
               data: {
                 position: index + 1,
                 attributeId: image.attributeId,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       //Update attribute names that admin changed
       attributes.map(async (attribute) => {
         if (attribute[1].updated) {
-          await prisma.attribute.update({
+          await prisma!.attribute.update({
             where: { id: attribute[1].id },
             data: {
               name: attribute[1].option,
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       if (imagesToDeleteFromDb.length) {
         imagesToDeleteFromDb.map((imageToDelete) => {
           imageToDelete[1].map(async (image) => {
-            const deletedImage = await prisma.attributeImage.delete({
+            const deletedImage = await prisma!.attributeImage.delete({
               where: { id: image.id },
             });
             await destroyImage(deletedImage.publicId);

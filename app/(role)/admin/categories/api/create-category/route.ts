@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
           };
         };
       } = await request.json();
-      const addedCategory = await prisma.category.create({
+      const addedCategory = await prisma!.category.create({
         data: {
           name: category.name,
           slug: category.slug,

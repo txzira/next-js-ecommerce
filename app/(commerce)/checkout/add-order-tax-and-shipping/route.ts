@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         const oldPaymentIntent = await stripe.paymentIntents.retrieve(
           paymentIntent
         );
-        const dbShippingMethod = await prisma.shippingMethod.findFirst({
+        const dbShippingMethod = await prisma!.shippingMethod.findFirst({
           where: { id: shippingMethod.id },
         });
         if (dbShippingMethod) {
@@ -125,7 +125,7 @@ async function calculateLineItemTotal(lineItem: CartItem): Promise<number> {
       })
     | null;
   if (lineItem.variant) {
-    product = await prisma.productVariant.findFirst({
+    product = await prisma!.productVariant.findFirst({
       where: {
         AND: [{ id: lineItem.variant?.id }, { productId: lineItem.productId }],
       },
@@ -135,7 +135,7 @@ async function calculateLineItemTotal(lineItem: CartItem): Promise<number> {
       },
     });
   } else {
-    product = await prisma.product.findFirst({
+    product = await prisma!.product.findFirst({
       where: {
         id: lineItem.productId,
       },

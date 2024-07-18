@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       const lastName = name.split(" ")[1];
 
       //connect to database
-      const dbUser = await prisma.user.findUnique({
+      const dbUser = await prisma!.user.findUnique({
         where: {
           email: email,
         },
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
         //hash password
         const cryptoPassword = await genPassword(password);
         //insert new user into database
-        const newUser = await prisma.user.create({
+        const newUser = await prisma!.user.create({
           data: {
             email: email,
             password: cryptoPassword.hash,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         if (newUser) {
           const hours = 3;
           const expiration_date = new Date(Date.now() + 60 * 60 * hours * 1000);
-          const token = await prisma.token.create({
+          const token = await prisma!.token.create({
             data: {
               user_id: newUser.id,
               token_type: "EMAIL_VERIFICATION",

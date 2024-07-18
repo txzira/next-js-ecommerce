@@ -8,10 +8,10 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
     const { cartItemId } = context.params;
     const session = await getServerSession(authOptions);
     if (session) {
-      const cartItem = await prisma.cartItem.delete({
+      const cartItem = await prisma!.cartItem.delete({
         where: { id: Number(cartItemId) },
       });
-      await prisma.cart.update({
+      await prisma!.cart.update({
         where: { id: cartItem.cartId },
         data: { cartTotal: { decrement: cartItem.quantity * cartItem.price } },
       });

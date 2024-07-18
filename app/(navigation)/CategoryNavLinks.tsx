@@ -3,7 +3,7 @@ import prisma from "lib/prisma";
 import React from "react";
 
 const CategoryNavLinks = async () => {
-  const categories = await prisma.category.findMany({
+  const categories = await prisma!.category.findMany({
     where: { parentId: null, product: { some: { active: true } } },
   });
 

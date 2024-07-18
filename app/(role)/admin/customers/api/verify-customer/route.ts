@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { id, verify } = await request.json();
-      const user = await prisma.user.update({
+      const user = await prisma!.user.update({
         where: { id: Number(id) },
         data: { verifiedByAdmin: !verify },
       });

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       // console.log(attributesToDelete);
       reqAttributeGroups.map(async (reqAttributeGroup) => {
         // console.log(reqAttributeGroup);
-        await prisma.attributeGroup.upsert({
+        await prisma!.attributeGroup.upsert({
           where: { id: Number(reqAttributeGroup.attributeGroup.id) },
           create: {
             name: reqAttributeGroup.attributeGroup.name,

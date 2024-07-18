@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import CartModal from "./CartModal";
 import { useSession, signOut } from "next-auth/react";
@@ -46,7 +46,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
             className="relative h-14 w-48 sm:mx-2"
             onMouseLeave={() => changeImage()}
             onMouseEnter={() => changeImage()}>
-            <Link href="/products" className="absolute h-full w-full  ">
+            <Link href="/home" className="absolute h-full w-full  ">
               <Image src={logo} alt="logo" fill className="object-contain" />
             </Link>
           </li>

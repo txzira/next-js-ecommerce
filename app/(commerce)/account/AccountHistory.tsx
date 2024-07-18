@@ -3,6 +3,7 @@ import Loader from "app/Loader";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import toast from "react-hot-toast";
+import { USDollar } from "lib/utils";
 
 const AccountHistory = ({
   setOrder,
@@ -117,7 +118,9 @@ const AccountHistory = ({
                     <div className="py-2">{`${
                       date.getMonth() + 1
                     }/${date.getDate()}/${date.getFullYear()}`}</div>
-                    <div className="py-2">${order.cartTotal}</div>
+                    <div className="py-2">
+                      {USDollar.format(order.orderTotal)}
+                    </div>
                     <div className="py-2">{order.status}</div>
                   </div>
                 );

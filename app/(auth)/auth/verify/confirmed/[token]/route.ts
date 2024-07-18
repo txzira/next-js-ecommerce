@@ -7,14 +7,14 @@ export async function PATCH(request: NextRequest, context: { params: any }) {
     if (request.method === "PATCH") {
       const { token } = context.params;
       const decoded: any = jwt.verify(token, process.env.NEXTAUTH_SECRET!);
-      const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+      const user = await prisma!.user.findUnique({ where: { id: decoded.id } });
       if (user?.verifiedEmail) {
         return NextResponse.json({
           message: "Email already verified.",
           status: 422,
         });
       } else {
-        await prisma.user.update({
+        await prisma!.user.update({
           where: { id: decoded.id },
           data: { verifiedEmail: { set: true } },
         });

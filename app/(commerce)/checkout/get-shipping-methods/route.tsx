@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     if (request.method === "GET") {
       if (country) {
-        const shippingMethods = await prisma.shippingMethod.findMany({
+        const shippingMethods = await prisma!.shippingMethod.findMany({
           where: { active: true, countries: { has: country } },
         });
         return NextResponse.json({

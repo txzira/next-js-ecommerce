@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     }
 
     const { productId } = context.params;
-    const productVariants = await prisma.productVariant.findMany({
+    const productVariants = await prisma!.productVariant.findMany({
       where: { productId: Number(productId) },
     });
     return NextResponse.json(productVariants, { status: 200 });

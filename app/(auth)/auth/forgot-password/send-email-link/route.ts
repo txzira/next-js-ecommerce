@@ -6,13 +6,13 @@ export async function POST(request: NextRequest) {
   try {
     if (request.method === "POST") {
       const { email } = await request.json();
-      const user = await prisma.user.findUnique({ where: { email } });
+      const user = await prisma!.user.findUnique({ where: { email } });
       if (!user) {
         return NextResponse.json({ message: "Email not found", status: 404 });
       }
       const hours = 3;
       const expiration_date = new Date(Date.now() + 60 * 60 * hours * 1000);
-      const token = await prisma.token.create({
+      const token = await prisma!.token.create({
         data: {
           user_id: user.id,
           expir_at: expiration_date,

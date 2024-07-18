@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
       }: {
         details: ProductVariant;
       } = await request.json();
-      const productVariant = await prisma.productVariant.update({
+      const productVariant = await prisma!.productVariant.update({
         where: { id: details.id },
         data: details,
       });

@@ -10,7 +10,7 @@ import ShippingMethodForm from "./ShippingMethodForm";
 import { useCartState } from "app/CartProvider";
 import PaymentForm from "./PaymentForm";
 import OrderReview from "./OrderReview";
-import { Stripe, StripeElements, loadStripe } from "@stripe/stripe-js";
+import { Stripe, StripeElements } from "@stripe/stripe-js";
 import toast from "react-hot-toast";
 
 const INITIALCUSTOMERINFO: CustomerInfoProps = {
@@ -217,6 +217,7 @@ const CheckoutForm = ({
   };
 
   const submitPaymentForm = (): void => {
+    toast.loading("Loading...");
     if (
       customerInfoSchema.safeParse(shippingAddress.addressInfo).success &&
       customerInfoSchema.safeParse(billingAddress.addressInfo).success &&
@@ -304,20 +305,27 @@ const CheckoutForm = ({
                       url.searchParams.append("orderNumber", data.order.id);
                       url.searchParams.append("email", data.order.email);
                       router.push(url.href);
+                      toast.dismiss();
                       toast.success("Thank you for your patronage!");
                     }
                   });
               } else {
+                toast.dismiss();
+
                 toast.error("Payment failed!");
               }
             }
           });
       } else {
         //Stripe not loaded related error
+        toast.dismiss();
+
         console.log("Stripe Error");
       }
     } else {
       //notify user form not valid
+      toast.dismiss();
+
       console.log("Form not valid.");
     }
   };
@@ -398,7 +406,6 @@ const CheckoutForm = ({
         )}
         {checkoutState === 2 && (
           <div className="w-full">
-            <pre>{JSON.stringify(billingAddress.addressInfo)}</pre>
             <section>
               <h1 className="mx-2 text-xl font-medium">Billing Address</h1>
               <div className="flex flex-row gap-3">

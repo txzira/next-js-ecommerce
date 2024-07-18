@@ -7,8 +7,14 @@ export async function POST(request: NextRequest) {
 
     console.log(itemId);
 
-    const cartItem = await prisma.cartItem.update({ where: { id: itemId }, data: { quantity: { increment: 1 } } });
-    await prisma.cart.update({ where: { id: cartId }, data: { cartTotal: { increment: cartItem.price } } });
+    const cartItem = await prisma!.cartItem.update({
+      where: { id: itemId },
+      data: { quantity: { increment: 1 } },
+    });
+    await prisma!.cart.update({
+      where: { id: cartId },
+      data: { cartTotal: { increment: cartItem.price } },
+    });
 
     return NextResponse.json({ status: 200 });
   } else {

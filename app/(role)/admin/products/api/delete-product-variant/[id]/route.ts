@@ -12,7 +12,7 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
         return NextResponse.json("Unauthorized Request", { status: 401 });
       }
       const { id } = context.params;
-      const productVariant = await prisma.productVariant.delete({
+      const productVariant = await prisma!.productVariant.delete({
         where: { id: Number(id) },
       });
       return NextResponse.json(`Variant deleted successfully.`, {

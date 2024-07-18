@@ -7,7 +7,10 @@ export async function GET(request: NextRequest) {
   if (request.method === "GET") {
     const session = await getServerSession(authOptions);
     if (session) {
-      const cart = await prisma.cart.findFirst({ where: { userId: session.user.id, currentCart: true }, include: { cartItems: true } });
+      const cart = await prisma!.cart.findFirst({
+        where: { userId: session.user.id, currentCart: true },
+        include: { cartItems: true },
+      });
       return NextResponse.json({ cart, status: 200 });
     } else {
       return NextResponse.json({ message: "Not Authorized", status: 401 });

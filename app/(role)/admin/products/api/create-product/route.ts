@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
           `default${defaultImage.imageName}`
         );
       }
-      const addedProduct = await prisma.product.create({
+      const addedProduct = await prisma!.product.create({
         data: {
           name: product.name,
           sku: product.sku,

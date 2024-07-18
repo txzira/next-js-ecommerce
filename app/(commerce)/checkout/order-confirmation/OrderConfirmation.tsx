@@ -202,23 +202,23 @@ const OrderConfirmation = ({
             </div>
             <div className="border-b border-black" />
 
-            <p className="!m-0 !my-2 flex flex-row justify-between font-medium">
+            <p className="my-2 flex flex-row justify-between font-medium">
               <span>SUBTOTAL:</span>
               <span>{USDollar.format(order.cartTotal)}</span>
             </p>
-            <p className="!m-0 !my-2 flex flex-row justify-between font-medium">
+            <p className="my-2 flex flex-row justify-between font-medium">
               <span>SHIPPING:</span>
               <span>{USDollar.format(order.shippingTotal)}</span>
             </p>
-            <p className="!m-0 !my-2 flex flex-row justify-between font-medium">
-              <span>Taxes:</span>
-              <span>{USDollar.format(order.taxTotal / 100)}</span>
+            <p className="my-2 flex flex-row justify-between font-medium">
+              <span>TAXES:</span>
+              <span>{USDollar.format(order.taxTotal)}</span>
             </p>
             <div className=" border-b border-black" />
 
-            <p className="!m-0 !my-2 flex flex-row justify-between font-medium">
+            <p className="my-2 flex flex-row justify-between font-medium">
               <span>ORDER TOTAL:</span>
-              <span>{USDollar.format(order.orderTotal / 100)}</span>
+              <span>{USDollar.format(order.orderTotal)}</span>
             </p>
           </div>
         </div>
@@ -227,7 +227,7 @@ const OrderConfirmation = ({
   } else {
     return (
       <div className="mx-auto h-full sm:my-10 sm:w-[80%]">
-        <h1 className="!m-0 !font-medium">Order does not exist.</h1>
+        <h1 className="!font-medium">Order does not exist.</h1>
       </div>
     );
   }

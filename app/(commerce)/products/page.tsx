@@ -3,7 +3,7 @@ import React from "react";
 import ProductsListings from "./ProductsListings";
 
 const ProductsPage = async () => {
-  const products = await prisma.product.findMany({
+  const products = await prisma!.product.findMany({
     where: { active: true },
     include: {
       brand: true,

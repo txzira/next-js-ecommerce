@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       console.log(currentPassword, newPassword, confirmPassword);
       // passwords match
       if (newPassword === confirmPassword) {
-        const user = await prisma.user.findUnique({
+        const user = await prisma!.user.findUnique({
           where: { id: session.user.id },
         });
         const checkPassword = await verifyPassword(
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
           );
           if (!checkIfSamePassword) {
             const { salt, hash } = await genPassword(newPassword);
-            await prisma.user.update({
+            await prisma!.user.update({
               where: { id: session.user.id },
               data: {
                 password: hash,

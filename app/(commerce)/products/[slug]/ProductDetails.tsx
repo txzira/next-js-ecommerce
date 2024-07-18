@@ -294,6 +294,11 @@ const ProductDetails = ({ product }: { product: ProductProps | null }) => {
             variant: undefined,
           });
       addToCart(cartItem);
+      toast.success(
+        `${cartItem.productName}${
+          cartItem.variantName ? " - " + cartItem.variantName : ""
+        } added to cart.`
+      );
     } else {
       toast.error("Failed to add to cart");
     }

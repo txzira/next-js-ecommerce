@@ -6,7 +6,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     if (request.method === "GET") {
       const { id } = context.params;
       console.log(request.url);
-      const category = await prisma.category.findUnique({
+      const category = await prisma!.category.findUnique({
         where: { id: Number(id) },
         include: { children: { include: { children: true } }, parent: true },
       });

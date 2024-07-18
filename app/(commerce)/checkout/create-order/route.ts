@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const cart = await createCart(requestCart, session?.user);
 
-    const dbCard = await prisma.card.create({
+    const dbCard = await prisma!.card.create({
       data: {
         brand: card.brand!,
         lastFourDigits: card.last4!,
@@ -82,14 +82,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const order = await prisma.order.create({
+    const order = await prisma!.order.create({
       data: {
         ...(session ? { customerId: session.user.id } : null),
         cartId: cart.id,
         shippingTotal: shippingMethod.price,
-        taxTotal: calculatedTax,
+        taxTotal: calculatedTax / 100,
         cartTotal: cart.cartTotal,
-        orderTotal: orderTotal,
+        orderTotal: orderTotal / 100,
         customerEmail: email,
         status: "PAYMENT_PENDING",
         shippingMethodId: shippingMethod.id,
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const shippingAddress = await prisma.orderShippingAddress.create({
+    const shippingAddress = await prisma!.orderShippingAddress.create({
       data: {
         firstName: requestShippingForm.firstName,
         lastName: requestShippingForm.lastName,
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const billingAddress = await prisma.orderBillingAddress.create({
+    const billingAddress = await prisma!.orderBillingAddress.create({
       data: {
         firstName: requestBillingForm.firstName,
         lastName: requestBillingForm.lastName,
@@ -202,14 +202,14 @@ export async function POST(request: NextRequest) {
             <td colspan="1"></td>
             <td style="font-weight:600;" colspan="1">Taxes</td>
             <td style="font-weight:600;" colspan="1">${usDollarformatter.format(
-              order.taxTotal / 100
+              order.taxTotal
             )}</td>
           </tr>
           <tr style="width:100%;">
             <td colspan="1"></td>
             <td style="font-weight:600;" colspan="1">Total</td>
             <td style="font-weight:600;" colspan="1">${usDollarformatter.format(
-              order.orderTotal / 100
+              order.orderTotal
             )}</td>
           </tr>
         </tbody>
@@ -261,7 +261,7 @@ export async function POST(request: NextRequest) {
             <h3>Payment Method</h3>
             <p style="margin:0;">${
               charge.payment_method_details?.card?.brand
-            } - ${usDollarformatter.format(order.orderTotal / 100)}</p>
+            } - ${usDollarformatter.format(order.orderTotal)}</p>
             
         </div>
 
@@ -317,7 +317,7 @@ async function createCart(_cartItems: CartItem[], user: any = null) {
         console.log("ERROR: Invalid product variant in cart");
       }
     } else {
-      const product = await prisma.product.findFirst({
+      const product = await prisma!.product.findFirst({
         where: { id: _cartItems[i].productId },
       });
 
@@ -336,7 +336,7 @@ async function createCart(_cartItems: CartItem[], user: any = null) {
     }
   }
 
-  const cart = await prisma.cart.create({
+  const cart = await prisma!.cart.create({
     data: {
       ...(user && { userId: user.id }),
       currentCart: false,
@@ -352,7 +352,7 @@ async function createCart(_cartItems: CartItem[], user: any = null) {
 }
 
 async function getProductVariant(variantId: number) {
-  return await prisma.productVariant.findFirst({
+  return await prisma!.productVariant.findFirst({
     where: { id: variantId },
     include: {
       product: true,

@@ -10,17 +10,17 @@ export async function GET(request: NextRequest, context: { params: any }) {
       const sort = context.params.sort;
 
       let customers: User[];
-      const customerCount = await prisma.user.count({
+      const customerCount = await prisma!.user.count({
         where: { role: "CUSTOMER" },
       });
 
       if (cursor === 0) {
-        customers = await prisma.user.findMany({
+        customers = await prisma!.user.findMany({
           take: limit,
           orderBy: { id: sort },
         });
       } else {
-        customers = await prisma.user.findMany({
+        customers = await prisma!.user.findMany({
           take: limit,
           skip: 1,
           cursor: { id: cursor },

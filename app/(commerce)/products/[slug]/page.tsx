@@ -4,7 +4,7 @@ import ProductDetails from "./ProductDetails";
 import { useSearchParams } from "next/navigation";
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-  const product = await prisma.product.findFirst({
+  const product = await prisma!.product.findFirst({
     where: { slug: params.slug },
     include: {
       brand: true,

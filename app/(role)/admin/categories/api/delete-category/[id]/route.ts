@@ -13,7 +13,7 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
       }
       const { id } = context.params;
 
-      const deletedCategory = await prisma.category.delete({
+      const deletedCategory = await prisma!.category.delete({
         where: { id: Number(id) },
       });
       return NextResponse.json(

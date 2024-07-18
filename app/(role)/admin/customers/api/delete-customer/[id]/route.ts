@@ -14,7 +14,7 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
       }
 
       const { id } = context.params;
-      const deleteCustomer = await prisma.user.delete({
+      const deleteCustomer = await prisma!.user.delete({
         where: { id: Number(id) },
       });
       return NextResponse.json(

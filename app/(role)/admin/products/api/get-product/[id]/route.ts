@@ -7,7 +7,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
       const { id } = context.params;
       console.log(request.url);
 
-      const product = await prisma.product.findUnique({
+      const product = await prisma!.product.findUnique({
         where: { id: Number(id) },
         include: { categories: true, images: true },
       });

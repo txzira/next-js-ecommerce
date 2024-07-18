@@ -13,7 +13,7 @@ export async function DELETE(request: NextRequest, context: { params: any }) {
       }
 
       const { id } = context.params;
-      const deletedProduct = await prisma.product.delete({
+      const deletedProduct = await prisma!.product.delete({
         where: { id: Number(id) },
       });
 

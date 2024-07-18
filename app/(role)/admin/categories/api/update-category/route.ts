@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         };
       } = await request.json();
 
-      await prisma.category.update({
+      await prisma!.category.update({
         where: { id: category.id },
         data: {
           name: category.name,

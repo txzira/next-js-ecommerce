@@ -11,7 +11,7 @@ const page = async ({
   const orderNumber = searchParams?.["orderNumber"];
   if (email && orderNumber) {
     const order =
-      (await prisma?.order.findFirst({
+      (await prisma!.order.findFirst({
         where: { id: Number(orderNumber), customerEmail: email },
         include: {
           cart: { include: { cartItems: true } },

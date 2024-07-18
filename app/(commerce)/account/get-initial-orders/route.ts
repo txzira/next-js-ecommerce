@@ -8,9 +8,9 @@ export async function GET(request: NextRequest, context: { params: any }) {
   try {
     if (request.method === "GET") {
       const session = await getServerSession(authOptions);
-      const orders = await prisma.$transaction([
-        prisma.order.count({ where: { customerId: session?.user.id } }),
-        prisma.order.findMany({
+      const orders = await prisma!.$transaction([
+        prisma!.order.count({ where: { customerId: session?.user.id } }),
+        prisma!.order.findMany({
           where: { customerId: session?.user.id },
           include: {
             cart: {

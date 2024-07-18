@@ -100,7 +100,7 @@ async function calculateOrderAmount(cartItems: CartItem[]) {
       | null;
 
     if (cartItems[i].variant) {
-      product = await prisma.productVariant.findFirst({
+      product = await prisma!.productVariant.findFirst({
         where: {
           AND: [
             { id: cartItems[i].variant?.id },
@@ -130,7 +130,7 @@ async function calculateOrderAmount(cartItems: CartItem[]) {
         });
       }
     } else {
-      product = await prisma.product.findFirst({
+      product = await prisma!.product.findFirst({
         where: {
           id: cartItems[i].productId,
         },

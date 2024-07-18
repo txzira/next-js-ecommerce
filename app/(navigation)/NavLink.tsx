@@ -15,11 +15,12 @@ const NavLink = ({
   if (`/${segment[1]}` === href) active = true;
   else if (segment[1] === "categories" && href.split("/")[2] === segment[2])
     active = true;
+  else if (`/${segment[1]}/${segment[2]}` === href) active = true;
   return (
     <Link
       href={href}
       className={`
-        flex h-14 items-center px-1 hover:bg-white hover:text-black sm:h-full md:px-4
+        flex h-14 items-center px-2 hover:bg-white hover:text-black sm:h-full sm:px-4
         ${active ? "bg-white text-black" : null}
         `}>
       {children}
