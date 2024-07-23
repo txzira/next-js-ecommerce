@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="relative">
         <NextAuthSessionProvider>
           <CartProvider>
             <Toaster />

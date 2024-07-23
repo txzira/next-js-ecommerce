@@ -1,7 +1,7 @@
 "use client";
 import { builder, Builder } from "@builder.io/react";
 import Counter from "./components/Counter/Counter";
-import HeroImage from "app/HeroImage";
+import HeroImage from "app/(builderio)/HeroImage";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 

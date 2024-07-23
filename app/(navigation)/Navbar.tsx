@@ -35,8 +35,8 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
         />
       )}
       {showNav && <NavModal setShow={setShowNav}>{children}</NavModal>}
-      <nav>
-        <ul className="flex h-14 flex-row  bg-red-600 text-sm font-semibold text-white shadow-md md:text-lg">
+      <nav className="z-10">
+        <ul className="z-10 flex h-14  flex-row bg-red-600 text-sm font-semibold text-white shadow-md md:text-lg">
           <li className="mx-2 flex items-center sm:hidden">
             <button onClick={() => setShowNav(true)}>
               <IoMenu size={40} color="white" />

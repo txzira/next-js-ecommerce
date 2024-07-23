@@ -12,7 +12,6 @@ interface PageProps {
 
 export default async function Page(props: PageProps) {
   const builderModelName = "page";
-  console.log(props?.params?.page);
   const content = await builder
     // Get the page content from Builder with the specified options
     .get(builderModelName, {
@@ -25,7 +24,7 @@ export default async function Page(props: PageProps) {
     .toPromise();
 
   return (
-    <div className="h-full max-h-full w-full overflow-clip bg-white">
+    <div className="h-screen w-full bg-white ">
       {/* Render the Builder page */}
       <RenderBuilderContent content={content} model={builderModelName} />
     </div>

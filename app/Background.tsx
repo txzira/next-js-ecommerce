@@ -33,15 +33,14 @@ export default function Background() {
     <>
       {isBreakpoint ? (
         <div
-          className=" absolute h-[calc(100vh_-_3.5rem)] w-full bg-opacity-20 bg-repeat opacity-20"
+          className="absolute z-0 h-[calc(100vh_-_3.5rem)] w-full bg-opacity-20 bg-repeat opacity-20"
           style={{
             backgroundImage: `url(${"/images/logo-bg.png"})`,
             backgroundSize: "130px 130px",
-            backgroundColor: "",
           }}></div>
       ) : (
         <div
-          className=" absolute z-0 h-[calc(100vh_-_3.5rem)] w-full bg-repeat opacity-20 "
+          className="absolute  z-0 h-[calc(100vh_-_3.5rem)] w-full bg-repeat opacity-20 "
           style={{
             backgroundImage: `url(${"/images/logo-bg.png"})`,
             backgroundSize: "200px 200px",
