@@ -1,5 +1,6 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { Account, NextAuthOptions, Profile } from "next-auth";
 import CredentialProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { verifyPassword } from "../../../lib/password";
 import prisma from "../../../lib/prisma";
 
@@ -25,6 +26,10 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 60 * 4,
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialProvider({
       name: "Credentials",
       credentials: {
@@ -41,10 +46,6 @@ export const authOptions: NextAuthOptions = {
           });
           // If user exist
           if (user) {
-            // const checkPassword = await verifyPassword(
-            //   credentials?.password,
-            //   user.password
-            // );
             // If entered password matches with password in database
             if (
               verifyPassword(credentials?.password, user.password, user.salt)
@@ -66,19 +67,67 @@ export const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
-        token.email = user.email ? user.email : "";
-        token.id = Number(user.id);
-        token.role = user.role;
-        token.name = user.firstName + " " + user.lastName;
+        if (account?.provider === "google") {
+          const _user = await prisma?.user.findUnique({
+            where: {
+              socialId_socialProvider: {
+                socialId: account.providerAccountId,
+                socialProvider: account.provider,
+              },
+            },
+          });
+          if (_user) {
+            token.id = _user.id;
+            token.role = _user.role;
+          } else throw new Error("User does not exist.");
+        } else {
+          console.log({ token });
+          token.id = Number(user.id);
+          token.role = user.role;
+          token.name = user.firstName + " " + user.lastName;
+          console.log({ token });
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      // session.accessToken = token.accessToken;
       session.user = token;
       return session;
+    },
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: any;
+      account: Account | null;
+      profile?: any;
+    }) {
+      if (account?.provider === "google") {
+        const _user = await prisma?.user.findUnique({
+          where: {
+            socialId_socialProvider: {
+              socialId: account.providerAccountId,
+              socialProvider: account.provider,
+            },
+          },
+        });
+        if (!_user) {
+          await prisma?.user.create({
+            data: {
+              email: profile.email,
+              firstName: profile.given_name,
+              lastName: profile.family_name,
+              socialId: profile.sub,
+              socialProvider: account.provider,
+              verifiedEmail: true,
+            },
+          });
+        }
+      }
+      return true;
     },
   },
   pages: {

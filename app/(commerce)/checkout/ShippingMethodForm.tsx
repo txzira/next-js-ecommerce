@@ -1,5 +1,5 @@
 import { ShippingMethod } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import { USDollar } from "lib/utils";
 import React from "react";
 

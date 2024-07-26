@@ -1,4 +1,4 @@
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import { useSession } from "next-auth/react";
 
 import { validatePassword } from "pages/api/auth/[...nextauth]";

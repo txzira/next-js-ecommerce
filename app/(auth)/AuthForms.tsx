@@ -159,6 +159,12 @@ export const LoginForm = () => {
         </FormItem>
 
         <FormButton>Login</FormButton>
+        <button
+          type="button"
+          onClick={() => signIn("google")}
+          className="rounded-md border border-black text-lg">
+          Continue with Google
+        </button>
         <p>
           Don&apos;t have an account yet?{" "}
           <Link href="/auth/signup" className="text-blue-800 underline">

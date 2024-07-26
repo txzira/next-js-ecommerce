@@ -5,7 +5,7 @@ import {
   OrderBillingAddress,
   OrderShippingAddress,
 } from "@prisma/client";
-import PrintButton from "app/PrintButton";
+import PrintButton from "app/(components)/PrintButton";
 import { USDollar, capitalizeFirstLetter } from "lib/utils";
 import Image from "next/image";
 import React from "react";

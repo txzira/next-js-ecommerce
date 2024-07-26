@@ -1,5 +1,5 @@
 import { Category } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import countries from "../../../lib/countries.json";
-import FormInput from "app/FormInput";
+import FormInput from "app/(components)/FormInput";
 import { z, ZodType } from "zod";
 import { ShippingMethod } from "@prisma/client";
 

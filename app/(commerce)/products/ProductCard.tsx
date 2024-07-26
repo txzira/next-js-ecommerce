@@ -9,7 +9,7 @@ import {
   ProductVariantAttribute,
   ProductVariantImage,
 } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import { USDollar } from "lib/utils";
 import Image from "next/image";
 import Link from "next/link";

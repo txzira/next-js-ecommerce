@@ -2,7 +2,7 @@ import "./globals.css";
 import NextAuthSessionProvider from "./NextAuthSessionProvider";
 import Header from "./(navigation)/Header";
 import { Toaster } from "react-hot-toast";
-import Background from "./Background";
+import Background from "./(components)/Background";
 import { Metadata, Viewport } from "next";
 import CartProvider from "./CartProvider";
 

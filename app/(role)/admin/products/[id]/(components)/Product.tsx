@@ -12,7 +12,7 @@ import {
   FormInputCurrency,
   FormTextArea,
 } from "app/(components)/Form";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import Image from "next/image";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";

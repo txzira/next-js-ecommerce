@@ -10,7 +10,7 @@ datasource db {
 
 model User {
   id              Int      @id @default(autoincrement())
-  socialId        String? 
+  socialId        String?  
   socialProvider  String?
   email           String   @unique
   firstName       String

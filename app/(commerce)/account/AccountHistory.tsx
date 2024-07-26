@@ -1,5 +1,5 @@
 import { Cart, CartItem, Order, OrderShippingAddress } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import toast from "react-hot-toast";

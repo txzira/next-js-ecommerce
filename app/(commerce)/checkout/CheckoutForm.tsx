@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ProgressView from "./ProgressView";
 import { useRouter } from "next/navigation";
 import CustomerInfoForm from "./CustomerInfoForm";
-import FormInput from "app/FormInput";
+import FormInput from "app/(components)/FormInput";
 import { ZodType, z } from "zod";
 import { ShippingMethod } from "@prisma/client";
 import ShippingMethodForm from "./ShippingMethodForm";

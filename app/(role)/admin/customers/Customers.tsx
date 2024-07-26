@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import { KeyedMutator } from "swr";
 import { BsFillTrashFill } from "react-icons/bs";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";

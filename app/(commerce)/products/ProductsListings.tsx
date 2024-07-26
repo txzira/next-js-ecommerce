@@ -10,7 +10,7 @@ import {
   ProductVariantAttribute,
   ProductVariantImage,
 } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import React from "react";
 import ProductCard from "./ProductCard";
 import { ProductProps } from "types/product";

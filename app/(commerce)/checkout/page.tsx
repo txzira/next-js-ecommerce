@@ -1,6 +1,6 @@
 "use client";
 import { Cart, CartItem, ShippingMethod } from "@prisma/client";
-import Loader from "app/Loader";
+import Loader from "app/(components)/Loader";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
