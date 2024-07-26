@@ -24,7 +24,7 @@ export default async function Page(props: PageProps) {
     .toPromise();
 
   return (
-    <div className="h-screen w-full bg-white ">
+    <div className="h-full w-full overflow-clip bg-white">
       {/* Render the Builder page */}
       <RenderBuilderContent content={content} model={builderModelName} />
     </div>

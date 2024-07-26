@@ -32,10 +32,10 @@ const ProductsPage = async () => {
   });
 
   return (
-    <section>
+    <div className="mx-auto sm:w-5/6">
       <h1 className="text-lg font-semibold">All Products</h1>
       <ProductsListings products={products} />
-    </section>
+    </div>
   );
 };
 

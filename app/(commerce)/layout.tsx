@@ -6,9 +6,5 @@ export default function UserLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-full w-full flex-row">
-      <div className="mx-auto w-full  md:w-5/6">{children}</div>
-    </div>
-  );
+  return <div className="h-max w-full overflow-clip">{children}</div>;
 }

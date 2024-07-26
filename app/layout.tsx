@@ -33,7 +33,7 @@ export default function RootLayout({
             <Toaster />
             <Header />
             <Background />
-            <main className="relative h-[calc(100vh_-_3.5rem)] md:h-[calc(100vh_-_3.5rem)] ">
+            <main className="relative h-[calc(100vh_-_3.5rem)] w-full  overflow-y-scroll">
               {children}
             </main>
           </CartProvider>
