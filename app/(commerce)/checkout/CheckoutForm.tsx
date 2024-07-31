@@ -299,16 +299,11 @@ const CheckoutForm = ({
                     orderId: order.order.id,
                     requestShippingForm: shippingAddress.addressInfo,
                     requestBillingForm: billingAddress.addressInfo,
-                    requestCart: cartItems,
-                    shippingMethod: shippingMethod.method,
-                    calculatedTax: orderTotalDetails.calculatedTax,
-                    orderTotal: orderTotalDetails.orderTotal,
                     paymentIntentId: result.paymentIntent.id,
                   }),
                 })
                   .then((response) => response.json())
                   .then((data) => {
-                    console.log(data);
                     if (data.message === "success") {
                       clearCart();
                       const url = new URL(
