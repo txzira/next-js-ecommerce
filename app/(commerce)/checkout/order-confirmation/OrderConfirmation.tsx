@@ -26,7 +26,7 @@ const OrderConfirmation = ({
           lastFourDigits: string;
           expir_month: number;
           expir_year: number;
-        };
+        } | null;
       })
     | null;
 }) => {
@@ -146,7 +146,7 @@ const OrderConfirmation = ({
                     />
                     <div>
                       <p>
-                        <span>{capitalizeFirstLetter(order.card?.brand)}</span>
+                        <span>{capitalizeFirstLetter(order.card?.brand!)}</span>
                         <span>●●●●●●●●●●●●{order.card?.lastFourDigits}</span>
                       </p>
                       <p>
