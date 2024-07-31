@@ -312,6 +312,7 @@ const CheckoutForm = ({
                       );
                       url.searchParams.append("orderNumber", data.order.id);
                       url.searchParams.append("email", data.order.email);
+                      console.log(url.href);
                       router.push(url.href);
                       toast.dismiss();
                       toast.success("Thank you for your patronage!");
