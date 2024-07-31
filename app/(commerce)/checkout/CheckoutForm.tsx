@@ -216,7 +216,7 @@ const CheckoutForm = ({
     setCheckoutState(checkoutState - 1);
   };
 
-  const submitPaymentForm = (): void => {
+  const submitPaymentForm = async () => {
     toast.loading("Loading...");
     if (
       customerInfoSchema.safeParse(shippingAddress.addressInfo).success &&
@@ -224,7 +224,20 @@ const CheckoutForm = ({
       !disablePaymentButton
     ) {
       if (stripe && stripeElements) {
-        console.log(clientSecret);
+        let order = (await fetch("/checkout/create-order", {
+          method: "POST",
+          body: JSON.stringify({
+            email,
+            requestCart: cartItems,
+            shippingMethod: shippingMethod.method,
+            calculatedTax: orderTotalDetails.calculatedTax,
+            orderTotal: orderTotalDetails.orderTotal,
+            paymentIntentId: paymentIntent,
+          }),
+        })) as any;
+
+        order = await order.json();
+
         stripe
           .confirmPayment({
             elements: stripeElements,
@@ -280,10 +293,10 @@ const CheckoutForm = ({
                 result.paymentIntent.status === "succeeded" ||
                 result.paymentIntent.status === "processing"
               ) {
-                fetch("/checkout/create-order", {
+                fetch("/checkout/update-order", {
                   method: "POST",
                   body: JSON.stringify({
-                    email,
+                    orderId: order.order.id,
                     requestShippingForm: shippingAddress.addressInfo,
                     requestBillingForm: billingAddress.addressInfo,
                     requestCart: cartItems,
