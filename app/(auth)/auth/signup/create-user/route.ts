@@ -3,7 +3,7 @@ import { genPassword } from "lib/password";
 
 import { validateEmail, validatePassword } from "pages/api/auth/[...nextauth]";
 import { NextRequest, NextResponse } from "next/server";
-import { SendEmail } from "lib/mailjet";
+import { sendEmail } from "lib/nodemailer";
 // supabase
 // minimum 1 read row per call
 // maximum 1 read and 1 write per call
@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
               user: { select: { firstName: true } },
             },
           });
-          const link = new URL(`${process.env.ORIGIN_URL}/auth/verify/`);
+          const link = new URL(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify/`
+          );
 
           link.searchParams.append("userId", token.user_id.toString());
           link.searchParams.append("tokenId", token.id);
@@ -89,7 +91,7 @@ export async function POST(request: NextRequest) {
           <br/>
           <p>-Your favorite shreders at ${process.env.COMPANY_NAME}</p>
         </div>`;
-          SendEmail(
+          sendEmail(
             newUser.email,
             newUser.firstName + " " + newUser.lastName,
             "Email Verification Link",

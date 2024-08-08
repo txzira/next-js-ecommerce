@@ -5,6 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 import prisma from "lib/prisma";
 export async function POST(request: NextRequest) {
+  console.log("hello");
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
   const body = await request.text();
   const sig = request.headers.get("stripe-signature") as string;

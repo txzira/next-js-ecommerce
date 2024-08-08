@@ -2,6 +2,7 @@
   "name": "next-13-boilerplate",
   "version": "0.1.0",
   "private": true,
+  "author": "Ronnie Ayers",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -29,7 +30,6 @@
     "jsonwebtoken": "^9.0.0",
     "next": "^14.2.3",
     "next-auth": "^4.19.0",
-    "node-mailjet": "^6.0.2",
     "nodemailer": "^6.9.14",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",

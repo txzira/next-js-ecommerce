@@ -1,6 +1,6 @@
 import prisma from "lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { SendEmail } from "lib/mailjet";
+import { sendEmail } from "lib/nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      const link = new URL(`${process.env.ORIGIN_URL}/auth/forgot-password`);
+      const link = new URL(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/forgot-password`
+      );
       link.searchParams.append("userId", token.user_id.toString());
       link.searchParams.append("tokenId", token.id);
       const message = `<div style="width:50%; margin:0 auto; color:black;">
@@ -42,7 +44,7 @@ export async function POST(request: NextRequest) {
               <p>-Your favorite shreders at ${process.env.COMPANY_NAME}</p>
             </div>`;
 
-      SendEmail(
+      sendEmail(
         user.email,
         user.firstName + " " + user.lastName,
         "Password Reset",
