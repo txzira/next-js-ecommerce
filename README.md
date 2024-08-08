@@ -34,14 +34,17 @@ The easiest way to deploy this Next.js app is to use the Vercel Platform from th
 
 5. Configure project.
 
-a.
+a. Enter the name of your project and change the build command to account for prisma.
+
 ![Config 1](/public/readme/project-config-1.png)
 
-b. Fill out environment variables
+b. Fill out environment variables.
+
 ![Config 2](/public/readme/project-config-2.png)
 
-c.
-![Config 3](/public/readme/project-config-2.png)
+c. Deploy your application!
+
+![Config 3](/public/readme/project-config-3.png)
 
 Check out our Next.js deployment documentation for more details.
 
