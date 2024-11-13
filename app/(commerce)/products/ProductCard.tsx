@@ -49,7 +49,7 @@ const ProductCard = ({ product }: { product: ProductProps }) => {
 
   return (
     <div className="relative mx-auto flex min-h-[365px] w-[300px] bg-white  ">
-      <div className="group absolute h-full w-full cursor-pointer bg-inherit shadow-lg hover:z-10 hover:h-max hover:min-h-[365px] hover:border hover:border-black ">
+      <div className="group absolute h-full w-full cursor-pointer bg-inherit shadow-lg hover:z-10 hover:border hover:border-black sm:hover:h-max sm:hover:min-h-[365px] ">
         <div
           id="image-wrapper"
           className="relative h-[300px] w-full bg-gray-50 bg-[radial-gradient(rgb(249,250,251),rgb(209,213,219))] ">

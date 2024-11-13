@@ -48,9 +48,9 @@ c. Deploy your application!
 
 Check out our Next.js deployment documentation for more details.
 
-<!-- # How to Use
+# How to Use
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<!-- You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
