@@ -18,7 +18,7 @@ export function sendEmail(
     const transporter = nodemailer.createTransport({
       service: "gmail",
       greetingTimeout: 1000 * 60 * 5,
-      // ...(process.env.DEV_ENV ? { secure: false } : { secure: true }),
+      ...(process.env.DEV_ENV ? { secure: false } : { secure: true }),
       auth: {
         user: process.env.GMAILNODEMAILER_EMAIL,
         pass: process.env.GMAILNODEMAILER_PASSWORD,
